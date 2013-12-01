@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD734B14-C1D5-41F8-95C9-2701F8871AA8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KSPAlternateResourcePanel</RootNamespace>
+    <AssemblyName>KSPAlternateResourcePanel</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\~Games\KSP_win_PlugInTest\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\~Games\KSP_win_PlugInTest\KSP_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlternateResourcePanel.cs" />
+    <Compile Include="ARP_BehaviourUpdate.cs" />
+    <Compile Include="ARP_Debug.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue_Back.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen_Back.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronDown.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronUp.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_EC.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_IA.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_Ke.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_LF.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_MP.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_O2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_OX.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_PanelBack.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_SF.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_Xe.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\txt_TooltipBackground.png" />
+    <Content Include="PlugInFiles\info.txt" />
+    <Content Include="PlugInFiles\ReadMe-KSPAlternateResourcePanel.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PluginBuilder\BuildKSPARPFiles.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem Build deployment versions
+
+if exist "C:\~Games\KSP_Win_PlugInTest\KSP.exe" (
+	set DestPath="C:\~Games\KSP_Win_PlugInTest\GameData\TriggerTech"
+	set Binary="C:\~Games\KSP_Win_PlugInTest\KSP.exe"
+) else (
+	set DestPath="D:\~Games\KSP_Win_PlugInTest\GameData\TriggerTech"
+	set Binary="D:\~Games\KSP_Win_PlugInTest\KSP.exe"
+)
+
+rem Need to copy all bits to plugin test game
+rem copy "$(TargetPath)" %25DestPath%25
+rem and then run the game
+rem %25Binary%25
+
+rem copy "$(TargetPath)" "D:\~Games\KSP_Win_PlugInTest\GameData\TriggerTech"
+rem "D:\~Games\KSP_Win_PlugInTest\KSP.exe"
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
