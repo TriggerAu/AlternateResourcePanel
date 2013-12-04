@@ -50,31 +50,63 @@
     <Compile Include="ARP_BehaviourUpdate.cs" />
     <Compile Include="ARP_Debug.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\AntiMatter.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Argon.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ArgonGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\CarbonDioxide.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\CO2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\DepletedFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\DepletedUranium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ElectricCharge.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\EnrichedUranium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Food.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\HydrogenGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\IntakeAir.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\IntakeAtm.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Kethane.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\KIntakeAir.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\LiquidFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\LiquidH2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Megajoules.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Metal.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\MonoPropellant.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\O2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Ore.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Oxidizer.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Oxygen.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\RP.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Science.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\SolidFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\StoredCharge.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ThermalPower.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Waste.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteHeat.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteWater.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteWater2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Water.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Xenon.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\XenonGas.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue_Back.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen_Back.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronDown.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronUp.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_EC.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_IA.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_Ke.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_LF.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_MP.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_O2.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_OX.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonSettingsAttention.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_PanelBack.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_SF.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_Xe.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\txt_TooltipBackground.png" />
     <Content Include="PlugInFiles\info.txt" />
     <Content Include="PlugInFiles\ReadMe-KSPAlternateResourcePanel.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PluginBuilder\BuildKSPARPFiles.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons-Player\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

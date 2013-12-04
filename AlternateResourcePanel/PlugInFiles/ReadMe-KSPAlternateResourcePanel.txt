@@ -4,7 +4,7 @@ An Alternate display of resources in whole vessel and current stage
 
 By Trigger Au
 
-Forum Thread for latest: http://forum.kerbalspaceprogram.com/showthread.php/??????
+Forum Thread for latest: http://forum.kerbalspaceprogram.com/threads/60227-KSP-Alternate-Resource-Panel
 Documentation Site: https://sites.google.com/site/kspalternateresourcepanel
 
 INSTALLATION
@@ -28,6 +28,16 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 1.1.0.0		-	KSP Version: 0.22
+- Changed loading method so that it parses the Icons folder
+- Also changed byte loading method to use System.IO instead of KSP.IO - see if thats the Linux64bit problem
+- Optional display of Instant consumption/rates
+- Converted draw code to use windows so main window is draggable and clamped to screen
+- Can lock window panel so you dont inadvertantly drag it
+- Separated settings window so yiou can drag to any edge and settings moves around to stay visible (pretty chuffed this worked)
+- Added a bunch of icons - more to come
+- Added folder for user to put custom icons in for ones I missed
+
 Version 1.0.3.0		-	KSP Version: 0.22
 - Typo in the darn build Script
 
