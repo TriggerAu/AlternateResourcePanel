@@ -94,10 +94,15 @@ namespace KSPAlternateResourcePanel
             }
         }
 
-        int intTest = 10;
-        int intTest2 = 18;
+        int intTest = 0;
+        int intTest2 = 0;
         int intTest3 = 0;
-        int intTest4 = 12;
+        int intTest4 = 0;
+
+        int intTest5 = 0;
+        int intTest6 = 0;
+        int intTest7 = 0;
+        int intTest8 = 0;
 
         float fltTest1 = 0;
         float fltTest2 = 0;
@@ -121,6 +126,11 @@ namespace KSPAlternateResourcePanel
             intTest3 = Convert.ToInt32(GUILayout.TextField(intTest3.ToString()));
             intTest4 = Convert.ToInt32(GUILayout.TextField(intTest4.ToString()));
 
+            intTest5 = Convert.ToInt32(GUILayout.TextField(intTest5.ToString()));
+            intTest6 = Convert.ToInt32(GUILayout.TextField(intTest6.ToString()));
+            intTest7 = Convert.ToInt32(GUILayout.TextField(intTest7.ToString()));
+            intTest8 = Convert.ToInt32(GUILayout.TextField(intTest8.ToString()));
+
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
@@ -131,7 +141,9 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(rectPanel.Contains(Event.current.mousePosition).ToString());
             //GUILayout.Label(IsMouseOver().ToString());
 
-            GUILayout.Label(UTUpdatePassed.ToString("0.0000"));
+            //GUILayout.Label(UTUpdatePassed.ToString("0.0000"));
+            GUILayout.Label(fltTooltipTime.ToString());
+            GUILayout.Label(strToolTipText);
 
             GUILayout.EndVertical();
             GUI.DragWindow();

@@ -131,35 +131,37 @@ namespace KSPAlternateResourcePanel
 
 	        }
 
-            //Now the list for the last stage before decouplers for resources where this counts
-            arpStage arpStageLast = lstStages.OrderBy(x => x.Number).Last();
-            arpResource resTemp;
-            foreach (arpResource r in lstResources)
-            {
-                if (r.Resource.resourceFlowMode != ResourceFlowMode.ALL_VESSEL)
+            if (lstStages.Count > 0) { 
+                //Now the list for the last stage before decouplers for resources where this counts
+                arpStage arpStageLast = lstStages.OrderBy(x => x.Number).Last();
+                arpResource resTemp;
+                foreach (arpResource r in lstResources)
                 {
-                    resTemp = arpStageLast.ResourceList.FirstOrDefault(x => x.Resource.id == r.Resource.id);
-                    if (resTemp != null)
+                    if (r.Resource.resourceFlowMode != ResourceFlowMode.ALL_VESSEL)
                     {
-                        lstResourcesLastStage.Add(new arpResource() {
-                                                    Resource = resTemp.Resource,
-                                                    Amount = resTemp.Amount,
-                                                    MaxAmount = resTemp.MaxAmount
-                                                    }
-                                                );
-                    }
+                        resTemp = arpStageLast.ResourceList.FirstOrDefault(x => x.Resource.id == r.Resource.id);
+                        if (resTemp != null)
+                        {
+                            lstResourcesLastStage.Add(new arpResource() {
+                                                        Resource = resTemp.Resource,
+                                                        Amount = resTemp.Amount,
+                                                        MaxAmount = resTemp.MaxAmount
+                                                        }
+                                                    );
+                        }
 
+                    }
+                }
+
+                //This is the stuff to update rates
+                if (UTUpdate != 0)
+                {
+                    CalculateRates(lstResources, lstLastResources);
+
+                    CalculateRates(lstResourcesLastStage, lstLastResourcesLastStage);
                 }
             }
-
-            ////This is the stuff to update rates
-            //if (UTUpdate!=0)
-            //{
-            //    CalculateRates(lstLastResources, lstLastResources);
-
-            //    CalculateRates(lstResourcesLastStage, lstLastResourcesLastStage);
-            //}
-            //UTUpdateLast = UTUpdate;
+            UTUpdateLast = UTUpdate;
 
 
             //if (tmeOutput.AddSeconds(10) < DateTime.Now)
