@@ -307,7 +307,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.FlexibleSpace();
             GUIContent btnMinMax = new GUIContent(btnChevronDown, "Show Settings...");
             if (ShowSettings) { btnMinMax.image = btnChevronUp; btnMinMax.tooltip = "Hide Settings"; }
-            if (GUILayout.Button( btnMinMax, styleButtonSmall))
+            if (GUILayout.Button( btnMinMax, styleButtonSettings))
             {
                 ShowSettings = !ShowSettings;
                 SaveConfig();

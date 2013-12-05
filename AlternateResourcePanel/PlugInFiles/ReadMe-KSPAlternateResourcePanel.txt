@@ -28,6 +28,10 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 1.1.1.0		-	KSP Version: 0.22
+- Finished 1st iteration of icons - includes icons for: Kethane, Deadly Reentry, Extra Planetary Launchpads, KSP Interstellar, Life Support By Bobcat, Near Future, TAC Life Support
+- Made the settings button a little wider to make it visible behind other fixed buttons
+
 Version 1.1.0.0		-	KSP Version: 0.22
 - Changed loading method so that it parses the Icons folder
 - Also changed byte loading method to use System.IO instead of KSP.IO - see if thats the Linux64bit problem

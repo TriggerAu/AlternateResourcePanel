@@ -44,9 +44,10 @@ namespace KSPAlternateResourcePanel
             DebugLogFormatted("Loading Textures");
 
             texIconsKSPARP = LoadIconDictionary("Icons");
+            DebugLogFormatted("KSPARP Icons Loaded: {0}",texIconsKSPARP.Count.ToString());
             texIconsPlayer = LoadIconDictionary("Icons-Player");
+            DebugLogFormatted("Player Icons Loaded: {0}", texIconsPlayer.Count.ToString());
 
-            DebugLogFormatted(texIconsKSPARP.Count.ToString());
             LoadImageIntoTexture2(ref texPanel, "img_PanelBack.png");
 
             LoadImageIntoTexture2(ref texBarBlue, "img_BarBlue.png");
@@ -83,7 +84,7 @@ namespace KSPAlternateResourcePanel
 
         public static GUIStyle styleButton;
         public static GUIStyle styleButtonMain;
-        public static GUIStyle styleButtonSmall;
+        public static GUIStyle styleButtonSettings;
 
         public static GUIStyle stylePanel;
 
@@ -124,9 +125,9 @@ namespace KSPAlternateResourcePanel
             styleButtonMain = new GUIStyle(styleButton);
             styleButtonMain.fixedHeight = 20;
 
-            styleButtonSmall = new GUIStyle(styleButton);
-            styleButtonSmall.padding = new RectOffset(1, 1, 1, 1);
-            styleButtonSmall.fixedWidth = 18;
+            styleButtonSettings = new GUIStyle(styleButton);
+            styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
+            styleButtonSettings.fixedWidth = 40;
 
             stylePanel = new GUIStyle();
             stylePanel.border = new RectOffset(6, 6, 6, 6);
@@ -240,7 +241,7 @@ namespace KSPAlternateResourcePanel
 
         public static Boolean LoadImageIntoTexture2(ref Texture2D tex, String FileName,String FolderPath="")
         {
-            DebugLogFormatted("{0},{1}",FileName, FolderPath);
+            //DebugLogFormatted("{0},{1}",FileName, FolderPath);
             Boolean blnReturn = false;
             try
             {
