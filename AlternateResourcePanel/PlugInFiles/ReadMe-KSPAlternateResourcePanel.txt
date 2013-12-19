@@ -28,6 +28,15 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 1.2.0.0		-	KSP Version: 0.23
+- 0.23 Recompile for new version of Unity
+- Added Option to choose to use Blizzies excellent toolbar - uses latebinding so no need to include DLL and no hard reference
+- Added link in game so if common toolbar not installed people can jump to forum page
+- Added option for users to choose display style - KSP/Unity
+- Added feature so Mod owners can provide a Texture with their Mod and KSPARP will read that
+- Added config so players can choose the order of precedence for the icon sets
+- Fixed bug with GUILayout errors on initial display
+
 Version 1.1.1.0		-	KSP Version: 0.22
 - Finished 1st iteration of icons - includes icons for: Kethane, Deadly Reentry, Extra Planetary Launchpads, KSP Interstellar, Life Support By Bobcat, Near Future, TAC Life Support
 - Made the settings button a little wider to make it visible behind other fixed buttons

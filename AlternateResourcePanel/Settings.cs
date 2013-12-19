@@ -14,17 +14,29 @@ namespace KSPAlternateResourcePanel
 {
     public partial class KSPAlternateResourcePanel 
     {
-        public static String AppPath = KSPUtil.ApplicationRootPath.Replace("\\", "/");
-        public static String PlugInPath = string.Format(AppPath + "GameData/TriggerTech/PluginData/{0}", _ClassName);
+        public static String PathApp = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        public static String PathTriggerTech = string.Format("{0}GameData/TriggerTech",PathApp);
+        public static String PathPluginData = string.Format("{0}/PluginData/{1}", PathTriggerTech, _ClassName);
+        public static String PathTextures = string.Format("{0}/Textures/{1}", PathTriggerTech, _ClassName);
 
+        public static String DBPathTriggerTech = string.Format("TriggerTech");
+        public static String DBPathTextures = string.Format("{0}/Textures/{1}", DBPathTriggerTech, _ClassName);
+        public static String DBPathSounds = string.Format("{0}/Sounds/{1}", DBPathTriggerTech, _ClassName);
         
         Boolean blnShowInstants = false;
         Boolean blnLockLocation = true;
+        Boolean blnKSPStyle = true;
+        Boolean blnKSPStyleButtons = true;
+
+        List<String> lstIconOrder = new List<String>() { "KSPARP", "Mod", "Player" };
 
         Boolean blnStaging = false;
         Boolean blnStagingInMapView = false;
         Boolean blnStagingSpaceInMapView = false;
-        
+
+        internal Boolean BlizzyToolbarIsAvailable = false;
+        internal Boolean UseBlizzyToolbarIfAvailable = false;
+
         private void LoadSettings()
         {
             DebugLogFormatted("Loading Config...");
@@ -43,12 +55,19 @@ namespace KSPAlternateResourcePanel
             blnShowInstants = configfile.GetValue<Boolean>("ShowInstants", false);
             blnLockLocation = configfile.GetValue<Boolean>("LockLocation", true);
             _WindowMainRect = configfile.GetValue<Rect>("WindowPos", new Rect(Screen.width - 298, 19, 299, 20));
+            blnKSPStyle = configfile.GetValue<Boolean>("KSPStyle", true);
+            blnKSPStyleButtons = configfile.GetValue<Boolean>("blnKSPStyleButtons", true);
+
+            String strIconOrder = configfile.GetValue<String>("IconOrder", "KSPARP,Mod,Player" );
+            lstIconOrder = strIconOrder.Split(",".ToCharArray()).ToList();
 
             blnStaging = configfile.GetValue<Boolean>("Staging", false);
             blnStagingInMapView = configfile.GetValue<Boolean>("StagingInMapView", false);
             blnStagingSpaceInMapView = configfile.GetValue<Boolean>("StagingSpaceInMapView", false);
 
             ToggleOn = configfile.GetValue<Boolean>("ToggleOn", false);
+
+            UseBlizzyToolbarIfAvailable = configfile.GetValue<Boolean>("UseBlizzyToolbarIfAvailable", false);
 
             DebugLogFormatted("Config Loaded Successfully");
         }
@@ -85,12 +104,18 @@ namespace KSPAlternateResourcePanel
             configfile.SetValue("ShowInstants", blnShowInstants);
             configfile.SetValue("LockLocation", blnLockLocation);
             configfile.SetValue("WindowPos", _WindowMainRect);
+            configfile.SetValue("KSPStyle", blnKSPStyle);
+            configfile.SetValue("blnKSPStyleButtons", blnKSPStyleButtons);
+
+            configfile.SetValue("IconOrder", String.Join(",",lstIconOrder.ToArray()));
 
             configfile.SetValue("Staging", blnStaging);
             configfile.SetValue("StagingInMapView", blnStagingInMapView);
             configfile.SetValue("StagingSpaceInMapView", blnStagingSpaceInMapView);
 
             configfile.SetValue("ToggleOn", ToggleOn);
+
+            configfile.SetValue("UseBlizzyToolbarIfAvailable", UseBlizzyToolbarIfAvailable);
 
             configfile.save();
             DebugLogFormatted("Saved Config");

@@ -11,10 +11,7 @@ namespace KSPAlternateResourcePanel
     [KSPAddon(KSPAddon.Startup.Flight,false)]
     public partial class KSPAlternateResourcePanel : MonoBehaviour
     {
-        //StageGroup Button
         //Autostage option
-        //Settings??
-        //Remember toggle state/settings
 
         //GlobalSettings
         private Boolean HoverOn = false;    //Are we hovering on something to draw the screen
@@ -49,24 +46,93 @@ namespace KSPAlternateResourcePanel
             //Load Settings here?
             LoadSettings();
 
+            SetIconOrder();
+
+
             //Add it to the queue
             DebugLogFormatted("Adding to DrawQueue");
             RenderingManager.AddToPostDrawQueue(0, DrawGUI);
+
+            //Common Toolbar Code
+            BlizzyToolbarIsAvailable = HookToolbar();
+
+            if (BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable)
+            {
+                btnToolbar = InitToolbarButton();
+            }
 
             //Get the time per sec from the settings file
             SetupRepeatingFunction("BehaviourUpdate", 0.05f);
             //SetupRepeatingFunction_BehaviourUpdate(10);
         }
-                
+
         /// <summary>
         /// Destroy Event - when the DLL is unloaded 
         /// </summary>
         public void OnDestroy()
         {
             DebugLogFormatted("Destroying the {0}", _ClassName);
+
+            DestroyToolbarButton(btnToolbar);
         }
 
-        
+
+        internal ToolbarButtonWrapper btnToolbar = null;
+
+        /// <summary>
+        /// Check to see if the Toolbar is available
+        /// </summary>
+        /// <returns>True if the Toolbar.ToolbarManager class is loaded in an existing assembly</returns>
+        internal Boolean HookToolbar()
+        {
+            //Is the Dll in memory
+            Boolean blnReturn = ToolbarDLL.Loaded;
+            DebugLogFormatted("Blizzy's Toolbar Loaded:{0}", blnReturn);
+            return blnReturn;
+        }
+
+        /// <summary>
+        /// initialises a Toolbar Button for this mod
+        /// </summary>
+        /// <returns>The ToolbarButtonWrapper that was created</returns>
+        internal ToolbarButtonWrapper InitToolbarButton()
+        {
+            ToolbarButtonWrapper btnReturn;
+            try
+            {
+                DebugLogFormatted("Initialising the Toolbar Icon");
+                btnReturn = new ToolbarButtonWrapper(_ClassName, "btnToolbarIcon");
+                btnReturn.TexturePath = "TriggerTech/ToolbarIcons/KSPARP";
+                btnReturn.ToolTip = "Alternate Resource Panel";
+                btnReturn.AddButtonClickHandler((e) =>
+                {
+                    ToggleOn = !ToggleOn;
+                    SaveConfig();
+                });
+            }
+            catch (Exception ex)
+            {
+                btnReturn = null;
+                DebugLogFormatted("Error Initialising Toolbar Button: {0}", ex.Message);
+            }
+            return btnReturn;
+        }
+
+        /// <summary>
+        /// Destroys theToolbarButtonWrapper object
+        /// </summary>
+        /// <param name="btnToDestroy">Object to Destroy</param>
+        internal void DestroyToolbarButton(ToolbarButtonWrapper btnToDestroy)
+        {
+            if (btnToDestroy != null)
+            {
+                DebugLogFormatted("Destroying Toolbar Button");
+                btnToDestroy.Destroy();
+            }
+            btnToDestroy = null;
+        }
+
+               
         /// <summary>
         /// Update Function - Happens on every frame - this is where behavioural stuff is typically done 
         /// </summary>
@@ -88,7 +154,7 @@ namespace KSPAlternateResourcePanel
 
         private static int _WindowSettingsID = 0;
         private static Rect _WindowSettingsRect = new Rect(Screen.width - 298, 200, 299, 200);
-        private static int _WindowSettingsHeight = 144;
+        private static int _WindowSettingsHeight = 238;
 
         private static Boolean ShowSettings = false;
         private static Boolean blnResetWindow = false;
@@ -98,34 +164,44 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         public void DrawGUI()
         {
-
             //Check for loaded Textures, etc
             if (!DrawStuffConfigured) {
                 SetupDrawStuff();
             }
 
-            //Draw the button
-            if (GUI.Button(rectButton, "Alternate",styleButtonMain))
-            {
-                ToggleOn = !ToggleOn;
-                SaveConfig();
+            //Draw the button - if we arent using blizzy's toolbar
+            if (!(BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable))
+            { 
+                if (GUI.Button(rectButton, "Alternate",styleButtonMain))
+                {
+                    ToggleOn = !ToggleOn;
+                    SaveConfig();
+                }
             }
 
-            //Test for moue over any component
-            HoverOn = IsMouseOver();
+            //Test for moue over any component - do this on repaint so it doesn't do it on layout and cause grouping errors
+            if (Event.current.type== EventType.Repaint)
+                HoverOn = IsMouseOver();
 
-            //Are there any resources left?
+            //Are there any resources left and the window is displayed?
             if ((HoverOn || ToggleOn) && (lstResources.Count > 0))
             {
+                if (!blnKSPStyle && (styleTooltipStyle.normal.background != GUI.skin.box.normal.background))
+                {
+                    DebugLogFormatted("Enforcing Unity Styles on Start");
+                    SetStylesUnity();
+                    SetButtonStyles();
+                }
+
                 if (blnResetWindow)
                 {
-                    DebugLogFormatted("A");
                     _WindowMainRect = new Rect(Screen.width - 298, 19, 299, 20);
+                    if (!blnKSPStyle) _WindowMainRect.y += 1;
                     blnResetWindow = false;
                     SaveConfig();
                 }
 
-                //set up the main window and loock it in the screen
+                //set up the main window and lock it in the screen
                 Rect MainWindowPos = new Rect(_WindowMainRect) { height = _WindowMainHeight };
                 MainWindowPos = ClampToScreen(MainWindowPos);
                 _WindowMainRect = GUILayout.Window(_WindowMainID, MainWindowPos, FillWindow, "", stylePanel);
@@ -135,7 +211,10 @@ namespace KSPAlternateResourcePanel
 
                 if (ShowSettings)
                 {
+                    //_WindowSettingsHeight = 230 + intTest;
                     Rect SettingsWindowPos = new Rect(_WindowMainRect) {y = _WindowMainRect.y+_WindowMainRect.height-2, height=_WindowSettingsHeight};
+
+                    if (!blnKSPStyle) SettingsWindowPos.y += 1;
 
                     //Nowfit it in the screen and move it around as the main window moves around 
                     if (Screen.height < SettingsWindowPos.y + SettingsWindowPos.height)
@@ -143,11 +222,13 @@ namespace KSPAlternateResourcePanel
                         if (0 < SettingsWindowPos.x - SettingsWindowPos.width)
                         {
                             SettingsWindowPos.x = _WindowMainRect.x - _WindowMainRect.width + 2;
+                            if (!blnKSPStyle) SettingsWindowPos.x -= 1;
                             SettingsWindowPos.y = Mathf.Clamp(_WindowMainRect.y, 0, Screen.height - SettingsWindowPos.height + 1);
                         }
                         else //if (Screen.width < SettingsWindowPos.x + SettingsWindowPos.width)
                         {
                             SettingsWindowPos.x = _WindowMainRect.x + _WindowMainRect.width - 2;
+                            if (!blnKSPStyle) SettingsWindowPos.x += 1;
                             SettingsWindowPos.y = Mathf.Clamp(_WindowMainRect.y, 0, Screen.height - SettingsWindowPos.height + 1);
                         }
                     }
@@ -165,13 +246,11 @@ namespace KSPAlternateResourcePanel
                 ShowSettings = false;
             }
 
-            //_WindowDebugRect = GUILayout.Window(_WindowDebugID, _WindowDebugRect, FillDebugWindow, "Debug");
-
+#if DEBUG
+            _WindowDebugRect = GUILayout.Window(_WindowDebugID, _WindowDebugRect, FillDebugWindow, "Debug");
+#endif
             DrawToolTip();
         }
-        //private static int _WindowDebugID = 12345;
-        //private static Rect _WindowDebugRect = new Rect(100,130,400,200);
-
 
         Rect ClampToScreen(Rect r)
         {
@@ -183,6 +262,10 @@ namespace KSPAlternateResourcePanel
         int intLineHeight = 20;
         static Rect rectButton = new Rect(Screen.width - 109, 0, 80, 30);
 
+        Dictionary<String, Texture2D> dictFirst = texIconsKSPARP;
+        Dictionary<String, Texture2D> dictSecond = texIconsResourceDefs;
+        Dictionary<String, Texture2D> dictThird = texIconsPlayer;
+
         private void FillWindow(int WindowHandle)
         {
             GUILayout.BeginVertical();
@@ -192,9 +275,6 @@ namespace KSPAlternateResourcePanel
 
             //What will the height of the panel be
             _WindowMainHeight = ((lstResources.Count + 1) * intLineHeight) + 12;
-
-            Dictionary<String, Texture2D> dictFirst = texIconsKSPARP;
-            Dictionary<String, Texture2D> dictSecond = texIconsPlayer;
 
             Rect rectBar;
             //Now draw the main panel
@@ -213,6 +293,10 @@ namespace KSPAlternateResourcePanel
                 {
                     contLabel = new GUIContent(dictSecond[lstResources[i].Resource.name.ToLower()]);
                 }
+                else if (dictThird.ContainsKey(lstResources[i].Resource.name.ToLower()))
+                {
+                    contLabel = new GUIContent(dictThird[lstResources[i].Resource.name.ToLower()]);
+                }
                 else
                 {
                     contLabel = new GUIContent(System.Text.RegularExpressions.Regex.Replace(lstResources[i].Resource.name, "[^A-Z]", ""));
@@ -226,7 +310,6 @@ namespace KSPAlternateResourcePanel
                 GUILayout.Label(contLabel, styleBarName);
 
                 GUILayout.Space(4);
-
 
                 //set ration for remaining resource value
                 fltBarRemainRatio = (float)lstResources[i].Amount / (float)lstResources[i].MaxAmount;
@@ -277,7 +360,6 @@ namespace KSPAlternateResourcePanel
                 GUILayout.EndHorizontal();
                     
             }
-
             GUILayout.BeginHorizontal();
             ////STAGING STUFF
             if (blnStaging)
@@ -384,7 +466,72 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             blnShowInstants = GUILayout.Toggle(blnShowInstants, "Show Rate Change Values", styleToggle);
-            blnLockLocation = GUILayout.Toggle(blnLockLocation, "Lock Window Position.", styleToggle);
+
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            //Styling
+            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282),GUILayout.Height(0));
+            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.Label("Styling:", styleStageTextHead);
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            if (DrawToggle(ref blnKSPStyle, "KSP Panels", styleToggle,GUILayout.Width(100)))
+            {
+                SetGUIStyles();
+                if (!blnKSPStyle) blnKSPStyleButtons = false;
+                SaveConfig();
+            }
+            if (!blnKSPStyle)
+            {
+                if (DrawToggle(ref blnKSPStyleButtons, "KSP Buttons", styleToggle))
+                {
+                    SetButtonStyles();
+                    SaveConfig();
+                }
+            }
+            GUILayout.EndHorizontal();
+
+            if (BlizzyToolbarIsAvailable)
+            {
+                if (DrawToggle(ref UseBlizzyToolbarIfAvailable, new GUIContent ("Use Common Toolbar", "Choose to use the Common  Toolbar or the native KSP ARP button"),styleToggle))
+                {
+                    if (BlizzyToolbarIsAvailable)
+                    {
+                        if (UseBlizzyToolbarIfAvailable)
+                            btnToolbar = InitToolbarButton();
+                        else
+                            DestroyToolbarButton(btnToolbar);
+                    }
+                    SaveConfig();
+                }
+            }
+            else
+            {
+                //GUILayout.BeginHorizontal();
+                //GUILayout.Label("Get the Common Toolbar:", styleStageTextHead);
+                //GUILayout.FlexibleSpace();
+                //if (GUILayout.Button("Click here", styleTextCenterGreen))
+                //    Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
+                //GUILayout.EndHorizontal();
+
+
+                if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), styleTextCenterGreen))
+                    Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
+            }
+
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            //Visuals
+            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282));
+            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.Label("Visuals:", styleStageTextHead);
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+            if(DrawToggle(ref blnLockLocation, "Lock Window Position", styleToggle))
+                SaveConfig();
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Position", styleButton))
                 SaveConfig();
@@ -392,6 +539,29 @@ namespace KSPAlternateResourcePanel
                 blnResetWindow = true;
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            //Icons
+            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282));
+            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.Label("Icons:", styleStageTextHead);
+            GUILayout.EndVertical();
+
+            for (int i = 0; i < lstIconOrder.Count; i++)
+            {
+                if (i>0)
+                {
+                    if (GUILayout.Button("<->",styleButton,GUILayout.Width(30)))
+                    {
+                        String strTemp = lstIconOrder[i];
+                        lstIconOrder[i] = lstIconOrder[i-1];
+                        lstIconOrder[i-1] = strTemp;
+                        SetIconOrder();
+                        SaveConfig();
+                    }
+                }
+                GUILayout.Label(IconOrderContent(lstIconOrder[i]),styleTextCenter,GUILayout.Width(40));
+            }
             GUILayout.EndHorizontal();
 
             //Staging
@@ -410,9 +580,38 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
+            SetTooltipText();
         }
 
+        private void SetIconOrder()
+        {
+            dictFirst = GetIconDict(lstIconOrder[0]);
+            dictSecond = GetIconDict(lstIconOrder[1]);
+            dictThird = GetIconDict(lstIconOrder[2]);
+        }
 
+        private Dictionary<String,Texture2D> GetIconDict(String Name)
+        {
+            switch (Name.ToLower())
+            {
+                case "ksparp": return texIconsKSPARP;
+                case "mod": return texIconsResourceDefs;
+                case "player": return texIconsPlayer;
+                default:
+                    return null;
+            }
+        }
+        private GUIContent IconOrderContent(String Name)
+        {
+            switch (Name.ToLower())
+            {
+                case "ksparp": return new GUIContent("ARP","Alternate Resource Panel");
+                case "mod": return new GUIContent("Mod", "Mod Resource Definition");
+                case "player": return new GUIContent("Player", "Players Icons");
+                default:
+                    return new GUIContent("ERROR", "");
+            }
+        }
         private Boolean IsMouseOver() 
         {
             //are we painting?
@@ -451,7 +650,8 @@ namespace KSPAlternateResourcePanel
 
         private void DrawToolTip()
         {
-            if (strToolTipText != "" && (fltTooltipTime < fltMaxToolTipTime))
+            //Added drawing check to turn off tooltips when window hides
+            if (Drawing && (strToolTipText != "") && (fltTooltipTime < fltMaxToolTipTime))
             {
                 GUIContent contTooltip = new GUIContent(strToolTipText);
                 if (!blnToolTipDisplayed || (strToolTipText != strLastTooltipText))
@@ -494,7 +694,49 @@ namespace KSPAlternateResourcePanel
         }
         #endregion
 
-        
+
+        #region "Control Drawing"
+        /// <summary>
+        /// Draws a Toggle Button and sets the boolean variable to the state of the button
+        /// </summary>
+        /// <param name="blnVar">Boolean variable to set and store result</param>
+        /// <param name="ButtonText"></param>
+        /// <param name="style"></param>
+        /// <param name="options"></param>
+        /// <returns>True when the button state has changed</returns>
+        public Boolean DrawToggle(ref Boolean blnVar, String ButtonText, GUIStyle style, params GUILayoutOption[] options)
+        {
+            Boolean blnReturn = GUILayout.Toggle(blnVar, ButtonText, style, options);
+
+            return ToggleResult(ref blnVar, ref  blnReturn);
+        }
+
+        public Boolean DrawToggle(ref Boolean blnVar, Texture image, GUIStyle style, params GUILayoutOption[] options)
+        {
+            Boolean blnReturn = GUILayout.Toggle(blnVar, image, style, options);
+
+            return ToggleResult(ref blnVar, ref blnReturn);
+        }
+
+        public Boolean DrawToggle(ref Boolean blnVar, GUIContent content, GUIStyle style, params GUILayoutOption[] options)
+        {
+            Boolean blnReturn = GUILayout.Toggle(blnVar, content, style, options);
+
+            return ToggleResult(ref blnVar, ref blnReturn);
+        }
+
+        private Boolean ToggleResult(ref Boolean Old, ref Boolean New)
+        {
+            if (Old != New)
+            {
+                Old = New;
+                DebugLogFormatted("Toggle Changed:" + New.ToString());
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         /// <summary>
         /// Some Structured logging to the debug file
         /// </summary>
@@ -504,29 +746,35 @@ namespace KSPAlternateResourcePanel
             Message = String.Format(Message, strParams);
             String strMessageLine = String.Format("{0},{2},{1}", DateTime.Now, Message, _ClassName);
             Debug.Log(strMessageLine);
-
         }
+
+
+#if DEBUG
+        private static int _WindowDebugID = 12345;
+        private static Rect _WindowDebugRect = new Rect(100, 130, 400, 200);
+#endif
+
     }
 
-
-    //[KSPAddon(KSPAddon.Startup.MainMenu, false)]
-    //public class Debug_AutoLoadPersistentSaveOnStartup : MonoBehaviour
-    //{
-    //    public static bool first = true;
-    //    public void Start()
-    //    {
-    //        if (first)
-    //        {
-    //            first = false;
-    //            HighLogic.SaveFolder = "default";
-    //            var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
-    //            if (game != null && game.flightState != null && game.compatible)
-    //            {
-    //                FlightDriver.StartAndFocusVessel(game, 6);
-    //            }
-    //            //CheatOptions.InfiniteFuel = true;
-    //        }
-    //    }
-    //}
-
+#if DEBUG
+    [KSPAddon(KSPAddon.Startup.MainMenu, false)]
+    public class Debug_AutoLoadPersistentSaveOnStartup : MonoBehaviour
+    {
+        public static bool first = true;
+        public void Start()
+        {
+            if (first)
+            {
+                first = false;
+                HighLogic.SaveFolder = "default";
+                var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
+                if (game != null && game.flightState != null && game.compatible)
+                {
+                    FlightDriver.StartAndFocusVessel(game, 6);
+                }
+                //CheatOptions.InfiniteFuel = true;
+            }
+        }
+    }
+#endif
 }

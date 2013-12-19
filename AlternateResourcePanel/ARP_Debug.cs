@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace KSPAlternateResourcePanel
 {
+#if DEBUG
     public partial class KSPAlternateResourcePanel
     {
         public void DebugActionTimed(GameScenes loadedscene)
@@ -139,14 +140,19 @@ namespace KSPAlternateResourcePanel
 
             //GUILayout.Label(Drawing.ToString());
             //GUILayout.Label(rectPanel.Contains(Event.current.mousePosition).ToString());
-            //GUILayout.Label(IsMouseOver().ToString());
+            GUILayout.Label(IsMouseOver().ToString());
+            GUILayout.Label(HoverOn.ToString());
+            GUILayout.Label(ToggleOn.ToString());
+            GUILayout.Label(Drawing.ToString());
 
+            GUILayout.Label(lstResources.Count.ToString());
             //GUILayout.Label(UTUpdatePassed.ToString("0.0000"));
-            GUILayout.Label(fltTooltipTime.ToString());
-            GUILayout.Label(strToolTipText);
+            //GUILayout.Label(fltTooltipTime.ToString());
+            //GUILayout.Label(strToolTipText);
 
             GUILayout.EndVertical();
             GUI.DragWindow();
         }
     }
+#endif
 }
