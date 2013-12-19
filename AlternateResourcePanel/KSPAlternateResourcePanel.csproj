@@ -35,13 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\~Games\KSP_win_PlugInTest\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\~Games\KSP_win_PlugInTest\KSP_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -52,67 +54,69 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ToolbarWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\AblativeShielding.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Actinides.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Aluminium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\AntiMatter.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Argon.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ArgonGas.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\CarbonDioxide.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\CO2.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\DepletedFuel.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\DepletedUranium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Deuterium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ElectricCharge.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\EnrichedUranium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ExoticMatter.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Food.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\HydrogenGas.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\IntakeAir.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\IntakeAtm.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Kethane.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\KIntakeAir.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\LiquidFuel.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\LiquidH2.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Lithium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\LqdMethane.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Megajoules.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Metal.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\MonoPropellant.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\O2 Candle.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\O2.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Ore.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Oxidizer.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Oxygen.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Polytetrafluoroethylene.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\RocketParts.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\RP.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Science.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\SolidFuel.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\StoredCharge.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ThermalPower.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\ThF4.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Tritium.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\UF4.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\VacuumPlasma.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Waste.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteHeat.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteWater.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\WasteWater2.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Water.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\Xenon.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons\XenonGas.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarBlue_Back.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_BarGreen_Back.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronDown.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonChevronUp.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_buttonSettingsAttention.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\img_PanelBack.png" />
-    <Content Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\txt_TooltipBackground.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\AblativeShielding.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Actinides.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Aluminium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\AntiMatter.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Argon.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\ArgonGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\CarbonDioxide.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\CO2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\DepletedFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\DepletedUranium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Deuterium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\ElectricCharge.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\EnrichedUranium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\ExoticMatter.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Food.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\HydrogenGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\IntakeAir.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\IntakeAtm.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Kethane.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\KIntakeAir.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\LiquidFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\LiquidH2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Lithium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\LqdMethane.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Megajoules.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Metal.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\MonoPropellant.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\O2 Candle.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\O2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Ore.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Oxidizer.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Oxygen.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Polytetrafluoroethylene.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\RocketParts.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\RP.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Science.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\SolidFuel.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\StoredCharge.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\ThermalPower.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\ThF4.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Tritium.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\UF4.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\VacuumPlasma.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Waste.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\WasteHeat.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\WasteWater.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\WasteWater2.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Water.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\Xenon.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons\XenonGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_BarBlue.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_BarBlue_Back.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_BarGreen.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_BarGreen_Back.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_buttonChevronDown.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_buttonChevronUp.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_buttonSettingsAttention.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\img_PanelBack.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\txt_TooltipBackground.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\ToolbarIcons\KSPARP.png" />
     <Content Include="PlugInFiles\info.txt" />
     <Content Include="PlugInFiles\ReadMe-KSPAlternateResourcePanel.txt" />
   </ItemGroup>
@@ -120,11 +124,13 @@
     <None Include="PluginBuilder\BuildKSPARPFiles.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\Icons-Player\" />
+    <Folder Include="PlugInFiles\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\" />
+    <Folder Include="PlugInFiles\GameData\TriggerTech\Textures\KSPAlternateResourcePanel\Icons-Player\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem Build deployment versions
+    <PostBuildEvent>if not $(ConfigurationName)==Debug goto END
+rem Build deployment versions
 
 if exist "C:\~Games\KSP_Win_PlugInTest\KSP.exe" (
 	set DestPath="C:\~Games\KSP_Win_PlugInTest\GameData\TriggerTech"
@@ -135,13 +141,11 @@ if exist "C:\~Games\KSP_Win_PlugInTest\KSP.exe" (
 )
 
 rem Need to copy all bits to plugin test game
-rem copy "$(TargetPath)" %25DestPath%25
+copy "$(TargetPath)" %25DestPath%25
 rem and then run the game
-rem %25Binary%25
+%25Binary%25
 
-rem copy "$(TargetPath)" "D:\~Games\KSP_Win_PlugInTest\GameData\TriggerTech"
-rem "D:\~Games\KSP_Win_PlugInTest\KSP.exe"
-</PostBuildEvent>
+:END</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
