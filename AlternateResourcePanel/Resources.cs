@@ -78,14 +78,14 @@ namespace KSPAlternateResourcePanel
             String strIconPath = string.Format("{0}/{1}", PathTextures, IconFolderName);
             String strIconDBPath = string.Format("{0}/{1}", DBPathTextures, IconFolderName);
 
-            DebugLogFormatted("{0}--{1}",strIconPath,strIconDBPath);
+            //DebugLogFormatted("{0}--{1}",strIconPath,strIconDBPath);
 
             if (Directory.Exists(strIconPath))
             {
                 FileInfo[] fileIcons = new System.IO.DirectoryInfo(strIconPath).GetFiles("*.png");
                 foreach (FileInfo fileIcon in fileIcons)
                 {
-                    DebugLogFormatted("{0}", fileIcon.FullName);
+                    //DebugLogFormatted("{0}", fileIcon.FullName);
                     try
                     {
                         texLoading = null;
@@ -207,7 +207,7 @@ namespace KSPAlternateResourcePanel
             {
                 if (FileName.ToLower().EndsWith(".png")) FileName = FileName.Substring(0, FileName.Length - 4);
                 if (FolderPath == "") FolderPath = DBPathTextures;
-                DebugLogFormatted("Loading {0}", String.Format("{0}/{1}", FolderPath, FileName));
+                //DebugLogFormatted("Loading {0}", String.Format("{0}/{1}", FolderPath, FileName));
                 tex = GameDatabase.Instance.GetTexture(String.Format("{0}/{1}", FolderPath, FileName), false);
                 blnReturn = true;
             }

@@ -140,6 +140,11 @@ namespace KSPAlternateResourcePanel
 
             //GUILayout.Label(Drawing.ToString());
             //GUILayout.Label(rectPanel.Contains(Event.current.mousePosition).ToString());
+            GUILayout.Label(BlizzyToolbarIsAvailable.ToString());
+            GUILayout.Label(UseBlizzyToolbarIfAvailable.ToString());
+            GUILayout.Label((BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable).ToString());
+            GUILayout.Label((!(BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable)).ToString());
+
             GUILayout.Label(IsMouseOver().ToString());
             GUILayout.Label(HoverOn.ToString());
             GUILayout.Label(ToggleOn.ToString());

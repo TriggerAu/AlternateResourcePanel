@@ -28,6 +28,11 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 1.2.1.0		-	KSP Version: 0.23
+- Added EVA Propellant
+- Added MFS Fuels
+- Fixed issue with onhover when KSP ARP button hidden
+
 Version 1.2.0.0		-	KSP Version: 0.23
 - 0.23 Recompile for new version of Unity
 - Added Option to choose to use Blizzies excellent toolbar - uses latebinding so no need to include DLL and no hard reference
