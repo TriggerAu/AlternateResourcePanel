@@ -614,6 +614,9 @@ namespace KSPAlternateResourcePanel
         }
         private Boolean IsMouseOver() 
         {
+            if ((BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable))
+                return false;
+
             //are we painting?
             Boolean blnRet = Event.current.type == EventType.Repaint;
 
