@@ -7,53 +7,115 @@ using System.IO;
 
 using KSP;
 using UnityEngine;
+using KSPPluginFramework;
 
 namespace KSPAlternateResourcePanel
 {
-    public partial class KSPAlternateResourcePanel
+    internal class Resources
     {
+        //WHERE SHOULD THESE BE???
+        internal static String PathApp = KSPUtil.ApplicationRootPath.Replace("\\", "/");
+        internal static String PathTriggerTech = string.Format("{0}GameData/TriggerTech", PathApp);
+        internal static String PathPlugin = string.Format("{0}/{1}", PathTriggerTech, KSPAlternateResourcePanel._AssemblyName);
+        internal static String PathPluginSounds = string.Format("{0}/Sounds", PathPlugin);
+        //internal static String PathPluginData = string.Format("{0}/Data", PathPlugin);
+        //internal static String PathPluginTextures = string.Format("{0}/Textures", PathPlugin);
 
-        static Boolean DrawStuffConfigured = false;
+        internal static String DBPathTriggerTech = string.Format("TriggerTech");
+        internal static String DBPathPlugin = string.Format("TriggerTech/{0}", KSPAlternateResourcePanel._AssemblyName);
+        internal static String DBPathToolbarIcons = string.Format("{0}/ToolbarIcons", DBPathPlugin);
+        internal static String DBPathTextures = string.Format("{0}/Textures", DBPathPlugin);
+        internal static String DBPathPluginSounds = string.Format("{0}/Sounds", DBPathPlugin);
 
-        public void SetupDrawStuff()
+        internal static Texture2D texPanel;
+        internal static Texture2D texBarBlue; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarBlue_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarGreen; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarGreen_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+
+        internal static Texture2D texBarHighlight; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+
+        internal static Texture2D btnChevronUp; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnChevronDown; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+
+        internal static Texture2D btnSettingsAttention; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+
+        internal static Texture2D texPartWindowHead;
+
+        //internal static Texture2D texTooltipBackground; // = new Texture2D(9, 9);//, TextureFormat.ARGB32, false);
+
+        internal static Texture2D btnAlarm;
+        internal static Texture2D btnAlarmEnabled;
+        internal static Texture2D btnAlarmWarn;
+        internal static Texture2D btnAlarmAlert;
+
+        internal static Texture2D btnDropDown;
+        internal static Texture2D btnPlay;
+        internal static Texture2D btnStop;
+
+        internal static Texture2D texBox;
+        internal static Texture2D texBoxUnity;
+
+        internal static Texture2D texSeparatorV;
+        internal static Texture2D texSeparatorH;
+
+        //Icon Libraries
+        internal static Dictionary<String, Texture2D> texIconsKSPARP;
+        internal static Dictionary<String, Texture2D> texIconsPlayer;
+        internal static Dictionary<String, Texture2D> texIconsResourceDefs;
+        
+        //Alarm Library
+        internal static Dictionary<String, AudioClip> clipAlarms;
+
+        internal static void LoadSounds()
         {
-            GUI.skin = HighLogic.Skin;
-            InitStyles();
+            MonoBehaviourExtended.LogFormatted("Loading Sounds");
 
-            SetGUIStyles();
-            SetButtonStyles();
+            clipAlarms = new Dictionary<string, AudioClip>();
+            clipAlarms.Add("None", null);
+            if (Directory.Exists(PathPluginSounds))
+            {
+                //get all the png and tga's
+                FileInfo[] fileClips = new System.IO.DirectoryInfo(PathPluginSounds).GetFiles("*.wav");
 
-            DrawStuffConfigured = true;
+                foreach (FileInfo fileClip in fileClips)
+                {
+                    try
+                    {
+                        //load the file from the GameDB
+                        AudioClip clipLoading = null;
+                        if (LoadAudioClipFromGameDB(ref clipLoading, fileClip.Name))
+                        {
+                            String ClipKey = fileClip.Name;
+                            if (ClipKey.ToLower().EndsWith(".wav"))
+                                ClipKey = ClipKey.Substring(0, ClipKey.Length - 4);
+                            clipAlarms.Add(ClipKey, clipLoading);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //MonoBehaviourExtended.LogFormatted("Unable to load AudioClip from GameDB:{0}/{1}", PathPluginSounds,fileClip.Name);
+                    }
+                }
+            }
+        
         }
 
-        public static Texture2D texPanel; // = new Texture2D(16, 16, TextureFormat.ARGB32, false);
-
-        public static Texture2D texBarBlue; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        public static Texture2D texBarBlue_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        public static Texture2D texBarGreen; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        public static Texture2D texBarGreen_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-
-        public static Texture2D btnChevronUp; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
-        public static Texture2D btnChevronDown; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
-
-        public static Texture2D btnSettingsAttention; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
-
-        public static Texture2D txtTooltipBackground; // = new Texture2D(9, 9);//, TextureFormat.ARGB32, false);
-
-        public static Dictionary<String, Texture2D> texIconsKSPARP;
-        public static Dictionary<String, Texture2D> texIconsPlayer;
-        public static Dictionary<String, Texture2D> texIconsResourceDefs;
-
-        void LoadTextures()
+        internal static void LoadTextures()
         {
-            DebugLogFormatted("Loading Textures");
+            MonoBehaviourExtended.LogFormatted("Loading Textures");
 
             texIconsKSPARP = LoadIconDictionary("Icons");
-            DebugLogFormatted("KSPARP Icons Loaded: {0}",texIconsKSPARP.Count.ToString());
+            MonoBehaviourExtended.LogFormatted("KSPARP Icons Loaded: {0}", texIconsKSPARP.Count.ToString());
             texIconsPlayer = LoadIconDictionary("Icons-Player");
-            DebugLogFormatted("Player Icons Loaded: {0}", texIconsPlayer.Count.ToString());
+            MonoBehaviourExtended.LogFormatted("Player Icons Loaded: {0}", texIconsPlayer.Count.ToString());
             texIconsResourceDefs = LoadIconDictionary_Defs();
-            DebugLogFormatted("Mod Definition Icons Loaded: {0}", texIconsResourceDefs.Count.ToString());
+            MonoBehaviourExtended.LogFormatted("Mod Definition Icons Loaded: {0}", texIconsResourceDefs.Count.ToString());
+
+            //Set the ordering arrays
+            dictFirst = texIconsKSPARP;
+            dictSecond = texIconsResourceDefs;
+            dictThird = texIconsPlayer;
 
             LoadImageFromGameDB(ref texPanel, "img_PanelBack.png");
 
@@ -62,69 +124,98 @@ namespace KSPAlternateResourcePanel
             LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.png");
             LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.png");
 
+            LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.tga");
+
             LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.png");
             LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.png");
 
             LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
 
-            LoadImageFromGameDB(ref txtTooltipBackground, "txt_TooltipBackground.png");
+            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.png");
+
+            //LoadImageFromGameDB(ref texTooltipBackground, "tex_TooltipBackground.png");
+
+            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.png");
+            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.png");
+            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.png");
+            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.png");
+
+            LoadImageFromGameDB(ref btnDropDown, "img_DropDown.tga");
+            LoadImageFromGameDB(ref btnPlay, "img_Play.tga");
+            LoadImageFromGameDB(ref btnStop, "img_Stop.tga");
+            //LoadImageFromGameDB(ref btnDropDownSep, "img_DropDownSep.tga");
+
+            //LoadImageFromGameDB(ref texDropDownListBox, "tex_DropDownListBox.tga");
+            //LoadImageFromGameDB(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.tga");
+
+            LoadImageFromGameDB(ref texBox, "tex_Box.tga");
+            LoadImageFromGameDB(ref texBoxUnity, "tex_BoxUnity.tga");
+
+            LoadImageFromGameDB(ref texSeparatorH , "img_SeparatorHorizontal.tga");
+            LoadImageFromGameDB(ref texSeparatorV, "img_SeparatorVertical.tga");
         }
+
+
 
         private static Dictionary<String, Texture2D> LoadIconDictionary(String IconFolderName)
         {
             Dictionary<String, Texture2D> dictReturn = new Dictionary<string, Texture2D>();
             Texture2D texLoading;
 
-            String strIconPath = string.Format("{0}/{1}", PathTextures, IconFolderName);
-            String strIconDBPath = string.Format("{0}/{1}", DBPathTextures, IconFolderName);
-
-            //DebugLogFormatted("{0}--{1}",strIconPath,strIconDBPath);
+            //Where are the Icons
+            String strIconPath = string.Format("{0}/{1}", PathPlugin, IconFolderName);
+            String strIconDBPath = string.Format("{0}/{1}", DBPathPlugin, IconFolderName);
 
             if (Directory.Exists(strIconPath))
             {
-                FileInfo[] fileIcons = new System.IO.DirectoryInfo(strIconPath).GetFiles("*.png");
+                //get all the png and tga's
+                FileInfo[] fileIconsPNG = new System.IO.DirectoryInfo(strIconPath).GetFiles("*.png");
+                FileInfo[] fileIconsTGA = new System.IO.DirectoryInfo(strIconPath).GetFiles("*.tga");
+                FileInfo[] fileIcons = fileIconsPNG.Concat(fileIconsTGA).ToArray();
+
                 foreach (FileInfo fileIcon in fileIcons)
                 {
-                    //DebugLogFormatted("{0}", fileIcon.FullName);
                     try
                     {
+                        //load the file from the GameDB
                         texLoading = null;
                         if (LoadImageFromGameDB(ref texLoading, fileIcon.Name, strIconDBPath))
-                            dictReturn.Add(fileIcon.Name.ToLower().Replace(".png", ""), texLoading);
-                        //texLoading = GameDatabase.Instance.GetTexture(string.Format("{0}/{1}", strIconDBPath, fileIcon.Name.ToLower().Replace(".png", "")), false);
-                        //dictReturn.Add(fileIcon.Name.ToLower().Replace(".png", ""), texLoading);
+                            dictReturn.Add(fileIcon.Name.ToLower().Replace(".png", "").Replace(".tga", ""), texLoading);
                     }
                     catch (Exception)
                     {
-                        DebugLogFormatted("Unable to load Texture from GameDB:{0}", strIconPath);
+                        MonoBehaviourExtended.LogFormatted("Unable to load Texture from GameDB:{0}", strIconPath);
                     }
-                    //texLoading; // = new Texture2D(32, 16, TextureFormat.ARGB32, false);
-                    //if (LoadImageIntoTexture2(ref texLoading, fileIcon.Name, strIconPath))
-                    //    dictReturn.Add(fileIcon.Name.ToLower().Replace(".png", ""), texLoading);
                 }
             }
             return dictReturn;
         }
 
+        /// <summary>
+        /// This one gets all the icons named in the resource definitions
+        /// </summary>
+        /// <returns></returns>
         private static Dictionary<String, Texture2D> LoadIconDictionary_Defs()
         {
             Dictionary<String, Texture2D> dictReturn = new Dictionary<string, Texture2D>();
             Texture2D texLoading;
 
+            //Find All the RESOURCE_DEFINITION Nodes
             ConfigNode[] cns = GameDatabase.Instance.GetConfigNodes("RESOURCE_DEFINITION");
-            //DebugLogFormatted(cns.Length.ToString());
             foreach (ConfigNode cn in cns)
             {
                 if (cn.HasValue("name"))
                 {
                     if (cn.HasValue("ksparpicon"))
                     {
+                        //If it has a name and a ksparpicon
                         try
                         {
+                            //lead the Texture from the GameDB
                             texLoading = GameDatabase.Instance.GetTexture(cn.GetValue("ksparpicon"), false);
                             if ((texLoading.width > 32) || (texLoading.height > 16))
                             {
-                                DebugLogFormatted("Texture Too Big (32x16 is limit) - w:{0} h:{1}", texLoading.width, texLoading.height);
+                                MonoBehaviourExtended.LogFormatted("Texture Too Big (32x16 is limit) - w:{0} h:{1}", texLoading.width, texLoading.height);
                             }
                             else
                             {
@@ -133,7 +224,7 @@ namespace KSPAlternateResourcePanel
                         }
                         catch (Exception)
                         {
-                            DebugLogFormatted("Unable to load texture {0}-{1}", cn.GetValue("name"), cn.GetValue("ksparpicon"));
+                            MonoBehaviourExtended.LogFormatted("Unable to load texture {0}-{1}", cn.GetValue("name"), cn.GetValue("ksparpicon"));
                         }
                     }
                 }
@@ -142,291 +233,91 @@ namespace KSPAlternateResourcePanel
             return dictReturn;
         }
 
-        //public static Byte[] LoadFileToArray(String Filename)
-        //{
-        //    Byte[] arrBytes;
+        internal static Dictionary<String, Texture2D> dictFirst = texIconsKSPARP;
+        internal static Dictionary<String, Texture2D> dictSecond = texIconsResourceDefs;
+        internal static Dictionary<String, Texture2D> dictThird = texIconsPlayer;
 
-        //    arrBytes = KSP.IO.File.ReadAllBytes<KSPAlternateResourcePanel>(Filename);
-
-        //    return arrBytes;
-        //}
-        public static Byte[] LoadFileToArray2(String Filename)
+        internal static void SetIconOrder(Settings settings)
         {
-            Byte[] arrBytes;
-
-            arrBytes = System.IO.File.ReadAllBytes(Filename);
-
-            return arrBytes;
+            dictFirst = GetIconDict(settings.lstIconOrder[0]);
+            dictSecond = GetIconDict(settings.lstIconOrder[1]);
+            dictThird = GetIconDict(settings.lstIconOrder[2]);
         }
 
-        //public static void SaveFileFromArray(Byte[] data, String Filename)
-        //{
-        //    KSP.IO.File.WriteAllBytes<KSPAlternateResourcePanel>(data, Filename);
-        //}
-
-
-        //public static Boolean LoadImageIntoTexture(ref Texture2D tex, String FileName)
-        //{
-        //    Boolean blnReturn = false;
-        //    try
-        //    {
-        //        //DebugLogFormatted("Loading {0}", FileName);
-        //        tex.LoadImage(LoadFileToArray(FileName));
-        //        blnReturn = true;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        DebugLogFormatted("Failed to load (are you missing a file):{0}", FileName);
-        //    }
-        //    return blnReturn;
-        //}
-
-        public static Boolean LoadImageIntoTexture2(ref Texture2D tex, String FileName, String FolderPath = "")
+        internal static Dictionary<String, Texture2D> GetIconDict(String Name)
         {
-            //DebugLogFormatted("{0},{1}",FileName, FolderPath);
+            switch (Name.ToLower())
+            {
+                case "ksparp": return texIconsKSPARP;
+                case "mod": return texIconsResourceDefs;
+                case "player": return texIconsPlayer;
+                default:
+                    return null;
+            }
+        }
+        internal static GUIContent IconOrderContent(String Name)
+        {
+            switch (Name.ToLower())
+            {
+                case "ksparp": return new GUIContent("ARP", "Alternate Resource Panel");
+                case "mod": return new GUIContent("Mod", "Mod Resource Definition");
+                case "player": return new GUIContent("Player", "Players Icons");
+                default:
+                    return new GUIContent("ERROR", "");
+            }
+        }
+
+        #region Util Stuff
+        internal static Boolean LoadImageFromGameDB(ref Texture2D tex, String FileName, String FolderPath = "")
+        {
             Boolean blnReturn = false;
             try
             {
-                if (FolderPath == "") FolderPath = PathPluginData;
-                //DebugLogFormatted("Loading {0}", FileName);
-                tex.LoadImage(LoadFileToArray2(string.Format("{0}/{1}", FolderPath, FileName)));
-                blnReturn = true;
-            }
-            catch (Exception)
-            {
-                DebugLogFormatted("Failed to load (are you missing a file):{0}", FileName);
-            }
-            return blnReturn;
-        }
-
-        public static Boolean LoadImageFromGameDB(ref Texture2D tex, String FileName, String FolderPath = "")
-        {
-            //DebugLogFormatted("{0},{1}",FileName, FolderPath);
-            Boolean blnReturn = false;
-            try
-            {
+                //trim off the tga and png extensions
                 if (FileName.ToLower().EndsWith(".png")) FileName = FileName.Substring(0, FileName.Length - 4);
+                if (FileName.ToLower().EndsWith(".tga")) FileName = FileName.Substring(0, FileName.Length - 4); 
+                //default folder
                 if (FolderPath == "") FolderPath = DBPathTextures;
-                //DebugLogFormatted("Loading {0}", String.Format("{0}/{1}", FolderPath, FileName));
+
+                //Look for case mismatches
+                if (!GameDatabase.Instance.ExistsTexture(String.Format("{0}/{1}", FolderPath, FileName)))
+                    throw new Exception();
+                
+                //now load it
                 tex = GameDatabase.Instance.GetTexture(String.Format("{0}/{1}", FolderPath, FileName), false);
                 blnReturn = true;
             }
             catch (Exception)
             {
-                DebugLogFormatted("Failed to load (are you missing a file):{0}/{1}", String.Format("{0}/{1}", FolderPath, FileName));
+                MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file - and check case):{0}/{1}", FolderPath, FileName);
             }
             return blnReturn;
         }
 
-        public static GUIStyle styleButton;
-        public static GUIStyle styleButtonMain;
-        public static GUIStyle styleButtonSettings;
-
-        public static GUIStyle stylePanel;
-
-        public static GUIStyle styleBarName;
-        public static GUIStyle styleBarDef;
-
-        public static GUIStyle styleBarBlue;
-        public static GUIStyle styleBarBlue_Back;
-        public static GUIStyle styleBarBlue_Thin;
-        public static GUIStyle styleBarGreen;
-        public static GUIStyle styleBarGreen_Back;
-        public static GUIStyle styleBarGreen_Thin;
-
-        public static GUIStyle styleTextCenter;
-        public static GUIStyle styleTextCenterGreen;
-
-        public static GUIStyle styleBarText;
-        public static GUIStyle styleBarRateText;
-
-        public static GUIStyle styleStageText;
-        public static GUIStyle styleStageTextHead;
-        public static GUIStyle styleStageButton;
-
-        public static GUIStyle styleTooltipStyle;
-
-        public static GUIStyle styleToggle;
-
-        public static GUIStyle styleSettingsArea;
-
-        void InitStyles()
+        internal static Boolean LoadAudioClipFromGameDB(ref AudioClip clip, String FileName, String FolderPath = "")
         {
-            DebugLogFormatted("Configuring Styles");
-            styleButton = new GUIStyle(GUI.skin.button);
-            styleButton.normal.background = HighLogic.Skin.button.normal.background;
-            styleButton.hover.background = HighLogic.Skin.button.hover.background;
-            styleButton.normal.textColor = new Color(207, 207, 207);
-            styleButton.fontStyle = FontStyle.Normal;
-            styleButton.fixedHeight = 18;
-            //styleButton.alignment = TextAnchor.MiddleCenter;
+            Boolean blnReturn = false;
+            try
+            {
+                //trim off the tga and png extensions
+                if (FileName.ToLower().EndsWith(".wav")) FileName = FileName.Substring(0, FileName.Length - 4);
+                //default folder
+                if (FolderPath == "") FolderPath = DBPathPluginSounds;
 
-            styleButtonMain = new GUIStyle(styleButton);
-            styleButtonMain.fixedHeight = 20;
+                //Look for case mismatches
+                if (!GameDatabase.Instance.ExistsAudioClip(String.Format("{0}/{1}", FolderPath, FileName)))
+                    throw new Exception();
 
-            styleButtonSettings = new GUIStyle(styleButton);
-            styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
-            styleButtonSettings.fixedWidth = 40;
-
-            stylePanel = new GUIStyle();
-            stylePanel.border = new RectOffset(6, 6, 6, 6);
-            stylePanel.normal.background = texPanel;
-            stylePanel.padding = new RectOffset(8, 4, 7, 0);
-
-            styleBarName = new GUIStyle() { fixedHeight = 16, fixedWidth = 32 };
-            styleBarName.normal.textColor = Color.white;
-            styleBarName.alignment = TextAnchor.MiddleCenter;
-
-            styleBarDef = new GUIStyle(GUI.skin.box);
-            styleBarDef.border = new RectOffset(2, 2, 2, 2);
-            styleBarDef.normal.textColor = Color.white;
-
-            styleBarBlue = new GUIStyle(styleBarDef);
-            styleBarBlue.normal.background = texBarBlue;
-            styleBarBlue_Back = new GUIStyle(styleBarDef);
-            styleBarBlue_Back.normal.background = texBarBlue_Back;
-            styleBarBlue_Thin = new GUIStyle(styleBarBlue);
-            styleBarBlue_Thin.border = new RectOffset(0, 0, 0, 0);
-            styleBarGreen = new GUIStyle(styleBarDef);
-            styleBarGreen.normal.background = texBarGreen;
-            styleBarGreen_Back = new GUIStyle(styleBarDef);
-            styleBarGreen_Back.normal.background = texBarGreen_Back;
-            styleBarGreen_Thin = new GUIStyle(styleBarGreen);
-            styleBarGreen_Thin.border = new RectOffset(0, 0, 0, 0);
-
-            styleBarText = new GUIStyle(GUI.skin.label);
-            styleBarText.fontSize = 12;
-            styleBarText.alignment = TextAnchor.MiddleCenter;
-            styleBarText.normal.textColor = new Color(255, 255, 255, 0.8f);
-            styleBarText.wordWrap = false;
-
-            styleBarRateText = new GUIStyle(styleBarText);
-            styleBarRateText.alignment = TextAnchor.MiddleRight;
-
-
-            styleTextCenter = new GUIStyle(GUI.skin.label);
-            styleTextCenter.alignment = TextAnchor.MiddleCenter;
-            styleTextCenter.wordWrap = false;
-            styleTextCenter.normal.textColor = new Color(207, 207, 207);
-
-            styleTextCenterGreen = new GUIStyle(styleTextCenter);
-            styleTextCenterGreen.normal.textColor = new Color32(183, 254, 0, 255);
-            
-            styleStageText = new GUIStyle(GUI.skin.label);
-            styleStageText.normal.textColor = new Color(207, 207, 207);
-            styleStageText.wordWrap = false;
-
-            styleStageTextHead = new GUIStyle(styleStageText);
-            styleStageTextHead.fontStyle = FontStyle.Bold;
-            styleStageTextHead.wordWrap = false;
-
-            styleStageButton = new GUIStyle(styleButton);
-
-            styleToggle = new GUIStyle(HighLogic.Skin.toggle);
-            styleToggle.normal.textColor = new Color(207, 207, 207);
-            styleToggle.fixedHeight = 20;
-            styleToggle.padding = new RectOffset(6, 0, -2, 0);
-
-            styleSettingsArea = new GUIStyle(HighLogic.Skin.textArea);
-            styleSettingsArea.padding = new RectOffset(0, 0, 0, 4);
-
-            styleTooltipStyle = new GUIStyle();
-            styleTooltipStyle.fontSize = 12;
-            styleTooltipStyle.normal.textColor = new Color32(207, 207, 207, 255);
-            styleTooltipStyle.stretchHeight = true;
-            styleTooltipStyle.wordWrap = true;
-            styleTooltipStyle.normal.background = txtTooltipBackground;
-            //Extra border to prevent bleed of color - actual border is only 1 pixel wide
-            styleTooltipStyle.border = new RectOffset(3, 3, 3, 3);
-            styleTooltipStyle.padding = new RectOffset(4, 4, 6, 4);
-            styleTooltipStyle.alignment = TextAnchor.MiddleCenter;
-
+                //now load it
+                clip = GameDatabase.Instance.GetAudioClip(String.Format("{0}/{1}", FolderPath, FileName));
+                blnReturn = true;
+            }
+            catch (Exception)
+            {
+                MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file - and check case):{0}/{1}", FolderPath, FileName);
+            }
+            return blnReturn;
         }
-
-        void SetStylesUnity()
-        {
-            DebugLogFormatted("Updating to Unity Styles");
-
-            SetStylesUnityButtons();
-
-            stylePanel = GUI.skin.box;
-            stylePanel.border = new RectOffset(6, 6, 6, 6);
-            stylePanel.padding = new RectOffset(8, 4, 7, 0);
-
-            styleTooltipStyle.normal.background = GUI.skin.box.normal.background;
-            styleTooltipStyle.normal.textColor = Color.white;
-        }
-
-        private static void SetStylesUnityButtons()
-        {
-            styleButton = new GUIStyle(GUI.skin.button);
-            styleButton.normal.background = GUI.skin.button.normal.background;
-            styleButton.hover.background = GUI.skin.button.hover.background;
-            styleButton.normal.textColor = new Color(207, 207, 207);
-            styleButton.fontStyle = FontStyle.Normal;
-            styleButton.fixedHeight = 18;
-            //styleButton.alignment = TextAnchor.MiddleCenter;
-
-            styleButtonMain = new GUIStyle(styleButton);
-            styleButtonMain.fixedHeight = 20;
-
-            styleButtonSettings = new GUIStyle(styleButton);
-            styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
-            styleButtonSettings.fixedWidth = 40;
-
-            styleStageButton = new GUIStyle(styleButton);
-        }
-
-        void SetStylesKSP()
-        {
-            DebugLogFormatted("Updating to KSP Styles");
-
-            SetStylesKSPButtons();
-
-            stylePanel = new GUIStyle();
-            stylePanel.border = new RectOffset(6, 6, 6, 6);
-            stylePanel.normal.background = texPanel;
-            stylePanel.padding = new RectOffset(8, 4, 7, 0);
-
-            styleTooltipStyle.normal.background = txtTooltipBackground;
-        }
-
-        private static void SetStylesKSPButtons()
-        {
-            styleButton = new GUIStyle(GUI.skin.button);
-            styleButton.normal.background = HighLogic.Skin.button.normal.background;
-            styleButton.hover.background = HighLogic.Skin.button.hover.background;
-            styleButton.normal.textColor = new Color(207, 207, 207);
-            styleButton.fontStyle = FontStyle.Normal;
-            styleButton.fixedHeight = 18;
-            //styleButton.alignment = TextAnchor.MiddleCenter;
-
-            styleButtonMain = new GUIStyle(styleButton);
-            styleButtonMain.fixedHeight = 20;
-
-            styleButtonSettings = new GUIStyle(styleButton);
-            styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
-            styleButtonSettings.fixedWidth = 40;
-
-            styleStageButton = new GUIStyle(styleButton);
-        }
-
-        private void SetGUIStyles()
-        {
-            if (blnKSPStyle)
-                SetStylesKSP();
-            else
-                SetStylesUnity();
-        }
-
-        private void SetButtonStyles()
-        {
-            if (blnKSPStyleButtons)
-                SetStylesKSPButtons();
-            else
-                SetStylesUnityButtons();
-        }
-
-        
+        #endregion
     }
 }

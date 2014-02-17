@@ -20,6 +20,7 @@ namespace KSPAlternateResourcePanel
         private Boolean DrawingSettings = false;    //Am I drawing the Settings Bit
         private static String _ClassName = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name;
 
+        internal static System.Random rnd;
         /// <summary>
         /// Class Initializer
         /// </summary>
@@ -36,7 +37,10 @@ namespace KSPAlternateResourcePanel
         {
             DebugLogFormatted("Awakening the {0}", _ClassName);
 
-            System.Random rnd = new System.Random();
+            //Settings s = new Settings();
+            //s.Save();
+
+            rnd = new System.Random();
             _WindowMainID = rnd.Next(1000, 2000000);
             _WindowSettingsID = rnd.Next(1000, 2000000);
 
@@ -139,8 +143,8 @@ namespace KSPAlternateResourcePanel
         public void Update()
         {
             //TODO:Disable this one
-            //if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F8))
-            //    DebugActionTriggered(HighLogic.LoadedScene);
+            if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.F8))
+                DebugActionTriggered(HighLogic.LoadedScene);
 
             //Activate Stage via Space Bar in MapView
             if (blnStagingSpaceInMapView && MapView.MapIsEnabled && Drawing && Input.GetKey(KeyCode.Space))
@@ -148,13 +152,22 @@ namespace KSPAlternateResourcePanel
 
         }
 
-        private static int _WindowMainID = 0;
-        private static Rect _WindowMainRect = new Rect(Screen.width - 298, 19, 299, 20);
-        private static int _WindowMainHeight = 30;
+        public void OnFixedUpdate()
+        {
+            if (lstPartWindows.Count>0)
+            {
+                //raycast test from camera to each part
 
-        private static int _WindowSettingsID = 0;
-        private static Rect _WindowSettingsRect = new Rect(Screen.width - 298, 200, 299, 200);
-        private static int _WindowSettingsHeight = 238;
+                //create the ray
+                //Origin is camera, direction is the camera minus the part
+
+                //test against part collider
+
+                //test against all colliders and see if the part is the one thats hit
+
+
+            }
+        }
 
         private static Boolean ShowSettings = false;
         private static Boolean blnResetWindow = false;
@@ -211,33 +224,24 @@ namespace KSPAlternateResourcePanel
 
                 if (ShowSettings)
                 {
-                    //_WindowSettingsHeight = 230 + intTest;
-                    Rect SettingsWindowPos = new Rect(_WindowMainRect) {y = _WindowMainRect.y+_WindowMainRect.height-2, height=_WindowSettingsHeight};
-
-                    if (!blnKSPStyle) SettingsWindowPos.y += 1;
-
-                    //Nowfit it in the screen and move it around as the main window moves around 
-                    if (Screen.height < SettingsWindowPos.y + SettingsWindowPos.height)
-                    {
-                        if (0 < SettingsWindowPos.x - SettingsWindowPos.width)
-                        {
-                            SettingsWindowPos.x = _WindowMainRect.x - _WindowMainRect.width + 2;
-                            if (!blnKSPStyle) SettingsWindowPos.x -= 1;
-                            SettingsWindowPos.y = Mathf.Clamp(_WindowMainRect.y, 0, Screen.height - SettingsWindowPos.height + 1);
-                        }
-                        else //if (Screen.width < SettingsWindowPos.x + SettingsWindowPos.width)
-                        {
-                            SettingsWindowPos.x = _WindowMainRect.x + _WindowMainRect.width - 2;
-                            if (!blnKSPStyle) SettingsWindowPos.x += 1;
-                            SettingsWindowPos.y = Mathf.Clamp(_WindowMainRect.y, 0, Screen.height - SettingsWindowPos.height + 1);
-                        }
-                    }
+                    Rect SettingsWindowPos = SetSettingsPosition();
 
                     _WindowSettingsRect=GUILayout.Window(_WindowSettingsID, SettingsWindowPos, FillSettingsWindow, "", stylePanel);
 
                     DrawingSettings = true;
                 }
 
+
+                if (lstPartWindows.Count>0)
+                {
+                    vectVesselCOMScreen = Camera.main.WorldToScreenPoint(FlightGlobals.ActiveVessel.findWorldCenterOfMass());
+
+                    DrawPartWindows();
+                }
+
+#if DEBUG
+                _WindowDebugRect = GUILayout.Window(_WindowDebugID, _WindowDebugRect, FillDebugWindow, "Debug");
+#endif
             }
             else
             {
@@ -246,372 +250,14 @@ namespace KSPAlternateResourcePanel
                 ShowSettings = false;
             }
 
-#if DEBUG
-            _WindowDebugRect = GUILayout.Window(_WindowDebugID, _WindowDebugRect, FillDebugWindow, "Debug");
-#endif
             DrawToolTip();
         }
 
-        Rect ClampToScreen(Rect r)
-        {
-            r.x = Mathf.Clamp(r.x, -1, Screen.width - r.width+1);
-            r.y = Mathf.Clamp(r.y, -1, Screen.height - r.height+1);
-            return r;
-        }
 
         int intLineHeight = 20;
         static Rect rectButton = new Rect(Screen.width - 109, 0, 80, 30);
 
-        Dictionary<String, Texture2D> dictFirst = texIconsKSPARP;
-        Dictionary<String, Texture2D> dictSecond = texIconsResourceDefs;
-        Dictionary<String, Texture2D> dictThird = texIconsPlayer;
 
-        private void FillWindow(int WindowHandle)
-        {
-            GUILayout.BeginVertical();
-
-            float fltBarRemainRatio;
-            float fltBarRemainStageRatio;
-
-            //What will the height of the panel be
-            _WindowMainHeight = ((lstResources.Count + 1) * intLineHeight) + 12;
-
-            Rect rectBar;
-            //Now draw the main panel
-            for (int i = 0; i < lstResources.Count; i++)
-            {
-                if (i > 0) GUILayout.Space(4);
-                GUILayout.BeginHorizontal();
-                //add title
-                GUIContent contLabel;
-                    
-                if (dictFirst.ContainsKey(lstResources[i].Resource.name.ToLower()))
-                {
-                    contLabel = new GUIContent(dictFirst[lstResources[i].Resource.name.ToLower()]);
-                }
-                else if (dictSecond.ContainsKey(lstResources[i].Resource.name.ToLower()))
-                {
-                    contLabel = new GUIContent(dictSecond[lstResources[i].Resource.name.ToLower()]);
-                }
-                else if (dictThird.ContainsKey(lstResources[i].Resource.name.ToLower()))
-                {
-                    contLabel = new GUIContent(dictThird[lstResources[i].Resource.name.ToLower()]);
-                }
-                else
-                {
-                    contLabel = new GUIContent(System.Text.RegularExpressions.Regex.Replace(lstResources[i].Resource.name, "[^A-Z]", ""));
-                    if (lstResources[i].Resource.name.Length < 5) 
-                        contLabel.text = lstResources[i].Resource.name;
-                    else if (contLabel.text.Length<2)
-                        contLabel.text = lstResources[i].Resource.name.Substring(0,3) + "...";
-                }
-
-                contLabel.tooltip = lstResources[i].Resource.name;
-                GUILayout.Label(contLabel, styleBarName);
-
-                GUILayout.Space(4);
-
-                //set ration for remaining resource value
-                fltBarRemainRatio = (float)lstResources[i].Amount / (float)lstResources[i].MaxAmount;
-
-                //For resources with no stage specifics
-                if (lstResources[i].Resource.resourceFlowMode == ResourceFlowMode.ALL_VESSEL)
-                {
-                    //full width bar
-                    rectBar=DrawBar(i, styleBarGreen_Back, 245);
-                    if ((rectBar.width * fltBarRemainRatio) > 1)
-                        DrawBarScaled(rectBar, i, styleBarGreen, styleBarGreen_Thin, fltBarRemainRatio);
-
-                    //add amounts
-                    DrawUsage(rectBar, i, lstResources[i].Amount, lstResources[i].MaxAmount);
-                    //add rate
-                    if (blnShowInstants) DrawRate(rectBar, i, lstResources[i].Rate);
-                }
-                else
-                {
-                    //need full Vessel and current stage bars
-                    rectBar = DrawBar( i, styleBarGreen_Back,120);
-                    if ((rectBar.width * fltBarRemainRatio) > 1)
-                        DrawBarScaled(rectBar, i, styleBarGreen, styleBarGreen_Thin, fltBarRemainRatio);
-
-                    //add amounts
-                    DrawUsage(rectBar, i, lstResources[i].Amount, lstResources[i].MaxAmount);
-                    //add rate
-                    if (blnShowInstants) DrawRate(rectBar, i, lstResources[i].Rate);
-
-                    GUILayout.Space(1);
-                    ////get last stage of this resource and set it
-                    arpResource resTemp = lstResourcesLastStage.FirstOrDefault(x => x.Resource.id == lstResources[i].Resource.id);
-                    if (resTemp != null)
-                    {
-                        fltBarRemainStageRatio = (float)resTemp.Amount / (float)resTemp.MaxAmount;
-                        rectBar=DrawBar( i, styleBarBlue_Back,120);
-                        if ((rectBar.width * fltBarRemainStageRatio) > 1)
-                            DrawBarScaled(rectBar, i, styleBarBlue, styleBarBlue_Thin, fltBarRemainStageRatio);
-
-                        //add amounts
-                        DrawUsage(rectBar, i, resTemp.Amount, resTemp.MaxAmount);
-                        //add rate
-                        if (blnShowInstants) DrawRate(rectBar, i, resTemp.Rate);
-                    }
-                }
-
-
-                GUILayout.EndHorizontal();
-                    
-            }
-            GUILayout.BeginHorizontal();
-            ////STAGING STUFF
-            if (blnStaging)
-            {
-                GUILayout.Label("Stage:", styleStageTextHead, GUILayout.Width(60));
-                GUIStyle styleStageNum = new GUIStyle(styleStageTextHead);
-                GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString());
-                //styleStageNum.normal.textColor=new Color(173,43,43);
-                //GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString(),"NO Active Engines");
-                //if (THERE ARE ACTIVE ENGINES IN STAGE)
-                //{
-                //contStageNum.tooltip="Active Engines";
-                styleStageNum.normal.textColor = new Color(117, 206, 60);
-                //}
-
-                GUILayout.Label(contStageNum, styleStageNum ,GUILayout.Width(40));
-
-                if (blnStagingInMapView || !MapView.MapIsEnabled)
-                {
-                    if (GUILayout.Button("Activate Stage", styleStageButton,GUILayout.Width(100)))
-                        Staging.ActivateNextStage();
-                }
-
-            }
-
-            //rectChevron.y = rectPanel.y + rectPanel.height - rectChevron.height - 2;
-            GUILayout.FlexibleSpace();
-            GUIContent btnMinMax = new GUIContent(btnChevronDown, "Show Settings...");
-            if (ShowSettings) { btnMinMax.image = btnChevronUp; btnMinMax.tooltip = "Hide Settings"; }
-            if (GUILayout.Button( btnMinMax, styleButtonSettings))
-            {
-                ShowSettings = !ShowSettings;
-                SaveConfig();
-            }
-
-            GUILayout.EndHorizontal();
-            
-            
-            GUILayout.EndVertical();
-
-            SetTooltipText();
-            if (!blnLockLocation)
-                GUI.DragWindow();
-        }
-
-        private Rect DrawBar(int Row, GUIStyle Style, int Width = 0, int Height = 0)
-        {
-            List<GUILayoutOption> Options = new List<GUILayoutOption>() ;
-            if (Width == 0) Options.Add(GUILayout.ExpandWidth(true));
-            else Options.Add(GUILayout.Width(Width));
-            if (Height != 0) Options.Add(GUILayout.Height(Height));
-            GUILayout.Label("", Style,Options.ToArray());
-
-            return GUILayoutUtility.GetLastRect();
-        }
-
-        private void DrawBar(Rect rectStart, int Row, GUIStyle Style)
-        {
-            GUI.Label(rectStart, "", Style);
-        }
-
-        private void DrawBarScaled(Rect rectStart, int Row, GUIStyle Style, GUIStyle StyleNarrow, float Scale)
-        {
-            Rect rectTemp = new Rect(rectStart);
-            rectTemp.width=(float)Math.Ceiling(rectTemp.width = rectTemp.width * Scale);
-            if (rectTemp.width <= 2) Style = StyleNarrow;
-            GUI.Label(rectTemp, "", Style);
-        }
-
-        private void DrawUsage(Rect rectStart, int Row, double Amount, double MaxAmount)
-        {
-            Rect rectTemp = new Rect(rectStart);
-
-            if (blnShowInstants && (rectStart.width<180)) rectTemp.width = (rectTemp.width * 2 / 3);
-            rectTemp.x -= 20;
-            rectTemp.width += 40;
-
-            GUI.Label(rectTemp, string.Format("{0} / {1}", DisplayValue(Amount), DisplayValue(MaxAmount)), styleBarText);
-        }
-
-        private void DrawRate(Rect rectStart, int Row, double Rate)
-        {
-            Rect rectTemp = new Rect(rectStart) { width = rectStart.width - 2 };
-            GUI.Label(rectTemp, string.Format("({0})", DisplayValue(Rate)), styleBarRateText);
-        }
-
-        private string DisplayValue(Double Amount)
-        {
-            String strFormat = "{0:0}";
-            if (Amount<100) 
-                strFormat = "{0:0.00}";
-            return string.Format(strFormat, Amount);
-        }
-
-        private void FillSettingsWindow(int windowHandle)
-        {
-            //styleSettingsArea.padding = new RectOffset(intTest, intTest2, intTest3, intTest4);
-            //styleToggle.padding = new RectOffset(intTest5, intTest6, intTest7, intTest8);
-
-            //General
-            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("General:", styleStageTextHead);
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            blnShowInstants = GUILayout.Toggle(blnShowInstants, "Show Rate Change Values", styleToggle);
-
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
-
-            //Styling
-            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282),GUILayout.Height(0));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Styling:", styleStageTextHead);
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-            if (DrawToggle(ref blnKSPStyle, "KSP Panels", styleToggle,GUILayout.Width(100)))
-            {
-                SetGUIStyles();
-                if (!blnKSPStyle) blnKSPStyleButtons = false;
-                SaveConfig();
-            }
-            if (!blnKSPStyle)
-            {
-                if (DrawToggle(ref blnKSPStyleButtons, "KSP Buttons", styleToggle))
-                {
-                    SetButtonStyles();
-                    SaveConfig();
-                }
-            }
-            GUILayout.EndHorizontal();
-
-            if (BlizzyToolbarIsAvailable)
-            {
-                if (DrawToggle(ref UseBlizzyToolbarIfAvailable, new GUIContent ("Use Common Toolbar", "Choose to use the Common  Toolbar or the native KSP ARP button"),styleToggle))
-                {
-                    if (BlizzyToolbarIsAvailable)
-                    {
-                        if (UseBlizzyToolbarIfAvailable)
-                            btnToolbar = InitToolbarButton();
-                        else
-                            DestroyToolbarButton(btnToolbar);
-                    }
-                    SaveConfig();
-                }
-            }
-            else
-            {
-                //GUILayout.BeginHorizontal();
-                //GUILayout.Label("Get the Common Toolbar:", styleStageTextHead);
-                //GUILayout.FlexibleSpace();
-                //if (GUILayout.Button("Click here", styleTextCenterGreen))
-                //    Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
-                //GUILayout.EndHorizontal();
-
-
-                if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), styleTextCenterGreen))
-                    Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
-            }
-
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
-
-            //Visuals
-            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Visuals:", styleStageTextHead);
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            if(DrawToggle(ref blnLockLocation, "Lock Window Position", styleToggle))
-                SaveConfig();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save Position", styleButton))
-                SaveConfig();
-            if (GUILayout.Button("Reset Position", styleButton))
-                blnResetWindow = true;
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
-
-            //Icons
-            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Icons:", styleStageTextHead);
-            GUILayout.EndVertical();
-
-            for (int i = 0; i < lstIconOrder.Count; i++)
-            {
-                if (i>0)
-                {
-                    if (GUILayout.Button("<->",styleButton,GUILayout.Width(30)))
-                    {
-                        String strTemp = lstIconOrder[i];
-                        lstIconOrder[i] = lstIconOrder[i-1];
-                        lstIconOrder[i-1] = strTemp;
-                        SetIconOrder();
-                        SaveConfig();
-                    }
-                }
-                GUILayout.Label(IconOrderContent(lstIconOrder[i]),styleTextCenter,GUILayout.Width(40));
-            }
-            GUILayout.EndHorizontal();
-
-            //Staging
-            GUILayout.BeginHorizontal(styleSettingsArea, GUILayout.Width(282), GUILayout.Height(64));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Staging:", styleStageTextHead);
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            blnStaging = GUILayout.Toggle(blnStaging, "Staging Enabled", styleToggle);
-            if (blnStaging)
-            {
-                blnStagingInMapView = GUILayout.Toggle(blnStagingInMapView, "Allow Staging in Mapview", styleToggle);
-                if (blnStagingInMapView)
-                    blnStagingSpaceInMapView = GUILayout.Toggle(blnStagingSpaceInMapView, "Allow Space Bar in Mapview", styleToggle);
-            }
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
-
-            SetTooltipText();
-        }
-
-        private void SetIconOrder()
-        {
-            dictFirst = GetIconDict(lstIconOrder[0]);
-            dictSecond = GetIconDict(lstIconOrder[1]);
-            dictThird = GetIconDict(lstIconOrder[2]);
-        }
-
-        private Dictionary<String,Texture2D> GetIconDict(String Name)
-        {
-            switch (Name.ToLower())
-            {
-                case "ksparp": return texIconsKSPARP;
-                case "mod": return texIconsResourceDefs;
-                case "player": return texIconsPlayer;
-                default:
-                    return null;
-            }
-        }
-        private GUIContent IconOrderContent(String Name)
-        {
-            switch (Name.ToLower())
-            {
-                case "ksparp": return new GUIContent("ARP","Alternate Resource Panel");
-                case "mod": return new GUIContent("Mod", "Mod Resource Definition");
-                case "player": return new GUIContent("Player", "Players Icons");
-                default:
-                    return new GUIContent("ERROR", "");
-            }
-        }
         private Boolean IsMouseOver() 
         {
             if ((BlizzyToolbarIsAvailable && UseBlizzyToolbarIfAvailable))
@@ -699,6 +345,99 @@ namespace KSPAlternateResourcePanel
 
 
         #region "Control Drawing"
+
+        Rect ClampToScreen(Rect r)
+        {
+            r.x = Mathf.Clamp(r.x, -1, Screen.width - r.width + 1);
+            r.y = Mathf.Clamp(r.y, -1, Screen.height - r.height + 1);
+            return r;
+        }
+
+        internal static void DrawResourceIcon(String ResourceName)
+        {
+            GUIContent contLabel;
+            if (dictFirst.ContainsKey(ResourceName.ToLower()))
+            {
+                contLabel = new GUIContent(dictFirst[ResourceName.ToLower()]);
+            }
+            else if (dictSecond.ContainsKey(ResourceName.ToLower()))
+            {
+                contLabel = new GUIContent(dictSecond[ResourceName.ToLower()]);
+            }
+            else if (dictThird.ContainsKey(ResourceName.ToLower()))
+            {
+                contLabel = new GUIContent(dictThird[ResourceName.ToLower()]);
+            }
+            else
+            {
+                contLabel = new GUIContent(System.Text.RegularExpressions.Regex.Replace(ResourceName, "[^A-Z]", ""));
+                if (ResourceName.Length < 5)
+                    contLabel.text = ResourceName;
+                else if (contLabel.text.Length < 2)
+                    contLabel.text = ResourceName.Substring(0, 3) + "...";
+            }
+
+            contLabel.tooltip = ResourceName;
+            GUILayout.Label(contLabel, styleBarName);
+        }
+
+        internal static Boolean DrawBar(int Row, GUIStyle Style, out Rect BarRect, int Width = 0, int Height = 0)
+        {
+            Boolean blnReturn = false;
+            List<GUILayoutOption> Options = new List<GUILayoutOption>();
+            if (Width == 0) Options.Add(GUILayout.ExpandWidth(true));
+            else Options.Add(GUILayout.Width(Width));
+            if (Height != 0) Options.Add(GUILayout.Height(Height));
+            
+            //GUILayout.Label("", Style, Options.ToArray());
+            if (GUILayout.Button("", Style, Options.ToArray()))
+                blnReturn = true;
+            BarRect=GUILayoutUtility.GetLastRect();
+
+            return blnReturn;
+        }
+
+        //private void DrawBar(Rect rectStart, int Row, GUIStyle Style)
+        //{
+        //    GUI.Label(rectStart, "", Style);
+        //}
+
+        internal static void DrawBarScaled(Rect rectStart, int Row, GUIStyle Style, GUIStyle StyleNarrow, float Scale)
+        {
+            Rect rectTemp = new Rect(rectStart);
+            rectTemp.width = (float)Math.Ceiling(rectTemp.width = rectTemp.width * Scale);
+            if (rectTemp.width <= 2) Style = StyleNarrow;
+            GUI.Label(rectTemp, "", Style);
+        }
+
+        internal static void DrawUsage(Rect rectStart, int Row, double Amount, double MaxAmount,Boolean IgnoreInstants=false)
+        {
+            Rect rectTemp = new Rect(rectStart);
+
+            if (blnShowInstants && !IgnoreInstants && (rectStart.width < 180)) rectTemp.width = (rectTemp.width * 2 / 3);
+            rectTemp.x -= 20;
+            rectTemp.width += 40;
+
+            GUI.Label(rectTemp, string.Format("{0} / {1}", DisplayValue(Amount), DisplayValue(MaxAmount)), styleBarText);
+        }
+
+        internal static void DrawRate(Rect rectStart, int Row, double Rate)
+        {
+            Rect rectTemp = new Rect(rectStart) { width = rectStart.width - 2 };
+            GUI.Label(rectTemp, string.Format("({0})", DisplayValue(Rate)), styleBarRateText);
+        }
+
+        internal static string DisplayValue(Double Amount)
+        {
+            if (Amount == 0) return "-.--";
+            String strFormat = "{0:0}";
+            if (Amount < 100)
+                strFormat = "{0:0.00}";
+            return string.Format(strFormat, Amount);
+        }
+
+
+
         /// <summary>
         /// Draws a Toggle Button and sets the boolean variable to the state of the button
         /// </summary>
@@ -707,28 +446,28 @@ namespace KSPAlternateResourcePanel
         /// <param name="style"></param>
         /// <param name="options"></param>
         /// <returns>True when the button state has changed</returns>
-        public Boolean DrawToggle(ref Boolean blnVar, String ButtonText, GUIStyle style, params GUILayoutOption[] options)
+        internal static Boolean DrawToggle(ref Boolean blnVar, String ButtonText, GUIStyle style, params GUILayoutOption[] options)
         {
             Boolean blnReturn = GUILayout.Toggle(blnVar, ButtonText, style, options);
 
             return ToggleResult(ref blnVar, ref  blnReturn);
         }
 
-        public Boolean DrawToggle(ref Boolean blnVar, Texture image, GUIStyle style, params GUILayoutOption[] options)
+        internal static Boolean DrawToggle(ref Boolean blnVar, Texture image, GUIStyle style, params GUILayoutOption[] options)
         {
             Boolean blnReturn = GUILayout.Toggle(blnVar, image, style, options);
 
             return ToggleResult(ref blnVar, ref blnReturn);
         }
 
-        public Boolean DrawToggle(ref Boolean blnVar, GUIContent content, GUIStyle style, params GUILayoutOption[] options)
+        internal static Boolean DrawToggle(ref Boolean blnVar, GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
             Boolean blnReturn = GUILayout.Toggle(blnVar, content, style, options);
 
             return ToggleResult(ref blnVar, ref blnReturn);
         }
 
-        private Boolean ToggleResult(ref Boolean Old, ref Boolean New)
+        internal static Boolean ToggleResult(ref Boolean Old, ref Boolean New)
         {
             if (Old != New)
             {
@@ -744,7 +483,7 @@ namespace KSPAlternateResourcePanel
         /// Some Structured logging to the debug file
         /// </summary>
         /// <param name="Message"></param>
-        public static void DebugLogFormatted(String Message, params object[] strParams)
+        internal static void DebugLogFormatted(String Message, params object[] strParams)
         {
             Message = String.Format(Message, strParams);
             String strMessageLine = String.Format("{0},{2},{1}", DateTime.Now, Message, _ClassName);
@@ -773,7 +512,7 @@ namespace KSPAlternateResourcePanel
                 var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
                 if (game != null && game.flightState != null && game.compatible)
                 {
-                    FlightDriver.StartAndFocusVessel(game, 6);
+                    FlightDriver.StartAndFocusVessel(game, 0);
                 }
                 //CheatOptions.InfiniteFuel = true;
             }
