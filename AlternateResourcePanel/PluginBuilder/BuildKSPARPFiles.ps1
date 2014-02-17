@@ -23,7 +23,7 @@ if ($VersionString -eq "")
 $DestFullPath= "$($DestRootPath)\v$($VersionString)"
 
 
-"`r`nThis will build v$($VersionString) of the Kerbal Alarm Clock"
+"`r`nThis will build v$($VersionString) of the KSP Alternate Resource panel"
 "`tFrom:`t$($SourcePath)"
 "`tTo:`t$($DestFullPath)"
 $Choices= [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes","&No")
@@ -51,7 +51,7 @@ if($ChoiceRtn -eq 0)
     #Copy the items 
     "Copying Plugin..."
     Copy-Item "$SourcePath\PluginFiles" "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)" -Recurse
-    Copy-Item "$SourcePath\bin\Release\KSPAlternateResourcePanel.dll" "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\GameData\TriggerTech" 
+    Copy-Item "$SourcePath\bin\Release\KSPAlternateResourcePanel.dll" "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\GameData\TriggerTech\KSPAlternateResourcePanel" 
     #Update the Text files with the version String
     (Get-Content "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\info.txt") |
         ForEach-Object {$_ -replace "%VERSIONSTRING%",$VersionString} |
@@ -59,7 +59,7 @@ if($ChoiceRtn -eq 0)
     (Get-Content "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\ReadMe-KSPAlternateResourcePanel.txt") |
         ForEach-Object {$_ -replace "%VERSIONSTRING%",$VersionString} |
             Set-Content "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\ReadMe-KSPAlternateResourcePanel.txt"
-	Move-Item "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\ReadMe-KSPAlternateResourcePanel.txt" "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\GameData\TriggerTech\"
+	Move-Item "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\ReadMe-KSPAlternateResourcePanel.txt" "$($DestFullPath)\KSPAlternateResourcePanel_$($VersionString)\GameData\TriggerTech\KSPAlternateResourcePanel\"
 
     #Copy the source files
     "Copying Source..."

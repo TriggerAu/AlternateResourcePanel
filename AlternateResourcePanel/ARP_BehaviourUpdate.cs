@@ -10,8 +10,6 @@ namespace KSPAlternateResourcePanel
 {
     public partial class KSPAlternateResourcePanel
     {
-
-        
         #region "Here is where the repeating Function is started"
         public void SetupRepeatingFunction_BehaviourUpdate(int ChecksPerSec)
         {
@@ -34,49 +32,6 @@ namespace KSPAlternateResourcePanel
             InvokeRepeating(FunctionName, SecsInterval, SecsInterval);
         }
         #endregion
-        
-        //Classes for resources and stages        
-        /// <summary>
-        /// A Resource type
-        /// </summary>
-        class arpResource
-        {
-            public PartResourceDefinition Resource { get; set; }
-            public Double Amount { get; set; }
-            public Double MaxAmount { get; set; }
-
-            public Double Rate { get; set; }
-        }
-        
-        /// <summary>
-        /// Stage based on decouplers, not stage view
-        /// </summary>
-        class arpStage
-        {
-            public arpResourceList ResourceList = new arpResourceList();
-            public int Number;
-        }
-
-
-        class arpResourceList : List<arpResource>
-        {
-            //public double UTgrabbed; 
-
-            //public arpResourceList()
-            //{
-            //    UTgrabbed = Planetarium.GetUniversalTime();
-            //}
-        }
-
-        class arpStageList : List<arpStage>
-        {
-            //public double lastGrab;
-
-            //public arpStageList()
-            //{
-            //    lastGrab = Planetarium.GetUniversalTime();
-            //}
-        }
 
         //Here's the work to do
         private arpStageList lstStages = new arpStageList();
@@ -87,14 +42,19 @@ namespace KSPAlternateResourcePanel
         private double UTUpdate = 0;
         private double UTUpdatePassed = 0;
 
+
+        private DateTime behav;
+        private TimeSpan behavrun;
         public void BehaviourUpdate()
         {
+            behav = DateTime.Now;
             //Dont bother doing the work if the panel is not displayed
             if (!(HoverOn || ToggleOn))
                 return;
 
             Vessel active = FlightGlobals.ActiveVessel;
 
+            //lstPartsLast = lstParts;
             arpResourceList lstLastResources = lstResources;
             arpResourceList lstLastResourcesLastStage = lstResourcesLastStage;
             UTUpdate = Planetarium.GetUniversalTime();
@@ -104,21 +64,19 @@ namespace KSPAlternateResourcePanel
             lstResources = new arpResourceList();
             lstResourcesLastStage = new arpResourceList();
 
+            //lstPartWindows = new List<PartWindow>();
+
             arpStage stgTemp;
-            int decoupleAt;
             //for each type of resource
             foreach (Part p in active.Parts)
 	        {
-                //Find the decoupler that is related to this stage
-                decoupleAt = CalcDecoupleStage(p);
-
                 foreach (PartResource pr in p.Resources)
-	            {
+                {
                     //Build the stages based on decouplers
-                    stgTemp = lstStages.FirstOrDefault(x => x.Number == decoupleAt);
+                    stgTemp = lstStages.FirstOrDefault(x => x.Number == p.DecoupledAt());
                     if (stgTemp == null)
                     {
-                        stgTemp = new arpStage() { Number = decoupleAt };
+                        stgTemp = new arpStage() { Number = p.DecoupledAt() };
                         lstStages.Add(stgTemp);
                     }
 
@@ -127,8 +85,7 @@ namespace KSPAlternateResourcePanel
 
                     //Now to the list of resources
                     AddResourceToList(ref lstResources, pr);
-	            }
-
+                }
 	        }
 
             if (lstStages.Count > 0) { 
@@ -163,10 +120,45 @@ namespace KSPAlternateResourcePanel
             }
             UTUpdateLast = UTUpdate;
 
+            //Loop through the partWindows and reset the amounts/rates
+            lstPartWindows.ClearValues();
+            //remove any windows for parts that are no longer attached
+            lstPartWindows.ClearWindows();
+            //Loop through the parts to see if we are displaying partwindows
+            foreach (Part p in active.Parts)
+            {
+                foreach (PartResource pr in p.Resources)
+                {
+                    //Now Check/Add PartWindow Stuff
+                    if (SelectedResources.ContainsKey(pr.info.id))
+                        AddResourceToPartWindow(p, pr);
+                    else if (lstPartWindows.Any(x=>x.Part.GetInstanceID()==p.GetInstanceID()))
+                        RemoveResourceFromPartWindow(p,pr);
+                }
+            }
 
             //if (tmeOutput.AddSeconds(10) < DateTime.Now)
             //{
-            //    DebugLogFormatted("{0}", Staging.lastStage, Staging.CurrentStage);
+            //    DebugLogFormatted("{0}-{1}", Staging.lastStage, Staging.CurrentStage);
+
+            //    foreach (Part p in active.Parts)
+            //    {
+            //        DebugLogFormatted("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+            //            p.partInfo.title,
+            //            p.childStageOffset,
+            //        p.defaultInverseStage,
+            //        p.inStageIndex,
+            //        p.inverseStage,
+            //        p.manualStageOffset,
+            //        p.originalStage,
+            //        p.stageAfter,
+            //        p.stageBefore,
+            //        p.stageOffset,
+            //        CalcDecoupleStage(p),
+            //        p.GetInstanceID().ToString()
+
+            //            );
+            //    }
 
             //    //work out per stage values for max and used
             //    foreach (arpStage s in lstStages)
@@ -221,9 +213,11 @@ namespace KSPAlternateResourcePanel
             //                            r.Rate);
 
             //    }
-            //    //DebugLogFormatted("CurrentStage:{0}", Staging.CurrentStage);
+                //DebugLogFormatted("CurrentStage:{0}", Staging.CurrentStage);
             //    tmeOutput = DateTime.Now;
             //}
+
+            behavrun = DateTime.Now - behav;
     
         }
 
@@ -236,6 +230,20 @@ namespace KSPAlternateResourcePanel
                 resTemp = new arpResource() { Resource = pr.info };
                 list.Add(resTemp);
             }
+            resTemp.Amount += pr.amount;
+            resTemp.MaxAmount += pr.maxAmount;
+            return resTemp;
+        }
+
+        private arpResource AddResourceToList(ref Dictionary<int,arpResource> list, PartResource pr)
+        {
+            arpResource resTemp;
+            if (!list.ContainsKey(pr.info.id))
+            { 
+                resTemp = new arpResource() { Resource = pr.info };
+                list.Add(pr.info.id, resTemp);
+            }
+            resTemp = list[pr.info.id];
             resTemp.Amount += pr.amount;
             resTemp.MaxAmount += pr.maxAmount;
             return resTemp;
@@ -264,32 +272,32 @@ namespace KSPAlternateResourcePanel
         private DateTime tmeOutput = DateTime.Now;
 
 
-        private int DecoupledInStage(Part part , int stage = -1)
+        //private int DecoupledInStage(Part part , int stage = -1)
+        //{
+
+        //    if (IsDecoupler(part))
+        //    {
+        //        if (part.inverseStage > stage)
+        //        {
+        //            stage = part.inverseStage;
+        //        }
+        //    }
+
+        //    if (part.parent != null)
+        //    {
+        //        stage = DecoupledInStage(part.parent, stage);
+        //    }
+
+        //    return stage;
+        //}
+        //private bool IsDecoupler(Part part)
+        //{
+        //    return part is Decoupler || part is RadialDecoupler || part.Modules.OfType<ModuleDecouple>().Count() > 0 || part.Modules.OfType<ModuleAnchoredDecoupler>().Count() > 0;
+        //}
+
+        internal static int CalcDecoupleStage(Part pTest)
         {
-
-            if (IsDecoupler(part))
-            {
-                if (part.inverseStage > stage)
-                {
-                    stage = part.inverseStage;
-                }
-            }
-
-            if (part.parent != null)
-            {
-                stage = DecoupledInStage(part.parent, stage);
-            }
-
-            return stage;
-        }
-        private bool IsDecoupler(Part part)
-        {
-            return part is Decoupler || part is RadialDecoupler || part.Modules.OfType<ModuleDecouple>().Count() > 0 || part.Modules.OfType<ModuleAnchoredDecoupler>().Count() > 0;
-        }
-
-        private int CalcDecoupleStage(Part pTest)
-        {
-            int stageOut = 0;
+            int stageOut = -1;
 
             //Is this part a decoupler
             if (pTest.Modules.OfType<ModuleDecouple>().Count() > 0 || pTest.Modules.OfType<ModuleAnchoredDecoupler>().Count() > 0)
