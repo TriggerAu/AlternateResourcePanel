@@ -200,7 +200,8 @@ namespace KSPAlternateResourcePanel
         internal Double Rate {get; private set;}
         internal void SetRate(Double UTPeriod)
         {
-            this.Rate = ((this.AmountLast - this.Amount) / UTPeriod);
+            if (UTPeriod>0)
+                this.Rate = ((this.AmountLast - this.Amount) / UTPeriod);
             //    //Remmed out code for sampling idea - doesn't work for resourcelist when it is additive
             //    //r.RateSamples.Enqueue(new RateRecord(KSPAlternateResourcePanel.UTUpdate, Resource.amount));
             //    //r.SetRate2();
@@ -371,12 +372,12 @@ namespace KSPAlternateResourcePanel
                 OnAlarmAcknowledged(sender);
         }
 
-        internal Boolean UnacknowledgedAlarms()
+        internal Boolean UnacknowledgedAlarms(Dictionary<Int32,ResourceSettings> ResourceList)
         {
             Boolean blnReturn = false;
             foreach (ARPResource r in this.Values)
             {
-                if (!r.AlarmAcknowledged)
+                if (!r.AlarmAcknowledged && ResourceList[r.ResourceDef.id].AlarmEnabled)
                 {
                     blnReturn = true;
                     break;

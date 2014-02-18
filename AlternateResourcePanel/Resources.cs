@@ -117,28 +117,28 @@ namespace KSPAlternateResourcePanel
             dictSecond = texIconsResourceDefs;
             dictThird = texIconsPlayer;
 
-            LoadImageFromGameDB(ref texPanel, "img_PanelBack.png");
+            LoadImageFromGameDB(ref texPanel, "img_PanelBack.tga");
 
-            LoadImageFromGameDB(ref texBarBlue, "img_BarBlue.png");
-            LoadImageFromGameDB(ref texBarBlue_Back, "img_BarBlue_Back.png");
-            LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.png");
-            LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.png");
+            LoadImageFromGameDB(ref texBarBlue, "img_BarBlue.tga");
+            LoadImageFromGameDB(ref texBarBlue_Back, "img_BarBlue_Back.tga");
+            LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.tga");
+            LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.tga");
 
             LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.tga");
 
-            LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.png");
-            LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.png");
+            LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.tga");
+            LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.tga");
 
-            LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
+            LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.tga");
 
-            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.png");
+            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.tga");
 
             //LoadImageFromGameDB(ref texTooltipBackground, "tex_TooltipBackground.png");
 
-            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.png");
-            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.png");
-            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.png");
-            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.png");
+            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.tga");
+            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.tga");
+            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.tga");
+            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.tga");
 
             LoadImageFromGameDB(ref btnDropDown, "img_DropDown.tga");
             LoadImageFromGameDB(ref btnPlay, "img_Play.tga");

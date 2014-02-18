@@ -28,6 +28,11 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.0.2.0		-	KSP Version: 0.23
+- Fixed Window vis on alarm issue
+- Fixed NaN rate display issue
+- Verified image paths
+
 Version 2.0.1.0		-	KSP Version: 0.23
 - Fixed Alarm Noise issue
 - Fixed resourceconfig window issues with Dropdowns
