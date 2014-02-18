@@ -252,8 +252,8 @@ namespace KSPAlternateResourcePanel
             if (Event.current.type == EventType.Repaint)
                 HoverOn = IsMouseOver();
 
-            //Are we drawing the main window
-            if ((HoverOn || settings.ToggleOn || lstResourcesVessel.UnacknowledgedAlarms()) && (lstResourcesVessel.Count > 0))
+            //Are we drawing the main window - hovering, or toggled or alarmsenabled and an unackowledged alarm - and theres resources
+            if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms(settings.Resources))) && (lstResourcesVessel.Count > 0))
             {
                 windowMain.Visible = true;
                 if (blnResetWindow)
