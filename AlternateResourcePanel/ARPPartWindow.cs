@@ -29,12 +29,12 @@ namespace KSPAlternateResourcePanel
             this.mbARP = mbARP;
             this.settings = KSPAlternateResourcePanel.settings;
             this.PartRef = Part;
-            this.ResourceList = new ARPResourceList(ARPResourceList.ResourceUpdate.SetValues);
+            this.ResourceList = new ARPResourceList(ARPResourceList.ResourceUpdate.SetValues,settings.Resources);
             this.LeftSide = this.PartScreenPos.x < (mbARP.vectVesselCOMScreen.x - 3);
         }
 
         //Details about the part attached to this window
-        internal Int32 PartID { get; private set;}
+        internal Int32 PartID { get { return PartRef.GetInstanceID(); } }
         internal Part PartRef { get; private set; }
 
         //What resources are we displaying for this part
@@ -80,7 +80,7 @@ namespace KSPAlternateResourcePanel
         {
             Rect NewPosition = new Rect(WindowRect);
             NewPosition.width = WindowWidth;
-            NewPosition.height = ((this.ResourceList.Count + 1) * mbARP.windowMain.intLineHeight) + 1;
+            NewPosition.height = ((this.ResourceList.Count + 1 + this.TransfersCount ) * mbARP.windowMain.intLineHeight) + 1;
 
             //where to position the window
             if (this.LeftSide && (this.PartScreenPos.x > (mbARP.vectVesselCOMScreen.x + SideThreshold)))
@@ -121,6 +121,8 @@ namespace KSPAlternateResourcePanel
 
         internal override void OnDestroy()
         {
+            mbARP.lstTransfers.RemovePartItems(this.PartID);
+
             //unsubscribe events
             OnMouseEnter -= ARPPartWindow_OnMouseEnter;
             OnMouseLeave -= ARPPartWindow_OnMouseLeave;
@@ -175,8 +177,10 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary_SkinChanged();
         }
 
+        Int32 TransfersCount = 0;
         internal override void DrawWindow(int id)
         {
+            TransfersCount = 0;
             if (SkinsLibrary.CurrentSkin.name=="Unity")
             {
                 GUI.Box(new Rect(0, 0, WindowWidth - 1,WindowRect.height- 1), "", SkinsLibrary.CurrentSkin.window);
@@ -188,6 +192,19 @@ namespace KSPAlternateResourcePanel
             int i = 0;
             foreach (int key in this.ResourceList.Keys)
             {
+                Boolean TransferExists = mbARP.lstTransfers.ItemExists(this.PartID, key);
+                Boolean TransferActive=false;
+                GUIStyle Highlight = Styles.styleBarHighlight;
+                if (TransferExists)
+                {
+                    if (mbARP.lstTransfers.GetItem(this.PartID, key).transferState== TransferStateEnum.In)
+                        Highlight = Styles.styleBarHighlightGreen;
+                    else if (mbARP.lstTransfers.GetItem(this.PartID, key).transferState== TransferStateEnum.Out)
+                        Highlight = Styles.styleBarHighlightRed;
+
+                    TransferActive=mbARP.lstTransfers.GetItem(this.PartID, key).Active;
+                }
+
                 GUILayout.Space(2);
                 if (i > 0) GUILayout.Space(2);
                 GUILayout.BeginHorizontal();
@@ -197,14 +214,119 @@ namespace KSPAlternateResourcePanel
                 GUILayout.Space(2);
 
                 Rect rectBar = Drawing.CalcBarRect(rectIcon,Icon2BarOffset,120,15);
-                Drawing.DrawResourceBar(rectBar, this.ResourceList[key], 
-                    Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, 
-                    settings.ShowRatesForParts,false);
+                if (Drawing.DrawResourceBar(rectBar, this.ResourceList[key], 
+                    Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin,
+                    settings.ShowRatesForParts, TransferActive, Highlight))
+                {
+                    //toggle the transfer line
+                    if (TransferExists)
+                    {
+                        mbARP.lstTransfers.RemoveItem(this.PartID, key);
+                        TransferExists = false;
+                    }
+                    else {
+                        mbARP.lstTransfers.AddItem(this.PartRef, this.ResourceList[key].ResourceDef, TransferStateEnum.None);
+                    }
+                }
                 GUILayout.EndHorizontal();
+
+                if (TransferExists)
+                {
+                    TransfersCount++;
+                    ARPTransfer tmpTransfer = mbARP.lstTransfers.GetItem(this.PartID, key);
+                    GUILayout.Space(1);
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Space(8);
+                    GUIStyle styleTransfer = new GUIStyle(SkinsLibrary.CurrentSkin.label);
+                    styleTransfer.fixedHeight = 19;
+                    styleTransfer.padding.top = -8;
+                    styleTransfer.padding.bottom = 0;
+                    //GUILayout.Label("Transfer: " + tmpTransfer.transferState, styleTransfer);
+                    GUILayout.Label("Transfer: " , styleTransfer);
+
+                    GUILayout.Space(21);
+
+                    GUIStyle styleTransferButton = new GUIStyle(SkinsLibrary.CurrentSkin.button);
+                    styleTransferButton.fixedHeight = 19;
+                    styleTransferButton.fixedWidth = 40;
+                    styleTransferButton.onNormal = styleTransferButton.active;
+                    styleTransferButton.padding = new RectOffset(0, 0, 0, 0);
+                    styleTransferButton.margin = new RectOffset(0, 0, 0, 0);
+
+
+                    String strOut = (tmpTransfer.transferState == TransferStateEnum.Out && tmpTransfer.Active) ? "Stop" : "Out";
+                    String strIn = (tmpTransfer.transferState == TransferStateEnum.In && tmpTransfer.Active) ? "Stop" : "In";
+                    Boolean blnTempOut = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.Out, strOut, styleTransferButton);
+                    Boolean blnTempIn = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.In, strIn, styleTransferButton);
+
+                    if (blnTempOut && (tmpTransfer.transferState != TransferStateEnum.Out))
+                    {
+                        //if there are any transfers in place for this resource then turn off the In
+                        if (mbARP.lstTransfers.Any(x=>x.ResourceID==key && x.Active))
+                            mbARP.lstTransfers.SetStateNone(key);
+                        else
+                            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
+
+                        tmpTransfer.transferState = TransferStateEnum.Out;
+                    }
+
+                    else if (blnTempIn && (tmpTransfer.transferState != TransferStateEnum.In))
+                    {
+                        //if there are any transfers in place for this resource then turn off the In
+                        if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
+                            mbARP.lstTransfers.SetStateNone(key);
+                        else
+                            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.In);
+
+                        tmpTransfer.transferState = TransferStateEnum.In;
+                    }
+                    else if (!blnTempIn && !blnTempOut && (tmpTransfer.transferState != TransferStateEnum.None))
+                        tmpTransfer.transferState = TransferStateEnum.None;
+
+
+                    //if (tmpTransfer.Active)
+                    //{
+                    //    GUILayout.Space(20);
+                    //    if (GUILayout.Button("Stop", styleTransferButton))
+                    //    {
+                    //        //mbARP.lstTransfers.SetStateNone(key);
+                    //        mbARP.lstTransfers.SetStateNone(key);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //if (GUILayout.Button("Out", styleTransferButton)) { tmpTransfer.transferState = TransferStateEnum.Out; }
+                    //    //if (GUILayout.Button("In", styleTransferButton)) { tmpTransfer.transferState = TransferStateEnum.In; }
+                    //    //if (GUILayout.Button("None", styleTransferButton)) { tmpTransfer.transferState = TransferStateEnum.None; }
+                    //    Boolean blnTempOut = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.Out, "Out", styleTransferButton);
+                    //    Boolean blnTempIn = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.In, "In", styleTransferButton);
+                    //    if (blnTempOut && (tmpTransfer.transferState != TransferStateEnum.Out))
+                    //    {
+                    //        if (mbARP.lstTransfers.Any(x=>x.transferState== TransferStateEnum.In))
+                    //            mbARP.lstTransfers.SetStateNone(key);
+                    //        else
+                    //            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
+
+                    //        tmpTransfer.transferState = TransferStateEnum.Out;
+                    //    }
+                    //    else if (blnTempIn && (tmpTransfer.transferState != TransferStateEnum.In))
+                    //    {
+                    //        if (mbARP.lstTransfers.Any(x => x.transferState == TransferStateEnum.Out))
+                    //            mbARP.lstTransfers.SetStateNone(key);
+                    //        else
+                    //            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.In);
+
+                    //        tmpTransfer.transferState = TransferStateEnum.In;
+                    //    }
+                    //    else if (!blnTempIn && !blnTempOut && (tmpTransfer.transferState != TransferStateEnum.None))
+                    //        tmpTransfer.transferState = TransferStateEnum.None;
+                    //}
+                    GUILayout.EndHorizontal();
+                }
+
                 i++;
             }
         }
-
         private Boolean MouseOver;
 
         delegate void MouseEventHandler();
@@ -339,7 +461,7 @@ namespace KSPAlternateResourcePanel
 
             //Then add the Resource
             pwTemp.ResourceList.SetUTPeriod(mbARP.RepeatingWorkerUTPeriod);
-            pwTemp.ResourceList.UpdateResource(PartsResource, KSPAlternateResourcePanel.settings.ShowRatesForParts);
+            pwTemp.ResourceList.UpdateResource(PartsResource,CalcRates:KSPAlternateResourcePanel.settings.ShowRatesForParts);
 
             return pwTemp;
         }

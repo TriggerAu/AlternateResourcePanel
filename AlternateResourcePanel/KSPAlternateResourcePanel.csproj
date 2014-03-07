@@ -53,6 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API.cs" />
+    <Compile Include="API\ARPWrapper.cs" />
     <Compile Include="ARP.cs" />
     <Compile Include="ARPPartWindow.cs" />
     <Compile Include="ARPWindow.cs" />
@@ -61,13 +63,11 @@
     <Compile Include="ARPWindowSettings.cs" />
     <Compile Include="AudioController.cs" />
     <Compile Include="ClassDefinitions.cs" />
-    <Compile Include="Framework\ToolbarButtonWrapper.cs" />
     <Compile Include="Framework\ConfigNodeStorage.cs" />
     <Compile Include="Framework\ExtensionsUnity.cs" />
     <Compile Include="Framework\MonoBehaviourExtended.cs" />
     <Compile Include="Framework\MonoBehaviourWindow.cs" />
     <Compile Include="Framework\SkinsLibrary.cs" />
-    <Compile Include="Framework\ToolbarWrapper - Copy.cs" />
     <Compile Include="Framework\ToolbarWrapper.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="SharedStuff\ClassDefinitions.cs" />
@@ -158,8 +158,11 @@
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarGreen.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarGreen_Back.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarHighlight.tga" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarHighlightGreen.tga" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarHighlightRed.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonChevronDown.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonChevronUp.tga" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonEye.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonSettingsAttention.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_DropDown.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_DropDownSep.tga" />
@@ -187,6 +190,8 @@
 echo Finding KSP
 if exist "D:\~Games\KSP_Win_PlugInTest_Minimal\KSP.exe" (
 	set GAMEPATH="D:\~Games\KSP_Win_PlugInTest_Minimal"
+) else if exist "C:\~Games\KSP_Win_PlugInTest_Minimal\KSP.exe" (
+	set GAMEPATH="C:\~Games\KSP_Win_PlugInTest_Minimal
 ) else if exist "D:\~Games\KSP_Win_PlugInTest\KSP.exe" (
 	set GAMEPATH="D:\~Games\KSP_Win_PlugInTest"
 ) else if exist "C:\~Games\KSP_Win_PlugInTest\KSP.exe" (

@@ -26,12 +26,13 @@ namespace KSPAlternateResourcePanel
         //  http://answers.unity3d.com/questions/445444/add-component-in-one-line-with-parameters.html
 
         internal KSPAlternateResourcePanel mbARP;
+        internal Settings settings;
 
-        public Int32 intTest1=120;
-        public Int32 intTest2=4;
-        public Int32 intTest3=50;
-        public Int32 intTest4 = 50;
-        public Int32 intTest5 = 4;
+        public Int32 intTest1=0;
+        public Int32 intTest2=0;
+        public Int32 intTest3=0;
+        public Int32 intTest4 = 0;
+        public Int32 intTest5 = 200;
         internal override void DrawWindow(int id)
         {
             //GUILayout.Label(Drawing.RectTest.ToString());
@@ -70,9 +71,76 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-
-            GUILayout.Label(mbARP.windowResourceConfig.ScrollPosition.ToString());
             GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
+            GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
+
+            GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
+            foreach (ARPTransfer item in mbARP.lstTransfers)
+            {
+                GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
+            }
+            if (GUILayout.Button("AAA"))
+            {
+                LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
+                foreach (ARPTransfer a in mbARP.lstTransfers)
+                {
+                    LogFormatted("{0}-{1}-{2}-{3}-{4}",intTest4, a.partID, a.part.GetInstanceID(), a.ResourceID, a.resource.id);
+                }
+            }
+            foreach (IGrouping<Int32,ARPTransfer> item in mbARP.lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
+	        {
+                GUILayout.Label(item.Key.ToString());
+		    }
+            GUILayout.Label(mbARP.TestTrans);
+            
+            foreach (String item in mbARP.lstString)
+            {
+                GUILayout.Label(item);
+                
+            }
+            //#region Auto Staging
+            //GUILayout.Label(FlightGlobals.ActiveVessel.ctrlState.mainThrottle.ToString());
+
+            //GUILayout.Label(String.Format("en:{0} delay:{1}, {2:0.0}", settings.AutoStagingEnabled, settings.AutoStagingDelayInTenths, ((Double)settings.AutoStagingDelayInTenths / 10)));
+            //GUILayout.Label(String.Format("Arm:{0}-run:{1}", mbARP.AutoStagingArmed, mbARP.AutoStagingRunning));
+            
+            //GUILayout.Label(String.Format("Staging:{0}-Stop{1}", Staging.CurrentStage, mbARP.AutoStagingTerminateAt));
+
+            //GUILayout.Label(string.Format("{0}-{1}-{2}", mbARP.AutoStagingTriggeredAt, Planetarium.GetUniversalTime(), Planetarium.GetUniversalTime() - mbARP.AutoStagingTriggeredAt));
+
+            //GUILayout.Label(string.Format("{0}", FlightInputHandler.fetch.stageLock));
+
+            //if (GUILayout.Button("GO BABY GO"))
+            //    mbARP.AutoStagingArmed = true;
+
+            //foreach (Part item in mbARP.lstPartsLastStageEngines)
+            //{
+            //    GUILayout.Label(String.Format("{0}-{1}", item.partName, item.partInfo.name));
+            //    foreach (ModuleEngines me in item.Modules.OfType<ModuleEngines>())
+            //    {
+            //        GUILayout.Label(string.Format("   {0}-{1}-{2}", me.getFlameoutState, me.staged, me.propellants.Count));
+            //        String Props = "    ";
+            //        for (int i = 0; i < me.propellants.Count; i++)
+            //        {
+            //            Props += string.Format("{0}:{1}, ",me.propellants[i].name,me.propellants[i].id);
+            //        }
+            //        GUILayout.Label(Props);
+            //    }
+            //}
+            //#endregion
+
+            //GUILayout.Label(API.VesselResources.Count.ToString());
+            //GUILayout.Label(API.AResource.ResourceDef.name + ":" + API.AResource.Amount);
+
+            //if (GUILayout.Button("Toggle"))
+            //    API.TestBool = !API.TestBool;
+            //if (GUILayout.Button("AddRes"))
+            //{
+            //    LogFormatted(API.AResource.Amount.ToString());
+            //    API.AResource.Amount += 20;
+            //    LogFormatted(API.AResource.Amount.ToString());
+            //}
+
             //GUILayout.Label(mbARP.MouseOverToolbarBtn.ToString());
 
             //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)

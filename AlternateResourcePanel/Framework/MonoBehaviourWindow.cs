@@ -8,6 +8,17 @@ using UnityEngine;
 
 namespace KSPPluginFramework
 {
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+    sealed class WindowInitialsAttribute : Attribute
+    {
+        public Boolean Visible { get; set; }
+        public Boolean DragEnabled { get; set; }
+        public Boolean ClampToScreen { get; set; }
+        public Boolean TooltipsEnabled { get; set; }
+        public String Caption { get; set; }
+    }
+
     /// <summary>
     /// An Extended version of the UnityEngine.MonoBehaviour Class
     /// Basically a template for a Window, has the MonoBehaviourExtended properties and extra bits to make drawing a window easier
@@ -18,9 +29,21 @@ namespace KSPPluginFramework
         internal MonoBehaviourWindow()
             : base()
         {
-            this.WindowID = UnityEngine.Random.Range(1000, 2000000);
+            //do the assembly name add so we get different windowIDs for multiple plugins
+            this.WindowID = UnityEngine.Random.Range(1000, 2000000) + _AssemblyName.GetHashCode();
             this._Visible = false;
             LogFormatted_DebugOnly("WindowID:{0}", WindowID);
+
+            //and look for any customattributes
+            WindowInitialsAttribute[] attrs = (WindowInitialsAttribute[])Attribute.GetCustomAttributes(this.GetType(), typeof(WindowInitialsAttribute));
+            foreach (WindowInitialsAttribute attr in attrs)
+            {
+                Visible = attr.Visible;
+                DragEnabled = attr.DragEnabled;
+                ClampToScreen = attr.ClampToScreen;
+                TooltipsEnabled = attr.TooltipsEnabled;
+                WindowCaption = attr.Caption;
+            }
         }
         ///CANT USE THE ONES BELOW HERE AS WE NEED TO INSTANTIATE THE WINDOW USING AddComponent()
         //internal MonoBehaviourWindow(String Caption)
@@ -50,6 +73,7 @@ namespace KSPPluginFramework
         {
             //just some debugging stuff here
             LogFormatted_DebugOnly("New MBWindow Awakened");
+
             //base.Awake();
         }
 

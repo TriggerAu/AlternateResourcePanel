@@ -87,8 +87,15 @@ namespace KSPAlternateResourcePanel
 
             //If they are both false then remove the resource from the list
             if (!(this[ResourceID].AllVisible || this[ResourceID].LastStageVisible))
+            {
                 this.Remove(ResourceID);
+                if (ResourceRemoved != null)
+                    ResourceRemoved(ResourceID);
+            }
         }
+
+        internal delegate void ResourceRemovedHandler(Int32 ResourceID);
+        internal event ResourceRemovedHandler ResourceRemoved;
     }
 
 
@@ -96,19 +103,48 @@ namespace KSPAlternateResourcePanel
     /// Details about a specific resource. 
     /// All Gets from this class should be straight from memory and all input work via Set functions that are called in the Repeating function 
     /// </summary>
-    internal class ARPResource
+    public class ARPResource
     {
-        internal ARPResource(PartResourceDefinition ResourceDefinition)
+        internal ARPResource(PartResourceDefinition ResourceDefinition, ResourceSettings ResourceConfig)
         {
             this.ResourceDef = ResourceDefinition;
+            this.ResourceConfig = ResourceConfig;
         }
 
-        internal PartResourceDefinition ResourceDef;
+        public PartResourceDefinition ResourceDef { get; private set; }
+        public ResourceSettings ResourceConfig { get; private set; }
 
-        internal Double Amount {get; set;}
-        internal String AmountFormatted { get { return DisplayValue(this.Amount); } }
+        private Double _Amount;
+        internal Double Amount
+        {
+            get { return _Amount; }
+            set
+            {
+                Double oldValue = _Amount;
+                _Amount = value;
+                if (oldValue != value)
+                {
+                    if (value <= 0)
+                    {
+                        IsEmpty = true;
+                        EmptyAt = DateTime.Now;
+                    }
+                    else
+                        IsEmpty=false;
+                }
+            }
+        }
+
+        internal Boolean IsEmpty=false;
+
+        //internal Double Amount {get; set;}
         internal Double MaxAmount{get; set;}
-        internal String MaxAmountFormatted { get { return DisplayValue(this.MaxAmount); } }
+        public Double AmountValue { get { return Amount; } }
+        public String AmountFormatted { get { return DisplayValue(this.Amount); } }
+        public Double MaxAmountValue { get { return MaxAmount; } }
+        public String MaxAmountFormatted { get { return DisplayValue(this.MaxAmount); } }
+
+        internal DateTime EmptyAt { get; set; }
 
         internal void ResetAmounts()
         {
@@ -116,79 +152,100 @@ namespace KSPAlternateResourcePanel
             this.MaxAmount = 0;
         }
 
-        internal enum MonitorType
+        public enum MonitorStateEnum
         {
-            Alert,
+            None,
             Warn,
-            None
+            Alert,
         }
 
-        internal delegate void MonitorChanged(ARPResource sender, MonitorType alarmType, Boolean TurnedOn,Boolean Acknowledged);
-        public event MonitorChanged OnMonitorStateChange;
-        private Boolean _MonitorWarning = true;
-        internal Boolean MonitorWarning
+        public enum AlarmStateEnum
         {
-            get { return _MonitorWarning; }
-            set
-            {
-                Boolean oldValue = _MonitorWarning;
-                _MonitorWarning = value;
-                if (oldValue != value) 
-                {
-                    if (value) AlarmAcknowledged = false;
-                    if (OnMonitorStateChange != null)
-                        OnMonitorStateChange(this, MonitorType.Warn, value,_AlarmAcknowledged);
-                }
-            }
+            None,
+            Unacknowledged,
+            Acknowledged,
         }
-        private Boolean _MonitorAlert = true;
-        internal Boolean MonitorAlert
+
+        private MonitorStateEnum _MonitorState;
+        public MonitorStateEnum MonitorState
         {
-            get { return _MonitorAlert; }
-            set
+            get { return _MonitorState; }
+            private set
             {
-                Boolean oldValue = _MonitorAlert;
-                _MonitorAlert = value;
-                if (oldValue != value)
+                MonitorStateEnum oldValue = _MonitorState;
+                _MonitorState=value;
+                if (oldValue!=value)
                 {
-                    if (value) AlarmAcknowledged = false;
-                    if (OnMonitorStateChange!=null)
-                        OnMonitorStateChange(this, MonitorType.Alert, value,_AlarmAcknowledged);
-                }
-            }
-        }
-
-        internal MonitorType MonitorWorstHealth
-        {
-            get
-            {
-                if (_MonitorAlert)
-                    return MonitorType.Alert;
-                else if (_MonitorWarning)
-                    return MonitorType.Warn;
-                else
-                    return MonitorType.None;
-            }
-        }
-
-        internal delegate void AlarmAcknowledgedEvent(ARPResource sender);
-        public event AlarmAcknowledgedEvent OnAlarmAcknowledged;
-
-        private Boolean _AlarmAcknowledged = true;
-        internal Boolean AlarmAcknowledged { get {
-            return _AlarmAcknowledged;
-        }
-        set
-            {
-                _AlarmAcknowledged = value;
-                if (value)
-                {
-                    if (OnAlarmAcknowledged!=null)
-                        OnAlarmAcknowledged(this);
+                    if (value>oldValue)
+                    {
+                        //if severity increased then unacknowledge the state
+                        if (ResourceConfig.AlarmEnabled && KSPAlternateResourcePanel.settings.AlarmsEnabled)
+                            AlarmState = AlarmStateEnum.Unacknowledged;
+                    }
+                    else if (value== MonitorStateEnum.None)
+                    {
+                        //Shortcut the alarmstate if the monitors all turned off
+                        _AlarmState = AlarmStateEnum.None;
+                    }
+                    //MonoBehaviourExtended.LogFormatted_DebugOnly("ResMON-{0}:{1}->{2} ({3})", this.ResourceDef.name, oldValue, value, this.AlarmState);
+                    if (OnMonitorStateChanged != null)
+                        OnMonitorStateChanged(this, oldValue, value,AlarmState);
                 }
             }
         }
 
+        private AlarmStateEnum _AlarmState;
+        public AlarmStateEnum AlarmState
+        {
+            get { return _AlarmState; }
+            private set
+            {
+                AlarmStateEnum oldValue = _AlarmState;
+                _AlarmState = value;
+                if (oldValue!=value)
+                {
+                    //MonoBehaviourExtended.LogFormatted_DebugOnly("ResALARM-{0}:{1}->{2} ({3})", this.ResourceDef.name, oldValue, value, this.MonitorState);
+                    if (value != AlarmStateEnum.Unacknowledged && IsEmpty)
+                        EmptyAt = DateTime.Now;
+
+                    if (OnAlarmStateChanged != null)
+                        OnAlarmStateChanged(this, oldValue, value,MonitorState);
+                }
+            }
+        }
+
+        internal void SetAlarmAcknowledged()
+        {
+            if (this.AlarmState == AlarmStateEnum.Unacknowledged)
+                this.AlarmState = AlarmStateEnum.Acknowledged;
+        }
+
+
+        internal delegate void MonitorStateChangedHandler(ARPResource sender, MonitorStateEnum oldValue,MonitorStateEnum newValue,AlarmStateEnum AlarmState);
+        internal event MonitorStateChangedHandler OnMonitorStateChanged;
+
+        internal delegate void AlarmStateChangedHandler(ARPResource sender, AlarmStateEnum oldValue, AlarmStateEnum newValue,MonitorStateEnum MonitorState);
+        internal event AlarmStateChangedHandler OnAlarmStateChanged;
+
+        internal void SetMonitors()
+        {
+            Double rPercent = (this.Amount / this.MaxAmount) * 100;
+
+            if ((ResourceConfig.MonitorDirection == ResourceSettings.MonitorDirections.Low && rPercent <= ResourceConfig.MonitorAlertLevel) ||
+                (ResourceConfig.MonitorDirection == ResourceSettings.MonitorDirections.High && rPercent >= ResourceConfig.MonitorAlertLevel))
+            {
+                this.MonitorState = MonitorStateEnum.Alert;
+            }
+            else if ((ResourceConfig.MonitorDirection == ResourceSettings.MonitorDirections.Low && rPercent <= ResourceConfig.MonitorWarningLevel) ||
+                (ResourceConfig.MonitorDirection == ResourceSettings.MonitorDirections.High && rPercent >= ResourceConfig.MonitorWarningLevel))
+            {
+                this.MonitorState = MonitorStateEnum.Warn;
+            }
+            else
+            {
+                this.MonitorState = MonitorStateEnum.None;
+            }
+        }
 
         internal Double AmountLast { get; private set; }
         internal String AmountLastFormatted { get { return DisplayValue(this.Amount); } }
@@ -290,17 +347,19 @@ namespace KSPAlternateResourcePanel
     //    internal Double Amount;
     //}
 
-    internal class ARPResourceList: Dictionary<Int32,ARPResource>
+    public class ARPResourceList: Dictionary<Int32,ARPResource>
     {
         //Should we be storing the UT values in here somewhere instead of referencing back to a static object???
         private Double RepeatingWorkerUTPeriod;
 
-        internal ARPResourceList(ResourceUpdate UpdateType)
+        internal ARPResourceList(ResourceUpdate UpdateType, Dictionary<Int32,ResourceSettings> ResourceConfigs)
         {
             this.UpdateType = UpdateType;
+            this.ResourceConfigs = ResourceConfigs;
         }
 
         private ResourceUpdate _UpdateType;
+        private Dictionary<Int32, ResourceSettings> ResourceConfigs;
 
         /// <summary>
         /// This boolean flag controls whether the ResourceList can be updated or not
@@ -345,39 +404,47 @@ namespace KSPAlternateResourcePanel
             }
         }
 
-        internal ARPResource AddResource(PartResource ResourceToAdd)
+        internal ARPResource AddResource(PartResource ResourceToAdd,out Boolean NewResource)
         {
             if (!UpdatingList) throw new SystemException("List is additive and Updating Flag has not been set");
             Int32 ResourceID = ResourceToAdd.info.id;
             if (!this.ContainsKey(ResourceID))
             {
-                this.Add(ResourceID, new ARPResource(ResourceToAdd.info));
-                this[ResourceID].OnMonitorStateChange += ARPResourceList_OnMonitorStateChange;
-                this[ResourceID].OnAlarmAcknowledged += ARPResourceList_OnAlarmAcknowledged;
+                this.Add(ResourceID, new ARPResource(ResourceToAdd.info, ResourceConfigs[ResourceID]));
+
+                //set the initial alarm states before enabling the events
+                NewResource = true;
+
+                this[ResourceID].OnMonitorStateChanged += ARPResourceList_OnMonitorStateChanged;
+                this[ResourceID].OnAlarmStateChanged+=ARPResourceList_OnAlarmStateChanged;
             }
+            else { NewResource = false; }
             return this[ResourceID];
         }
 
-        public event ARPResource.MonitorChanged OnMonitorStateChange;
-        public event ARPResource.AlarmAcknowledgedEvent OnAlarmAcknowledged;
+        internal event ARPResource.MonitorStateChangedHandler OnMonitorStateChanged;
+        internal event ARPResource.AlarmStateChangedHandler OnAlarmStateChanged;
 
-        void ARPResourceList_OnMonitorStateChange(ARPResource sender, ARPResource.MonitorType alarmType, bool TurnedOn,Boolean Acknowledged)
+        void ARPResourceList_OnMonitorStateChanged(ARPResource sender, ARPResource.MonitorStateEnum oldValue, ARPResource.MonitorStateEnum newValue,ARPResource.AlarmStateEnum AlarmState)
         {
-            if (OnMonitorStateChange != null)
-                OnMonitorStateChange(sender, alarmType, TurnedOn,Acknowledged);
-        }
-        void ARPResourceList_OnAlarmAcknowledged(ARPResource sender)
-        {
-            if (OnAlarmAcknowledged != null)
-                OnAlarmAcknowledged(sender);
+            MonoBehaviourExtended.LogFormatted_DebugOnly("LISTMon-{0}:{1}->{2} ({3})", sender.ResourceDef.name, oldValue, newValue, sender.AlarmState);
+            if (OnMonitorStateChanged != null)
+                OnMonitorStateChanged(sender, oldValue, newValue, AlarmState);
         }
 
-        internal Boolean UnacknowledgedAlarms(Dictionary<Int32,ResourceSettings> ResourceList)
+        void ARPResourceList_OnAlarmStateChanged(ARPResource sender, ARPResource.AlarmStateEnum oldValue, ARPResource.AlarmStateEnum newValue,ARPResource.MonitorStateEnum MonitorState)
+        {
+            MonoBehaviourExtended.LogFormatted_DebugOnly("LISTAck-{0}:{1}->{2} ({3})", sender.ResourceDef.name, oldValue, newValue, sender.MonitorState);
+            if (OnAlarmStateChanged != null) 
+                OnAlarmStateChanged(sender, oldValue, newValue,MonitorState);
+        }
+
+        internal Boolean UnacknowledgedAlarms()
         {
             Boolean blnReturn = false;
             foreach (ARPResource r in this.Values)
             {
-                if (!r.AlarmAcknowledged && ResourceList[r.ResourceDef.id].AlarmEnabled)
+                if (r.AlarmState== ARPResource.AlarmStateEnum.Unacknowledged && ResourceConfigs[r.ResourceDef.id].AlarmEnabled)
                 {
                     blnReturn = true;
                     break;
@@ -391,7 +458,8 @@ namespace KSPAlternateResourcePanel
         {
             if (!UpdatingList) throw new SystemException("List is additive and Updating Flag has not been set");
             //Get the Resource (or create it if needed)
-            ARPResource r = AddResource(Resource);
+            Boolean NewResource = false;
+            ARPResource r = AddResource(Resource,out NewResource);
 
             //Are we adding or setting the amounts
             switch (UpdateType)
@@ -410,6 +478,12 @@ namespace KSPAlternateResourcePanel
                     break;
                 default:
                     throw new SystemException("Invalid ResourceUpdate Type");
+            }
+            
+            if (NewResource)
+            {
+                r.SetMonitors();
+                r.SetAlarmAcknowledged();
             }
 
             return r;
@@ -440,4 +514,94 @@ namespace KSPAlternateResourcePanel
         }
 
     }
+
+    internal class ARPTransfer
+    {
+        internal ARPTransfer()
+        { }
+        internal ARPTransfer(Part p,PartResourceDefinition RD,TransferStateEnum State)
+        {
+            this.part = p;
+            this.resource = RD;
+            this.transferState = State;
+            this.Active = false;
+        }
+
+        internal Part part;
+        internal PartResourceDefinition resource;
+        internal TransferStateEnum transferState;
+
+        internal Boolean Active;
+        internal Single RatePerSec;
+
+        internal Int32 partID { get { return part.GetInstanceID(); } }
+        internal Int32 ResourceID { get { return resource.id; } }
+    }
+
+    internal enum TransferStateEnum
+    {
+        None,
+        In,
+        Out,
+    }
+
+    internal class ARPTransferList : List<ARPTransfer>
+    {
+        internal void AddItem(Part p,PartResourceDefinition RD,TransferStateEnum State)
+        {
+            this.Add(new ARPTransfer(p, RD, State));
+        }
+
+        internal Boolean ItemExists(Int32 PartID, Int32 ResourceID)
+        {
+            return this.Any(x => (x.partID == PartID) && (x.ResourceID == ResourceID));
+        }
+
+        internal ARPTransfer GetItem(Int32 PartID,Int32 ResourceID)
+        {
+            return this.FirstOrDefault(x => (x.partID == PartID) && (x.ResourceID == ResourceID));
+        }
+
+        internal void SetStateNone(Int32 ResourceID)
+        {
+            foreach (ARPTransfer t in this.Where(x => x.ResourceID == ResourceID))
+            {
+                t.transferState = TransferStateEnum.None;
+            }
+        }
+        internal void SetStateNone(Int32 ResourceID,TransferStateEnum State)
+        {
+            foreach (ARPTransfer t in this.Where(x => x.ResourceID == ResourceID && x.transferState==State))
+            {
+                t.transferState = TransferStateEnum.None;
+            }
+        }
+
+        internal void RemoveItem(Int32 PartID, Int32 ResourceID)
+        {
+            ARPTransfer toRemove = GetItem(PartID, ResourceID);
+            if (toRemove != null)
+                this.Remove(toRemove);
+        }
+
+        internal void RemovePartItems(Int32 PartID)
+        {
+            List<ARPTransfer> toRemove = this.Where(x=>x.partID==PartID).ToList();
+            foreach (ARPTransfer item in toRemove)
+            {
+                this.Remove(item);
+            }
+        }
+        internal void RemoveResourceItems(Int32 ResourceID)
+        {
+            List<ARPTransfer> toRemove = this.Where(x => x.ResourceID == ResourceID).ToList();
+            foreach (ARPTransfer item in toRemove)
+            {
+                this.Remove(item);
+            }
+        }
+
+
+    }
+
 }

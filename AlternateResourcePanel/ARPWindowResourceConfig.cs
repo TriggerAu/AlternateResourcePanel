@@ -191,13 +191,17 @@ namespace KSPAlternateResourcePanel
                         settings.Resources[item.id].MonitorWarningLevel = Mathf.Clamp(settings.Resources[item.id].MonitorWarningLevel,
                             0, settings.Resources[item.id].MonitorAlertLevel);
 
-                    GUIStyle temp = new GUIStyle();
-                    temp.padding.top = 4; temp.margin.top = 0;
-                    GUILayout.BeginHorizontal(temp);
-                    GUILayout.Label("Alarms for this:", Styles.styleStageTextHead, GUILayout.Width(100));
+                    GUIStyle temp = new GUIStyle(Styles.styleStageTextHead);
+                    temp.padding.top = 0;
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Alarms for this:", temp, GUILayout.Width(120));
                     DrawToggle(ref settings.Resources[item.id].AlarmEnabled, "Alarm Enabled", Styles.styleToggle);
                     GUILayout.EndHorizontal();
-
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Empty Behaviour:", temp, GUILayout.Width(120));
+                    DrawToggle(ref settings.Resources[item.id].HideWhenEmpty, "Hide When Empty", Styles.styleToggle);
+                    GUILayout.EndHorizontal();
+                    GUILayout.Space(3);
                     GUILayout.EndVertical();
                 }
             }

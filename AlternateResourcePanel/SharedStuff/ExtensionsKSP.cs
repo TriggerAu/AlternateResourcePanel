@@ -18,7 +18,7 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         /// <param name="p">Part to Check</param>
         /// <returns>Stage at which part will be decoupled. Returns -1 if the part will never be decoupled from the vessel</returns>
-        public static Int32 DecoupledAt(this Part p)
+        internal static Int32 DecoupledAt(this Part p)
         {
             return CalcDecoupleStage(p);
         }

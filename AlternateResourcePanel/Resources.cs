@@ -34,9 +34,13 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D texBarGreen_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
 
         internal static Texture2D texBarHighlight; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarHighlightGreen; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarHighlightRed; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
 
         internal static Texture2D btnChevronUp; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
         internal static Texture2D btnChevronDown; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+
+        internal static Texture2D btnViewAll; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
         internal static Texture2D btnSettingsAttention; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
@@ -125,9 +129,13 @@ namespace KSPAlternateResourcePanel
             LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.tga");
 
             LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.tga");
+            LoadImageFromGameDB(ref texBarHighlightGreen, "img_BarHighlightGreen.tga");
+            LoadImageFromGameDB(ref texBarHighlightRed, "img_BarHighlightRed.tga");
 
             LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.tga");
             LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.tga");
+
+            LoadImageFromGameDB(ref btnViewAll, "img_buttonEye.tga");
 
             LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.tga");
 

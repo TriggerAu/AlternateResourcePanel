@@ -109,6 +109,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label("Settings Section", Styles.styleStageTextHead,GUILayout.Width(140));
             GUILayout.Space(5);
             ddlSettingsTab.DrawButton();
+            GUILayout.Space(4);
             GUILayout.EndHorizontal();
 
             SettingsAreaWidth = 284;
@@ -123,19 +124,19 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 174;
+                    WindowHeight = 241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
-                    WindowHeight = 247;
+                    WindowHeight = 246;
                     DrawWindow_Alarms();
                     break;
                 case SettingsTabs.Staging:
-                    WindowHeight = 136;
+                    WindowHeight = MinWindowHeight + ((settings.StagingEnabled)?17:0);// 153;// 173 ;//136;
                     DrawWindow_Staging();
                     break;
                 case SettingsTabs.About:
-                    WindowHeight = 270;
+                    WindowHeight = 246;
                     DrawWindow_About();
                     break;
             }
@@ -226,8 +227,13 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Label("Icons:", Styles.styleStageTextHead);
+            GUILayout.Space(2);
+            GUILayout.Label(new GUIContent("Separator:","Padding around resource separators"), Styles.styleStageTextHead);
+            GUILayout.Label("Empties:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
             for (int i = 0; i < settings.lstIconOrder.Count; i++)
             {
                 if (i > 0)
@@ -244,6 +250,28 @@ namespace KSPAlternateResourcePanel
                 GUILayout.Label(Resources.IconOrderContent(settings.lstIconOrder[i]), Styles.styleTextCenter, GUILayout.Width(40));
             }
             GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(4);
+            settings.SpacerPadding = (Int32)GUILayout.HorizontalSlider(settings.SpacerPadding, 0, 5, GUILayout.Width(168+mbARP.windowMain.IconAlarmOffset));
+            GUILayout.Space(3);
+            GUILayout.Label(String.Format("{0}px",settings.SpacerPadding));
+            GUILayout.EndHorizontal();
+
+            if (DrawToggle(ref settings.HideEmptyResources, "Hide Empty Resources", Styles.styleToggle))
+            {
+                settings.Save();
+            }
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("After:");
+            settings.HideAfter = (Int32)GUILayout.HorizontalSlider(settings.HideAfter, 0, 10, GUILayout.Width(128 + mbARP.windowMain.IconAlarmOffset));
+            GUILayout.Space(3);
+            GUILayout.Label(String.Format("{0} secs", settings.HideAfter));
+            GUILayout.EndHorizontal();
+            GUILayout.Space(4);
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            
 
             //Visuals
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
@@ -311,7 +339,9 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Repeat:", GUILayout.Width(70));
-            settings.AlarmsWarningRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130));
+            //settings.AlarmsWarningRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130));
+            if (DrawHorizontalSlider(ref settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130)))
+                settings.Save();
             GUILayout.Space(3);
             GUILayout.Label (settings.AlarmsWarningRepeatsText);
             GUILayout.EndHorizontal();
@@ -325,7 +355,9 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Repeat:", GUILayout.Width(70));
-            settings.AlarmsAlertRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsAlertRepeats, 1, 6, GUILayout.Width(130));
+            //settings.AlarmsAlertRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsAlertRepeats, 1, 6, GUILayout.Width(130));
+            if (DrawHorizontalSlider(ref settings.AlarmsAlertRepeats,1,6, GUILayout.Width(130)))
+                settings.Save();
             GUILayout.Space(3);
             GUILayout.Label(settings.AlarmsAlertRepeatsText);
             GUILayout.EndHorizontal();
@@ -354,9 +386,14 @@ namespace KSPAlternateResourcePanel
         private void DrawWindow_Staging()
         {
             //Staging
-            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(64));
+            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(64));//, GUILayout.Height(84));
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Label("Staging:", Styles.styleStageTextHead);
+            //if (settings.StagingEnabled)
+            //{
+            //    GUILayout.Space(34);
+            //    GUILayout.Label("Alt+L:", Styles.styleStageTextHead.PaddingChangeBottom(-5));
+            //}
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             if (DrawToggle(ref settings.StagingEnabled, "Staging Enabled", Styles.styleToggle)) 
@@ -368,9 +405,42 @@ namespace KSPAlternateResourcePanel
                 if (settings.StagingEnabledInMapView)
                     if (DrawToggle(ref settings.StagingEnabledSpaceInMapView, "Allow Space Bar in Mapview", Styles.styleToggle) )
                         settings.Save();
+                //if (DrawToggle(ref settings.StagingIgnoreStageLock, "Ignore Keyboard Stage Lock", Styles.styleToggle))
+                //    settings.Save();
             }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
+
+            //AutoStaging
+            if (settings.StagingEnabled)
+            {
+                GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(50));
+                GUILayout.BeginVertical(GUILayout.Width(60));
+                GUILayout.Label("Auto:", Styles.styleStageTextHead);
+                if (settings.AutoStagingEnabled)
+                {
+                    GUILayout.Space(-2);
+                    GUILayout.Label("Delay:", Styles.styleStageTextHead.PaddingChangeBottom(-5));
+                }
+                GUILayout.EndVertical();
+                GUILayout.BeginVertical();
+                if (DrawToggle(ref settings.AutoStagingEnabled, "Auto Staging Enabled", Styles.styleToggle))
+                    settings.Save();
+                if (settings.AutoStagingEnabled)
+                {
+                    Single AutoStagingDelay = (Single)settings.AutoStagingDelayInTenths / 10;
+                    GUILayout.BeginHorizontal();
+                    if (DrawHorizontalSlider(ref AutoStagingDelay, 0.1f, 3f, GUILayout.Width(148 + mbARP.windowMain.IconAlarmOffset)))
+                    {
+                        settings.AutoStagingDelayInTenths = (Int32)(AutoStagingDelay * 10);
+                        settings.Save();
+                    }
+                    GUILayout.Label(String.Format("{0:0.0} sec", AutoStagingDelay), GUILayout.Width(50));
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
         }
 
         private void DrawWindow_About()
@@ -379,7 +449,7 @@ namespace KSPAlternateResourcePanel
             //Update Check Area
             GUILayout.Label("Version Check", Styles.styleStageTextHead);
 
-            GUILayout.BeginVertical(Styles.styleSettingsArea);
+            GUILayout.BeginVertical(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
             GUILayout.Space(3);
@@ -425,7 +495,7 @@ namespace KSPAlternateResourcePanel
 
 
             //About Area
-            GUILayout.BeginVertical(Styles.styleSettingsArea);
+            GUILayout.BeginVertical(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
             //GUILayout.Label("Written by:", Styles.styleStageTextHead);

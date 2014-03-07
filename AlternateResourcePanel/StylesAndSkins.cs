@@ -48,6 +48,8 @@ namespace KSPAlternateResourcePanel
         internal static GUIStyle styleBarRateText;
 
         internal static GUIStyle styleBarHighlight;
+        internal static GUIStyle styleBarHighlightGreen;
+        internal static GUIStyle styleBarHighlightRed;
 
         internal static GUIStyle styleText;
         internal static GUIStyle styleTextCenter;
@@ -88,7 +90,7 @@ namespace KSPAlternateResourcePanel
             stylePanel = new GUIStyle();
             stylePanel.normal.background = Resources.texPanel;
             stylePanel.border = new RectOffset(6, 6, 6, 6);
-            stylePanel.padding = new RectOffset(8, 7, 7, 0);
+            stylePanel.padding = new RectOffset(8, 3, 7, 0);
 
             styleButton = new GUIStyle(SkinsLibrary.DefUnitySkin.button);
             styleButton.name = "ButtonGeneral";
@@ -117,7 +119,7 @@ namespace KSPAlternateResourcePanel
             styleButtonSettings = new GUIStyle(styleButton);
             styleButtonSettings.name = "ButtonSettings";
             styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
-            styleButtonSettings.fixedWidth = 40;
+            //styleButtonSettings.fixedWidth = 40;
 
             styleButtonSettingsUnity = new GUIStyle(styleButtonSettings);
             styleButtonSettingsUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
@@ -236,6 +238,11 @@ namespace KSPAlternateResourcePanel
             styleBarHighlight = new GUIStyle();
             styleBarHighlight.normal.background = Resources.texBarHighlight;
             styleBarHighlight.border = new RectOffset(3, 3, 3, 3);
+
+            styleBarHighlightGreen = new GUIStyle(styleBarHighlight);
+            styleBarHighlightGreen.normal.background = Resources.texBarHighlightGreen;
+            styleBarHighlightRed = new GUIStyle(styleBarHighlight);
+            styleBarHighlightRed.normal.background = Resources.texBarHighlightRed;
 
             styleStageText = new GUIStyle(GUI.skin.label);
             styleStageText.normal.textColor = new Color(207, 207, 207);

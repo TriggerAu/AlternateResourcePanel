@@ -26,6 +26,10 @@ namespace KSPAlternateResourcePanel
         internal Rect WindowPosition = new Rect(Screen.width - 298, 19, 299, 20);
         [Persistent] private RectStorage WindowPositionStored = new RectStorage();
 
+        [Persistent] internal Int32 SpacerPadding = 0;
+        [Persistent] internal Boolean HideEmptyResources = false;
+        [Persistent] internal Int32 HideAfter = 2;
+
         [Persistent] internal Boolean ShowRates = true;
         [Persistent] internal Boolean ShowRatesForParts = true;
 
@@ -51,8 +55,12 @@ namespace KSPAlternateResourcePanel
 
 
         [Persistent] internal Boolean StagingEnabled = false;
+        //[Persistent] internal Boolean StagingIgnoreStageLock = true;
         [Persistent] internal Boolean StagingEnabledInMapView = false;
         [Persistent] internal Boolean StagingEnabledSpaceInMapView = false;
+
+        [Persistent] internal Boolean AutoStagingEnabled = false;
+        [Persistent] internal Int32 AutoStagingDelayInTenths = 5;
 
         [Persistent] internal List<String> lstIconOrder = new List<String>() { "KSPARP", "Mod", "Player" };
         [Persistent] internal DisplaySkin SelectedSkin = DisplaySkin.Default;
@@ -258,13 +266,14 @@ namespace KSPAlternateResourcePanel
     }
 
 
-    internal class ResourceSettings:ConfigNodeStorage
+    public class ResourceSettings:ConfigNodeStorage
     {
         [Persistent] internal Int32 id;
         [Persistent] internal String name="";
         [Persistent] internal Boolean IsSeparator=false;        
         [Persistent] internal VisibilityTypes Visibility = VisibilityTypes.AlwaysOn;
         [Persistent] internal Boolean AlarmEnabled = false;
+        [Persistent] internal Boolean HideWhenEmpty = false;
         [Persistent] internal MonitorDirections MonitorDirection = MonitorDirections.Low;
         [Persistent] internal Int32 MonitorWarningLevel = 20;
         [Persistent] internal Int32 MonitorAlertLevel = 10;
