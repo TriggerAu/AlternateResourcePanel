@@ -28,6 +28,12 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.1.0.0		-	KSP Version: 0.23
+- Added API for other plugins to read details and acknowledge alarms
+- Added Hide on empty setting - with delay
+- Added Show All button - show hidden resources on click/hover
+- Added Resource Transfer - same functionality from base part windows
+
 Version 2.0.2.0		-	KSP Version: 0.23
 - Fixed Window vis on alarm issue
 - Fixed NaN rate display issue

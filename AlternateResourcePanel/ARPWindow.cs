@@ -9,7 +9,7 @@ using KSPPluginFramework;
 
 namespace KSPAlternateResourcePanel
 {
-    class ARPWindow: MonoBehaviourWindow
+    class ARPWindow: MonoBehaviourWindowPlus
     {
         //internal ARPWindow()
         //{
@@ -73,8 +73,9 @@ namespace KSPAlternateResourcePanel
                     //Is it a separator - draw and skip?
                     if (ResourceID == 0)
                     {
-                        GUILayout.Space(3);
+                        GUILayout.Space(3 + settings.SpacerPadding);
                         GUILayout.Label("", Styles.styleSeparatorH, GUILayout.Width(WindowRect.width - 15), GUILayout.Height(2));
+                        GUILayout.Space(settings.SpacerPadding);
                         continue;
                     }
 
@@ -95,14 +96,14 @@ namespace KSPAlternateResourcePanel
                         if (settings.Resources[ResourceID].AlarmEnabled)
                         {
                             contAlarm.image = Resources.btnAlarmEnabled;
-                            switch (lstResources[ResourceID].MonitorWorstHealth)
+                            switch (lstResources[ResourceID].MonitorState)
                             {
-                                case ARPResource.MonitorType.Alert:
-                                    if (lstResources[ResourceID].AlarmAcknowledged || DateTime.Now.Millisecond < 500)
+                                case ARPResource.MonitorStateEnum.Alert:
+                                    if (lstResources[ResourceID].AlarmState!= ARPResource.AlarmStateEnum.Unacknowledged || DateTime.Now.Millisecond < 500)
                                         contAlarm.image = Resources.btnAlarmAlert;
                                     break;
-                                case ARPResource.MonitorType.Warn:
-                                    if (lstResources[ResourceID].AlarmAcknowledged || DateTime.Now.Millisecond < 500)
+                                case ARPResource.MonitorStateEnum.Warn:
+                                    if (lstResources[ResourceID].AlarmState != ARPResource.AlarmStateEnum.Unacknowledged || DateTime.Now.Millisecond < 500)
                                         contAlarm.image = Resources.btnAlarmWarn;
                                     break;
                                 default:
@@ -112,8 +113,8 @@ namespace KSPAlternateResourcePanel
                         //Draw the button - if the alarm is unacknowledged then acknowledge, else toggle alarm status
                         if (GUILayout.Button(contAlarm, Styles.styleAlarmButton))
                         {
-                            if (!lstResources[ResourceID].AlarmAcknowledged)
-                                lstResources[ResourceID].AlarmAcknowledged = true;
+                            if (lstResources[ResourceID].AlarmState == ARPResource.AlarmStateEnum.Unacknowledged)
+                                lstResources[ResourceID].SetAlarmAcknowledged();
                             else
                                 settings.Resources[ResourceID].AlarmEnabled = !settings.Resources[ResourceID].AlarmEnabled;
                         }
@@ -125,7 +126,7 @@ namespace KSPAlternateResourcePanel
                     {
                         //full width bar
                         rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset, 245, 15);
-                        if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight))
+                        if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             //MonoBehaviourExtended.LogFormatted_DebugOnly("Clicked");
                             SelectedResources.TogglePartResourceVisible(ResourceID);
                     }
@@ -133,7 +134,7 @@ namespace KSPAlternateResourcePanel
                     {
                         //need full Vessel and current stage bars
                         rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset, 120, 15);
-                        if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight))
+                        if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             SelectedResources.TogglePartResourceVisible(ResourceID);
 
                         //get last stage of this resource and set it
@@ -141,7 +142,7 @@ namespace KSPAlternateResourcePanel
                         {
                             Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].LastStageVisible;
                             rectBar = Drawing.CalcBarRect(rectIcon, Icon2StageBarOffset, 120, 15);
-                            if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight))
+                            if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                                 SelectedResources.TogglePartResourceVisible(ResourceID, true);
                         }
                     }
@@ -152,29 +153,73 @@ namespace KSPAlternateResourcePanel
             ////STAGING STUFF
             if (settings.StagingEnabled)
             {
-                GUILayout.Label("Stage:", Styles.styleStageTextHead, GUILayout.Width(60));
-                GUIStyle styleStageNum = new GUIStyle(Styles.styleStageTextHead);
-                GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString());
-                //styleStageNum.normal.textColor=new Color(173,43,43);
-                //GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString(),"NO Active Engines");
-                //if (THERE ARE ACTIVE ENGINES IN STAGE)
-                //{
-                //contStageNum.tooltip="Active Engines";
-                styleStageNum.normal.textColor = new Color(117, 206, 60);
-                //}
-
-                GUILayout.Label(contStageNum, styleStageNum, GUILayout.Width(40));
-
-                if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
+                if (!settings.AutoStagingEnabled)
                 {
-                    if (GUILayout.Button("Activate Stage","ButtonGeneral", GUILayout.Width(100)))
-                        Staging.ActivateNextStage();
-                }
+                    //GUILayout.Label("Stage:", Styles.styleStageTextHead, GUILayout.Width(50));
+                    if (GUILayout.Button("Stage:", Styles.styleStageTextHead, GUILayout.Width(50)))
+                        settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
+                    GUIStyle styleStageNum = new GUIStyle(Styles.styleStageTextHead);
+                    GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString());
+                    //styleStageNum.normal.textColor=new Color(173,43,43);
+                    //GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString(),"NO Active Engines");
+                    //if (THERE ARE ACTIVE ENGINES IN STAGE)
+                    //{
+                    //contStageNum.tooltip="Active Engines";
+                    styleStageNum.normal.textColor = new Color(117, 206, 60);
+                    //}
 
+                    GUILayout.Label(contStageNum, styleStageNum, GUILayout.Width(20));
+
+                    if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
+                    {
+                        if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
+                            Staging.ActivateNextStage();
+                    }
+                    GUILayout.Space(48 + IconAlarmOffset);
+                }
+                else
+                {
+                    if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50)))
+                        settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
+                    GUILayout.Label(Staging.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
+                    GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30));
+                    GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30));
+                    DrawHorizontalSlider(ref mbARP.AutoStagingTerminateAt, 0, mbARP.AutoStagingMaxStage);
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+
+                    String  strButtonArm = "Arm";
+                    GUIStyle styleArm = new GUIStyle(SkinsLibrary.CurrentSkin.button) { fontStyle = FontStyle.Bold };
+                    if (mbARP.AutoStagingArmed)
+                    {
+                        strButtonArm = "Disarm";
+                        styleArm.normal.textColor = styleArm.hover.textColor = new Color32(207,31,31,255) ;
+                    }
+                    else
+                    {
+                        styleArm.normal.textColor = styleArm.hover.textColor = new Color32(183,254,0,255);
+                    }
+
+                    if (GUILayout.Button(strButtonArm,styleArm ,GUILayout.Width(75)))
+                        mbARP.AutoStagingArmed = !mbARP.AutoStagingArmed;
+                    
+                    GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
+                    StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147+IconAlarmOffset));
+                }
+            }
+            else
+            {
+                GUILayout.Space(234 + IconAlarmOffset);
+            }
+
+            //Settings ShowAll Button
+            if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            {
+                KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;
             }
 
             //Settings Toggle button
-            GUILayout.FlexibleSpace();
             GUIContent btnMinMax = new GUIContent(Resources.btnChevronDown, "Show Settings...");
             if (windowSettings.Visible) { 
                 btnMinMax.image = Resources.btnChevronUp; btnMinMax.tooltip = "Hide Settings";
@@ -185,7 +230,7 @@ namespace KSPAlternateResourcePanel
             
             if (settings.VersionAttentionFlag) btnMinMax.tooltip = "Updated Version Available - " + btnMinMax.tooltip;
             
-            if (GUILayout.Button(btnMinMax,"ButtonSettings"))
+            if (GUILayout.Button(btnMinMax,"ButtonSettings",GUILayout.Width(23)))
             {
                 windowSettings.Visible = !windowSettings.Visible;
                 if (windowSettings.Visible && settings.VersionAttentionFlag)

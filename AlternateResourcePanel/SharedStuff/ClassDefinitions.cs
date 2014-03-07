@@ -12,7 +12,7 @@ namespace KSPAlternateResourcePanel
     /// A Queue structure that has a numerical limit.
     /// When the limit is reached the oldest entry is discarded
     /// </summary>
-    public class LimitedQueue<T> : Queue<T>
+    internal class LimitedQueue<T> : Queue<T>
     {
         private Int32 limit = -1;
 

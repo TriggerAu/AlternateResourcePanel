@@ -31,5 +31,18 @@ namespace KSPPluginFramework
             r.y = Mathf.Clamp(r.y, ScreenBorder.top, Screen.height - r.height - ScreenBorder.bottom);
             return r;
         }
+
+        public static GUIStyle PaddingChange(this GUIStyle g, Int32 PaddingValue)
+        {
+            GUIStyle gReturn = new GUIStyle(g);
+            gReturn.padding = new RectOffset(PaddingValue, PaddingValue, PaddingValue, PaddingValue);
+            return gReturn;
+        }
+        public static GUIStyle PaddingChangeBottom(this GUIStyle g, Int32 PaddingValue)
+        {
+            GUIStyle gReturn = new GUIStyle(g);
+            gReturn.padding.bottom = PaddingValue;
+            return gReturn;
+        }
     }
 }

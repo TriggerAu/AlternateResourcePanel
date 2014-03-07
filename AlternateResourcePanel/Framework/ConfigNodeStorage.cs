@@ -104,7 +104,7 @@ namespace KSPPluginFramework
             Boolean blnReturn = false;
             try
             {
-                LogFormatted_DebugOnly("Loading Settings");
+                LogFormatted_DebugOnly("Loading ConfigNode");
                 if (FileExists)
                 {
                     //Load the file into a config node
@@ -223,7 +223,7 @@ namespace KSPPluginFramework
         [System.Diagnostics.Conditional("DEBUG")]
         internal static void LogFormatted_DebugOnly(String Message, params object[] strParams)
         {
-            LogFormatted(Message, strParams);
+            LogFormatted("DEBUG: " + Message, strParams);
         }
 
         /// <summary>

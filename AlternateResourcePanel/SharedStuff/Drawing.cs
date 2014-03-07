@@ -42,7 +42,7 @@ namespace KSPAlternateResourcePanel
             return GUILayoutUtility.GetLastRect();
         }
 
-        internal static Boolean DrawResourceBar(Rect rectBar,ARPResource Res, GUIStyle styleBack,GUIStyle styleFront,GUIStyle styleFrontThin,Boolean ShowRates,Boolean Highlight)
+        internal static Boolean DrawResourceBar(Rect rectBar, ARPResource Res, GUIStyle styleBack, GUIStyle styleFront, GUIStyle styleFrontThin, Boolean ShowRates, Boolean Highlight, GUIStyle HighlightStyle)
         {
             Boolean blnReturn = false;
             Single fltBarRemainRatio = (float)Res.Amount / (float)Res.MaxAmount;
@@ -53,7 +53,7 @@ namespace KSPAlternateResourcePanel
                 Rect rectHighlight = new Rect(rectBar);
                 rectHighlight.x -= 2; rectHighlight.y -= 2;
                 rectHighlight.width += 4; rectHighlight.height += 4;
-                GUI.Box(rectHighlight, "", Styles.styleBarHighlight);
+                GUI.Box(rectHighlight, "", HighlightStyle);
             }
 
 

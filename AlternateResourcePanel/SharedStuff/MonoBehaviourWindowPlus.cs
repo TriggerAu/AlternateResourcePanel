@@ -51,6 +51,21 @@ namespace KSPPluginFramework
         }
 
 
+        internal Boolean DrawHorizontalSlider(ref Int32 intVar, Int32 leftValue, Int32 rightValue, params GUILayoutOption[] options)
+        {
+            Int32 intOld = intVar;
+
+            intVar = (Int32)GUILayout.HorizontalSlider((Single)intVar, (Single)leftValue, (Single)rightValue, options);
+            return DrawResultChanged(intOld, intVar, "Integer HorizSlider");
+        }
+        internal Boolean DrawHorizontalSlider(ref Single dblVar, Single leftValue, Single rightValue, params GUILayoutOption[] options)
+        {
+            Single intOld = dblVar;
+
+            dblVar = GUILayout.HorizontalSlider(dblVar, leftValue, rightValue, options);
+            return DrawResultChanged(intOld, dblVar, "Integer HorizSlider");
+        }
+
         /// <summary>
         /// Draws a Toggle Button and sets the boolean variable to the state of the button
         /// </summary>
@@ -414,11 +429,6 @@ namespace KSPPluginFramework
                     height = (Items.Count * ListItemHeight) + (ListBoxPadding.top + ListBoxPadding.bottom)
                 };
 
-
-                LogFormatted(Window.WindowRect.ToString());
-                LogFormatted(rectButton.ToString());
-                LogFormatted(rectListBox.ToString());
-                LogFormatted("{0}-{1}", (rectListBox.y + rectListBox.height), Window.WindowRect.y);
                 //if it doesnt fit below the list
                 if ((rectListBox.y+rectListBox.height)>Window.WindowRect.height) {
                     if (rectListBox.height < Window.WindowRect.height - 8)
@@ -426,7 +436,6 @@ namespace KSPPluginFramework
                         //move the top up so that the full list is visible
                         ListPageOverflow = false;
                         rectListBox.y = Window.WindowRect.height - rectListBox.height - 4;
-                        LogFormatted("Moved:" + rectListBox.ToString());
                     }
                     else
                     {

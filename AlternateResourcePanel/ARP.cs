@@ -12,8 +12,13 @@ using ARPToolbarWrapper;
 namespace KSPAlternateResourcePanel
 {
     [KSPAddon(KSPAddon.Startup.Flight,false)]
-    public class KSPAlternateResourcePanel : MonoBehaviourExtended
+    public partial class KSPAlternateResourcePanel : MonoBehaviourExtended
     {
+        private KSPAlternateResourcePanel()
+        {
+            APIInstance = this;
+        }
+
         //windows
         internal ARPWindow windowMain;
         internal ARPWindowSettings windowSettings;
@@ -23,9 +28,12 @@ namespace KSPAlternateResourcePanel
         internal PartResourceVisibleList SelectedResources;
 
         internal Int32 LastStage;
-        internal ARPResourceList lstResourcesVessel;
-        internal ARPResourceList lstResourcesLastStage;
+        public ARPResourceList lstResourcesVessel;
+        public ARPResourceList lstResourcesLastStage;
 
+        internal ARPPartList lstPartsLastStageEngines;
+        internal List<ModuleEngines> lstLastStageEngineModules;
+ 
         /// <summary>
         /// ResourceIDs of ones to show in window
         /// </summary>
@@ -48,6 +56,16 @@ namespace KSPAlternateResourcePanel
         internal static AudioController audioController;
         internal AudioClip clipAlarmsWarning;
         internal AudioClip clipAlarmsAlert;
+
+        internal Boolean AutoStagingArmed = false;
+        internal Boolean AutoStagingRunning = false;
+        internal Int32 AutoStagingMaxStage = 0;
+        internal Int32 AutoStagingTerminateAt = 1;
+        internal String AutoStagingStatus;
+        internal Color32 AutoStagingStatusColor;
+
+        //List of resource transfers
+        internal ARPTransferList lstTransfers;
 
         internal override void Awake()
         {
@@ -73,14 +91,20 @@ namespace KSPAlternateResourcePanel
 
             //init the global variables
             lstPartWindows = new ARPPartWindowList();
-            lstResourcesVessel = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues);
-            lstResourcesLastStage = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues);
+            lstResourcesVessel = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues, settings.Resources);
+            lstResourcesLastStage = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues, settings.Resources);
+
+            lstPartsLastStageEngines = new ARPPartList();
 
             lstResourcesToDisplay = new List<Int32>();
             SelectedResources = new PartResourceVisibleList();
 
-            lstResourcesVessel.OnMonitorStateChange += lstResourcesVessel_OnMonitorStateChange;
-            lstResourcesVessel.OnAlarmAcknowledged += lstResourcesVessel_OnAlarmAcknowledged;
+            lstTransfers = new ARPTransferList();
+
+            SelectedResources.ResourceRemoved += SelectedResources_ResourceRemoved;
+
+            lstResourcesVessel.OnMonitorStateChanged += lstResourcesVessel_OnMonitorStateChanged;
+            lstResourcesVessel.OnAlarmStateChanged += lstResourcesVessel_OnAlarmStateChanged;
 
             //init the windows
             InitMainWindow();
@@ -94,22 +118,36 @@ namespace KSPAlternateResourcePanel
 
             //register for stage separation events - so we can cancel the noise on a sep
             GameEvents.onStageActivate.Add(OnStageActivate);
+            GameEvents.onFlightReady.Add(OnFlightReady);
 
             //do the daily version check if required
             if (settings.DailyVersionCheck)
                 settings.VersionCheck(false);
+
+            APIAwake();
+
+        }
+
+        void SelectedResources_ResourceRemoved(int ResourceID)
+        {
+            lstTransfers.RemoveResourceItems(ResourceID);
         }
 
         internal override void OnDestroy()
         {
             LogFormatted("Destroying the AlternateResourcePanel (ARP)");
 
-            lstResourcesVessel.OnMonitorStateChange -= lstResourcesVessel_OnMonitorStateChange;
-            lstResourcesVessel.OnAlarmAcknowledged -= lstResourcesVessel_OnAlarmAcknowledged;
+            lstResourcesVessel.OnMonitorStateChanged -= lstResourcesVessel_OnMonitorStateChanged;
+            lstResourcesVessel.OnAlarmStateChanged -= lstResourcesVessel_OnAlarmStateChanged;
 
             RenderingManager.RemoveFromPostDrawQueue(1, DrawGUI);
 
+            GameEvents.onStageActivate.Remove(OnStageActivate);
+            GameEvents.onFlightReady.Remove(OnFlightReady);
+
             DestroyToolbarButton(btnToolbar);
+
+            APIDestroy();
         }
 
         //use this to trigger a clean up of sound at the end of teh repeating worker loop
@@ -119,27 +157,37 @@ namespace KSPAlternateResourcePanel
             StageCheckAlarmAudio = true;
         }
 
-        void lstResourcesVessel_OnMonitorStateChange(ARPResource sender, ARPResource.MonitorType alarmType, bool TurnedOn,Boolean AlarmAcknowledged)
+        void OnFlightReady()
         {
+            AutoStagingMaxStage = Staging.StageCount-1;
+        }
+
+//        void lstResourcesVessel_OnMonitorStateChange(ARPResource sender, ARPResource.MonitorStateEnum alarmType, bool TurnedOn,Boolean AlarmAcknowledged)
+        void lstResourcesVessel_OnMonitorStateChanged(ARPResource sender, ARPResource.MonitorStateEnum oldValue, ARPResource.MonitorStateEnum newValue,ARPResource.AlarmStateEnum AlarmState)
+        {
+            LogFormatted_DebugOnly("ARP-{0}:{1}->{2} ({3})", sender.ResourceDef.name, oldValue, newValue,sender.AlarmState);
             //Play a sound if necessary
-            if (TurnedOn && !AlarmAcknowledged && settings.AlarmsEnabled && settings.Resources[sender.ResourceDef.id].AlarmEnabled)
-            {
-                switch (alarmType)
+            //if (TurnedOn && !AlarmAcknowledged && settings.AlarmsEnabled && settings.Resources[sender.ResourceDef.id].AlarmEnabled)
+            if (newValue!= ARPResource.MonitorStateEnum.None && AlarmState== ARPResource.AlarmStateEnum.Unacknowledged && settings.AlarmsEnabled && settings.Resources[sender.ResourceDef.id].AlarmEnabled)
                 {
-                    case ARPResource.MonitorType.Alert:
+                switch (newValue)
+                {
+                    case ARPResource.MonitorStateEnum.Alert:
                         if (clipAlarmsAlert != null) 
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsAlert, settings.AlarmsAlertRepeats);
                         break;
-                    case ARPResource.MonitorType.Warn:
+                    case ARPResource.MonitorStateEnum.Warn:
                         if (clipAlarmsAlert != null) 
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsWarning, settings.AlarmsWarningRepeats);
                         break;
                 }
             }
         }
-        void lstResourcesVessel_OnAlarmAcknowledged(ARPResource sender)
+        void lstResourcesVessel_OnAlarmStateChanged(ARPResource sender, ARPResource.AlarmStateEnum oldValue, ARPResource.AlarmStateEnum newValue,ARPResource.MonitorStateEnum MonitorState)
         {
-            KSPAlternateResourcePanel.audioController.Stop();
+            LogFormatted_DebugOnly("ARP-{0}:{1}->{2} ({3})", sender.ResourceDef.name, oldValue, newValue, sender.MonitorState);
+            if (newValue != ARPResource.AlarmStateEnum.Unacknowledged)
+                KSPAlternateResourcePanel.audioController.Stop();
         }
 
         /// <summary>
@@ -212,6 +260,7 @@ namespace KSPAlternateResourcePanel
             windowDebug.Visible = true;
             windowDebug.WindowRect = new Rect(0, 50, 300, 200);
             windowDebug.DragEnabled = true;
+            windowDebug.settings = settings;
 #endif
         }
 
@@ -231,10 +280,12 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary.SetCurrent(settings.SelectedSkin.ToString());
         }
 
-        //Positio of screen button
+        //Position of screen button
         static Rect rectButton = new Rect(Screen.width - 109, 0, 80, 30);
         //Hover Status for mouse
         internal static Boolean HoverOn = false;
+        //Hover Status for mouse
+        internal static Boolean ShowAll = false;
 
         void DrawGUI()
         {
@@ -252,8 +303,11 @@ namespace KSPAlternateResourcePanel
             if (Event.current.type == EventType.Repaint)
                 HoverOn = IsMouseOver();
 
+            if (!HoverOn)
+                ShowAll = false;
+
             //Are we drawing the main window - hovering, or toggled or alarmsenabled and an unackowledged alarm - and theres resources
-            if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms(settings.Resources))) && (lstResourcesVessel.Count > 0))
+            if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms())) && (lstResourcesVessel.Count > 0))
             {
                 windowMain.Visible = true;
                 if (blnResetWindow)
@@ -275,7 +329,7 @@ namespace KSPAlternateResourcePanel
         /// Is the mouse ver the main or settings windows or the button
         /// </summary>
         /// <returns></returns>
-        public Boolean IsMouseOver()
+        internal Boolean IsMouseOver()
         {
             if ((settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
                 return MouseOverToolbarBtn || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
@@ -312,20 +366,23 @@ namespace KSPAlternateResourcePanel
             lstResourcesVessel.StartUpdatingList(settings.ShowRates, RepeatingWorkerUTPeriod);
             lstResourcesLastStage.StartUpdatingList(settings.ShowRates, RepeatingWorkerUTPeriod);
 
+            //flush the temporary lists
+            lstPartsLastStageEngines= new ARPPartList();
             List<Int32> ActiveResources = new List<Int32>();
             //Now loop through and update em
             foreach (Part p in active.parts)
             {
+                //is the part decoupled in the last stage
+                Boolean DecoupledInLastStage = (p.DecoupledAt()==LastStage);
+
                 foreach (PartResource pr in p.Resources)
                 {
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
                     
                     //update the resource in the vessel list
-                    lstResourcesVessel.UpdateResource(pr);
+                    lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
 
-                    //is the part decoupled in the last stage
-                    Boolean DecoupledInLastStage = (p.DecoupledAt()==LastStage);
                     if (DecoupledInLastStage)
                     {
                         lstResourcesLastStage.UpdateResource(pr);
@@ -343,6 +400,12 @@ namespace KSPAlternateResourcePanel
                             lstPartWindows[p.GetInstanceID()].ResourceList.Remove(pr.info.id);
                     }
                 }
+
+                if(DecoupledInLastStage && p.Modules.OfType<ModuleEngines>().Any())
+                {
+                    //Add the part to the engines list for the active stage
+                    lstPartsLastStageEngines.Add(p);
+                }
             }
 
             //Destroy the windows that have no resources selected to display
@@ -359,28 +422,8 @@ namespace KSPAlternateResourcePanel
             //Set the alarm flags
             foreach (ARPResource r in lstResourcesVessel.Values)
             {
-                ResourceSettings rToCheck = settings.Resources[r.ResourceDef.id];
-                Double rPercent = (r.Amount / r.MaxAmount)*100;
-
-                if ((rToCheck.MonitorDirection == ResourceSettings.MonitorDirections.Low && rPercent <= rToCheck.MonitorAlertLevel) ||
-                    (rToCheck.MonitorDirection == ResourceSettings.MonitorDirections.High && rPercent >= rToCheck.MonitorAlertLevel))
-                {
-                    r.MonitorAlert = true;
-                    r.MonitorWarning = true;
-                }
-                else if ((rToCheck.MonitorDirection == ResourceSettings.MonitorDirections.Low && rPercent <= rToCheck.MonitorWarningLevel) ||
-                    (rToCheck.MonitorDirection == ResourceSettings.MonitorDirections.High && rPercent >= rToCheck.MonitorWarningLevel))
-                {
-                    r.MonitorWarning = true;
-                    r.MonitorAlert = false;
-                }
-                else
-                {
-                    r.MonitorWarning = false;
-                    r.MonitorAlert = false;
-                }
+                r.SetMonitors();
             }
-
 
             //work out if we have to kill the audio
             if (StageCheckAlarmAudio)
@@ -391,7 +434,7 @@ namespace KSPAlternateResourcePanel
                     Boolean AudioShouldBePlaying = false;
                     foreach (ARPResource r in lstResourcesVessel.Values)
                     {
-                        if (!r.AlarmAcknowledged && r.MonitorWorstHealth!= ARPResource.MonitorType.None)
+                        if (r.AlarmState== ARPResource.AlarmStateEnum.Unacknowledged && r.MonitorState!= ARPResource.MonitorStateEnum.None)
                         {
                             AudioShouldBePlaying = true;
                             break;
@@ -402,7 +445,6 @@ namespace KSPAlternateResourcePanel
                 }
 
             }
-
 
             //Build the displayList
             lstResourcesToDisplay = new List<Int32>();
@@ -417,13 +459,28 @@ namespace KSPAlternateResourcePanel
                     continue;
                 }
 
-                //skip to next item if this one is a) Hidden b) Set to threshold and not flagged
+                //only add resources in the vessel
                 if (!lstResourcesVessel.ContainsKey(ResourceID)) continue;
-                if (settings.Resources[ResourceID].Visibility == ResourceSettings.VisibilityTypes.Hidden)
-                    continue;
-                else if (settings.Resources[ResourceID].Visibility == ResourceSettings.VisibilityTypes.Threshold)
-                    if (!(lstResourcesVessel[ResourceID].MonitorAlert || lstResourcesVessel[ResourceID].MonitorWarning))
+
+                //skip to next item if this one is a) Hidden b) Set to threshold and not flagged c)Empty and empty timer is done
+                //show everything of showall is enabled
+                if (!ShowAll)
+                {
+                    if (settings.Resources[ResourceID].Visibility == ResourceSettings.VisibilityTypes.Hidden)
                         continue;
+                    else if (settings.Resources[ResourceID].Visibility == ResourceSettings.VisibilityTypes.Threshold)
+                    {
+                        if (lstResourcesVessel[ResourceID].MonitorState == ARPResource.MonitorStateEnum.None)
+                            continue;
+                    }
+                    else if (settings.HideEmptyResources && settings.Resources[ResourceID].HideWhenEmpty && lstResourcesVessel[ResourceID].IsEmpty)
+                    {
+                        //if the alarms not firing and the time has passed then hide it
+                        if (lstResourcesVessel[ResourceID].AlarmState!=ARPResource.AlarmStateEnum.Unacknowledged &&
+                                lstResourcesVessel[ResourceID].EmptyAt<DateTime.Now.AddSeconds(-settings.HideAfter))
+                            continue;
+                    }
+                }
 
                 //if we get this far then add it to the list
                 lstResourcesToDisplay.Add(ResourceID);
@@ -440,28 +497,158 @@ namespace KSPAlternateResourcePanel
             }
 
             //Calc window widths/heights
-            windowMain.WindowRect.width = 299;
-            windowMain.Icon2BarOffset = 40;
-            windowMain.Icon2StageBarOffset = 40 + 125;
-            if (settings.AlarmsEnabled)
-            {
-                windowMain.WindowRect.width += windowMain.IconAlarmOffset;
-                windowMain.Icon2BarOffset += windowMain.IconAlarmOffset;
-                windowMain.Icon2StageBarOffset += windowMain.IconAlarmOffset;
-            }
+            windowMain.IconAlarmOffset = 12;
+            if (!settings.AlarmsEnabled)
+                windowMain.IconAlarmOffset = 0;
+
+            windowMain.WindowRect.width = 299 + windowMain.IconAlarmOffset;
+            windowMain.Icon2BarOffset = 40+ windowMain.IconAlarmOffset ;
+            windowMain.Icon2StageBarOffset = 40 + 125 + windowMain.IconAlarmOffset ;
 
             if (lstResourcesToDisplay.Count == 0)
                 windowMain.WindowRect.height = (2 * windowMain.intLineHeight) + 16;
             else
-                windowMain.WindowRect.height = ((lstResourcesToDisplay.Count + 1) * windowMain.intLineHeight) - (lstResourcesToDisplay.Count(x => x == 0) * 15) + 12;
+            {
+                //this is resources lines - separators diff + fixed value
+                windowMain.WindowRect.height = ((lstResourcesToDisplay.Count + 1) * windowMain.intLineHeight) - (lstResourcesToDisplay.Count(x => x == 0) * (15 - (settings.SpacerPadding * 2))) + 12;
+            }
+            if (settings.AutoStagingEnabled)
+                windowMain.WindowRect.height += 24;
 
+            //now do the autostaging stuff
+            lstLastStageEngineModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEngines>()).ToList();
+            AutoStagingMaxStage = Mathf.Min(AutoStagingMaxStage, Staging.StageCount - 1);
+            AutoStagingTerminateAt = Mathf.Min(AutoStagingTerminateAt, AutoStagingMaxStage);
+            AutoStagingStatusColor = Color.white;
+            if (settings.AutoStagingEnabled)
+            {
+                if (AutoStagingArmed)
+                {
+                    if (!AutoStagingRunning)
+                    {
+                        AutoStagingStatusColor = Color.white;
+                        AutoStagingStatus = "Armed... waiting for stage";
+                        //when to set it to running
+                        if (lstLastStageEngineModules.Any(x => x.staged))
+                            AutoStagingRunning = true;
+                    }
+                    else if (Staging.CurrentStage > AutoStagingTerminateAt)
+                    {
+                        //we are running, so now what
+                        AutoStagingStatusColor = new Color32(183, 254, 0, 255);
+                        AutoStagingStatus = "Running";
+
+                        //are all the engines flamed out in the last stage
+                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.All(x => x.getFlameoutState)))
+                        {
+                            AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
+                        }
+                        else if (AutoStagingTriggeredAt != 0){
+                            if (Planetarium.GetUniversalTime() - AutoStagingTriggeredAt > ((Double)settings.AutoStagingDelayInTenths / 10))
+                            {
+                                //if (!settings.StagingIgnoreLock || Staging.stackLocked || FlightInputHandler.fetch.stageLock)
+                                LogFormatted("Autostage Triggered: {0}->{1}", Staging.CurrentStage, Staging.CurrentStage - 1);
+                                Staging.ActivateNextStage();
+                                AutoStagingTriggeredAt = 0;
+                            } else {
+                                AutoStagingStatusColor = new Color32(232, 232, 0, 255);
+                                AutoStagingStatus = String.Format("Delay:{0:0.0}s", ((Double)settings.AutoStagingDelayInTenths / 10) - (Planetarium.GetUniversalTime() -AutoStagingTriggeredAt ));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        LogFormatted("Autostaging Run Complete");
+                        AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
+                        AutoStagingRunning = false;
+                        AutoStagingArmed = false;
+                    }
+                }
+                else
+                {
+                    if (AutoStagingTriggeredAt == 0)
+                    {
+                        AutoStagingStatusColor = new Color32(140, 140, 140,255);
+                        AutoStagingStatus = "Not Armed";
+                    }
+                    else
+                    {
+                        if (Planetarium.GetUniversalTime() - AutoStagingTriggeredAt > 3)
+                            AutoStagingTriggeredAt = 0;
+                        else
+                        {
+                            AutoStagingStatus = "Run Complete";
+                            AutoStagingStatusColor = new Color32(183, 254, 0, 255);
+                        }
+                    }
+                }
+            }
+
+            //Transfers??
+            lstString = new List<string>();
+            if (lstTransfers.Count>1)
+            {
+                //look for matches
+                foreach (IGrouping<Int32,ARPTransfer> item in lstTransfers.GroupBy(x=>x.ResourceID))
+	            {
+                    String strTemp = item.First().resource.name;
+                    if (item.Any(x => x.transferState == TransferStateEnum.In) &&
+                        item.Any(x => x.transferState == TransferStateEnum.Out))
+                    {
+                        foreach (ARPTransfer t in item.Where(x=>x.transferState!= TransferStateEnum.None))
+                        {
+                            t.Active = true;
+                            t.RatePerSec = (Single)lstPartWindows[t.partID].ResourceList[t.ResourceID].MaxAmount / 20;
+                        }
+                        strTemp += "Transfer";
+                    }
+                    else
+                    {
+                        foreach (ARPTransfer t in item)
+                        {
+                            t.Active = false;
+                        }
+                        strTemp += "Waiting";
+                    }
+                    lstString.Add(strTemp);
+	            }
+            }
         }
+        internal List<String> lstString;
+        internal Double AutoStagingTriggeredAt = 0;
 
         internal override void Update()
         {
             //Activate Stage via Space Bar in MapView
             if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && Input.GetKey(KeyCode.Space))
                 Staging.ActivateNextStage();
+        }
+
+        internal String TestTrans;
+        internal override void FixedUpdate()
+        {
+            foreach (IGrouping<Int32, ARPTransfer> t in lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
+            {
+                if (t.FirstOrDefault(x => x.transferState == TransferStateEnum.Out) ==null ||
+                    t.FirstOrDefault(x => x.transferState == TransferStateEnum.In) == null) continue;
+                ARPTransfer OutTrans = t.First(x => x.transferState == TransferStateEnum.Out);
+                ARPTransfer InTrans = t.First(x => x.transferState == TransferStateEnum.In);
+
+                Single TransferRate = Mathf.Max(InTrans.RatePerSec, OutTrans.RatePerSec);
+
+                Single RequestAmount = TransferRate * Time.deltaTime;
+                Single AmountOutPossible = (Single)OutTrans.part.Resources.Get(t.Key).amount;
+                Single AmountInPossible = (Single)InTrans.part.Resources.Get(t.Key).maxAmount - (Single)InTrans.part.Resources.Get(t.Key).amount;
+                Single AmountPossible = Mathf.Min(AmountOutPossible, AmountInPossible);
+
+                Single AmountToTransfer = Mathf.Min(RequestAmount, AmountPossible);
+
+                OutTrans.part.Resources.Get(t.Key).amount -= AmountToTransfer;
+                InTrans.part.Resources.Get(t.Key).amount += AmountToTransfer;
+                //OutTrans.part.RequestResource(t.Key, AmountToTransfer);
+                //InTrans.part.RequestResource(t.Key, -AmountToTransfer);
+                TestTrans = String.Format("{0}->{1}", OutTrans.partID, InTrans.partID);
+            }
         }
 
         internal override void LateUpdate()
