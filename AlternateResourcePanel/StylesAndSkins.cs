@@ -313,7 +313,7 @@ namespace KSPAlternateResourcePanel
             GUISkin DefUnity = SkinsLibrary.CopySkin(SkinsLibrary.DefSkinType.Unity);
             DefUnity.window = DefUnity.box;
             DefUnity.window.border = new RectOffset(6, 6, 6, 6);
-            DefUnity.window.padding = new RectOffset(8, 4, 7, 0);
+            DefUnity.window.padding = new RectOffset(8, 3, 7, 0);
             DefUnity.horizontalSlider.margin.top = 8;
             SkinsLibrary.AddSkin("Unity", DefUnity);
 

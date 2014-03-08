@@ -64,6 +64,10 @@ namespace KSPAlternateResourcePanel
             //base.DrawWindow(id);
             GUILayout.BeginVertical();
 
+            if (GUILayout.Button("Remove"))
+            {
+                ResourceDisplay.Instance.HideResourceList();
+            }
 
             GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
             GUILayout.Label(String.Format("UT Passed: {0}s",mbARP.RepeatingWorkerUTPeriod.ToString()));
