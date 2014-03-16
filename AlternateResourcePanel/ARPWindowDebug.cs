@@ -75,33 +75,38 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-            GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
-            GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
+            foreach (ModuleEngines item in mbARP.lstLastStageEngineModules)
+            {
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+            }
 
-            GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
-            foreach (ARPTransfer item in mbARP.lstTransfers)
-            {
-                GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
-            }
-            if (GUILayout.Button("AAA"))
-            {
-                LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
-                foreach (ARPTransfer a in mbARP.lstTransfers)
-                {
-                    LogFormatted("{0}-{1}-{2}-{3}-{4}",intTest4, a.partID, a.part.GetInstanceID(), a.ResourceID, a.resource.id);
-                }
-            }
-            foreach (IGrouping<Int32,ARPTransfer> item in mbARP.lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
-	        {
-                GUILayout.Label(item.Key.ToString());
-		    }
-            GUILayout.Label(mbARP.TestTrans);
+            //GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
+            //GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
+
+            //GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
+            //foreach (ARPTransfer item in mbARP.lstTransfers)
+            //{
+            //    GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
+            //}
+            //if (GUILayout.Button("AAA"))
+            //{
+            //    LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
+            //    foreach (ARPTransfer a in mbARP.lstTransfers)
+            //    {
+            //        LogFormatted("{0}-{1}-{2}-{3}-{4}",intTest4, a.partID, a.part.GetInstanceID(), a.ResourceID, a.resource.id);
+            //    }
+            //}
+            //foreach (IGrouping<Int32,ARPTransfer> item in mbARP.lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
+            //{
+            //    GUILayout.Label(item.Key.ToString());
+            //}
+            //GUILayout.Label(mbARP.TestTrans);
             
-            foreach (String item in mbARP.lstString)
-            {
-                GUILayout.Label(item);
+            //foreach (String item in mbARP.lstString)
+            //{
+            //    GUILayout.Label(item);
                 
-            }
+            //}
             //#region Auto Staging
             //GUILayout.Label(FlightGlobals.ActiveVessel.ctrlState.mainThrottle.ToString());
 

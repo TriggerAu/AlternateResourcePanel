@@ -61,7 +61,7 @@
     <Compile Include="ARPWindowDebug.cs" />
     <Compile Include="ARPWindowResourceConfig.cs" />
     <Compile Include="ARPWindowSettings.cs" />
-    <Compile Include="AudioController.cs" />
+    <Compile Include="FrameworkExt\AudioController.cs" />
     <Compile Include="ClassDefinitions.cs" />
     <Compile Include="Framework\ConfigNodeStorage.cs" />
     <Compile Include="Framework\ExtensionsUnity.cs" />
@@ -70,12 +70,12 @@
     <Compile Include="Framework\SkinsLibrary.cs" />
     <Compile Include="Framework\ToolbarWrapper.cs" />
     <Compile Include="Resources.cs" />
-    <Compile Include="SharedStuff\ClassDefinitions.cs" />
+    <Compile Include="FrameworkExt\ClassDefinitions.cs" />
     <Compile Include="SharedStuff\Drawing.cs" />
-    <Compile Include="SharedStuff\ExtensionsKSP.cs" />
+    <Compile Include="FrameworkExt\ExtensionsKSP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SharedStuff\MonoBehaviourWindowPlus.cs" />
+    <Compile Include="FrameworkExt\MonoBehaviourWindowPlus.cs" />
     <Compile Include="StylesAndSkins.cs" />
   </ItemGroup>
   <ItemGroup>
