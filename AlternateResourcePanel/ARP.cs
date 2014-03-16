@@ -326,7 +326,7 @@ namespace KSPAlternateResourcePanel
         }
 
         /// <summary>
-        /// Is the mouse ver the main or settings windows or the button
+        /// Is the mouse over the main or settings windows or the button
         /// </summary>
         /// <returns></returns>
         internal Boolean IsMouseOver()
@@ -538,8 +538,8 @@ namespace KSPAlternateResourcePanel
                         AutoStagingStatusColor = new Color32(183, 254, 0, 255);
                         AutoStagingStatus = "Running";
 
-                        //are all the engines flamed out in the last stage
-                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.All(x => x.getFlameoutState)))
+                        //are all the engines that are active flamed out in the last stage
+                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.Where(x=>x.staged).All(x => x.getFlameoutState)))
                         {
                             AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
                         }
