@@ -28,6 +28,9 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.1.3.0		-	KSP Version: 0.23.5
+- 0.23.5 Recompile for new version of Unity/KSP
+
 Version 2.1.2.0		-	KSP Version: 0.23
 - Set AutoStaging to only watch for staged engine flameout - caters to Sepratron
 
