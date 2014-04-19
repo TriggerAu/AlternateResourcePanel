@@ -201,6 +201,10 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Label("Empty Behaviour:", temp, GUILayout.Width(120));
                     DrawToggle(ref settings.Resources[item.id].HideWhenEmpty, "Hide When Empty", Styles.styleToggle);
                     GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120));
+                    DrawToggle(ref settings.Resources[item.id].HideWhenFull, "Hide When Full", Styles.styleToggle);
+                    GUILayout.EndHorizontal();
                     GUILayout.Space(3);
                     GUILayout.EndVertical();
                 }

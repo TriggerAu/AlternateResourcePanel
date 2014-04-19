@@ -33,6 +33,7 @@ namespace KSPAlternateResourcePanel
 
         internal ARPPartList lstPartsLastStageEngines;
         internal List<ModuleEngines> lstLastStageEngineModules;
+        internal List<ModuleEnginesFX> lstLastStageEngineFXModules;
  
         /// <summary>
         /// ResourceIDs of ones to show in window
@@ -307,7 +308,8 @@ namespace KSPAlternateResourcePanel
                 ShowAll = false;
 
             //Are we drawing the main window - hovering, or toggled or alarmsenabled and an unackowledged alarm - and theres resources
-            if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms())) && (lstResourcesVessel.Count > 0))
+            //if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms())) && (lstResourcesVessel.Count > 0))
+            if ((HoverOn || settings.ToggleOn || (settings.AlarmsEnabled && lstResourcesVessel.UnacknowledgedAlarms())) && (lstResourcesVessel.Count > 0)) 
             {
                 windowMain.Visible = true;
                 if (blnResetWindow)
@@ -332,13 +334,15 @@ namespace KSPAlternateResourcePanel
         internal Boolean IsMouseOver()
         {
             if ((settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
-                return MouseOverToolbarBtn || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
+                //return MouseOverToolbarBtn || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
+                return (MouseOverToolbarBtn && !settings.DisableHover) || 
+                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
 
             //are we painting?
             Boolean blnRet = Event.current.type == EventType.Repaint;
 
-            //And the mouse is over the button
-            blnRet = blnRet && rectButton.Contains(Event.current.mousePosition);
+            //And the mouse is over the button - if hovering is not disabled
+            blnRet = blnRet && rectButton.Contains(Event.current.mousePosition) && !settings.DisableHover;
 
             //mouse in main window
             blnRet = blnRet || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
@@ -401,7 +405,7 @@ namespace KSPAlternateResourcePanel
                     }
                 }
 
-                if(DecoupledInLastStage && p.Modules.OfType<ModuleEngines>().Any())
+                if(DecoupledInLastStage && (p.Modules.OfType<ModuleEngines>().Any() || p.Modules.OfType<ModuleEnginesFX>().Any()))
                 {
                     //Add the part to the engines list for the active stage
                     lstPartsLastStageEngines.Add(p);
@@ -473,11 +477,16 @@ namespace KSPAlternateResourcePanel
                         if (lstResourcesVessel[ResourceID].MonitorState == ARPResource.MonitorStateEnum.None)
                             continue;
                     }
-                    else if (settings.HideEmptyResources && settings.Resources[ResourceID].HideWhenEmpty && lstResourcesVessel[ResourceID].IsEmpty)
-                    {
+                    else if (settings.HideEmptyResources && settings.Resources[ResourceID].HideWhenEmpty && lstResourcesVessel[ResourceID].IsEmpty) {
                         //if the alarms not firing and the time has passed then hide it
-                        if (lstResourcesVessel[ResourceID].AlarmState!=ARPResource.AlarmStateEnum.Unacknowledged &&
-                                lstResourcesVessel[ResourceID].EmptyAt<DateTime.Now.AddSeconds(-settings.HideAfter))
+                        if (lstResourcesVessel[ResourceID].AlarmState != ARPResource.AlarmStateEnum.Unacknowledged &&
+                                lstResourcesVessel[ResourceID].EmptyAt < DateTime.Now.AddSeconds(-settings.HideAfter))
+                            continue;
+                    }
+                    else if (settings.HideFullResources && settings.Resources[ResourceID].HideWhenFull && lstResourcesVessel[ResourceID].IsFull) {
+                        //if the alarms not firing and the time has passed then hide it
+                        if (lstResourcesVessel[ResourceID].AlarmState != ARPResource.AlarmStateEnum.Unacknowledged && 
+                                lstResourcesVessel[ResourceID].FullAt < DateTime.Now.AddSeconds(-settings.HideAfter))
                             continue;
                     }
                 }
@@ -517,6 +526,7 @@ namespace KSPAlternateResourcePanel
 
             //now do the autostaging stuff
             lstLastStageEngineModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEngines>()).ToList();
+            lstLastStageEngineFXModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEnginesFX>()).ToList();
             AutoStagingMaxStage = Mathf.Min(AutoStagingMaxStage, Staging.StageCount - 1);
             AutoStagingTerminateAt = Mathf.Min(AutoStagingTerminateAt, AutoStagingMaxStage);
             AutoStagingStatusColor = Color.white;
@@ -529,7 +539,7 @@ namespace KSPAlternateResourcePanel
                         AutoStagingStatusColor = Color.white;
                         AutoStagingStatus = "Armed... waiting for stage";
                         //when to set it to running
-                        if (lstLastStageEngineModules.Any(x => x.staged))
+                        if (lstLastStageEngineModules.Any(x => x.staged) || lstLastStageEngineFXModules.Any(x => x.staged))
                             AutoStagingRunning = true;
                     }
                     else if (Staging.CurrentStage > AutoStagingTerminateAt)
@@ -539,7 +549,7 @@ namespace KSPAlternateResourcePanel
                         AutoStagingStatus = "Running";
 
                         //are all the engines that are active flamed out in the last stage
-                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.Where(x=>x.staged).All(x => x.getFlameoutState)))
+                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.Where(x => x.staged).All(x => x.getFlameoutState)) && (lstLastStageEngineFXModules.Where(x => x.staged).All(x => x.getFlameoutState)))
                         {
                             AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
                         }
@@ -865,11 +875,26 @@ namespace KSPAlternateResourcePanel
             {
                 first = false;
                 HighLogic.SaveFolder = "default";
-                var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
+                Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
+
                 if (game != null && game.flightState != null && game.compatible)
                 {
-                    FlightDriver.StartAndFocusVessel(game, 0);
+                    Int32 FirstVessel;
+                    Boolean blnFoundVessel=false;
+                    for (FirstVessel = 0; FirstVessel < game.flightState.protoVessels.Count; FirstVessel++)
+                    {
+                        if (game.flightState.protoVessels[FirstVessel].vesselType != VesselType.SpaceObject &&
+                            game.flightState.protoVessels[FirstVessel].vesselType != VesselType.Unknown)
+                        {
+                            blnFoundVessel = true;
+                            break;
+                        }
+                    }
+                    if (!blnFoundVessel)
+                        FirstVessel = 0;
+                    FlightDriver.StartAndFocusVessel(game, FirstVessel);
                 }
+
                 //CheatOptions.InfiniteFuel = true;
             }
         }

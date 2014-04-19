@@ -153,6 +153,13 @@ namespace KSPAlternateResourcePanel
             ////STAGING STUFF
             if (settings.StagingEnabled)
             {
+                ////Keyboard Stage Lock
+                //GUIContent contLock = new GUIContent(Resources.btnUnlock, "Keyboard Staging Unlocked\r\nClick to toggle");
+                //if (FlightInputHandler.fetch.stageLock)
+                //    contLock = new GUIContent(Resources.btnLock, "Keyboard Staging Locked\r\nClick to toggle");
+                //if (GUILayout.Button(contLock, Styles.styleAlarmButton))
+                //    FlightInputHandler.fetch.stageLock = !FlightInputHandler.fetch.stageLock;
+
                 if (!settings.AutoStagingEnabled)
                 {
                     //GUILayout.Label("Stage:", Styles.styleStageTextHead, GUILayout.Width(50));
@@ -175,7 +182,8 @@ namespace KSPAlternateResourcePanel
                         if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
                             Staging.ActivateNextStage();
                     }
-                    GUILayout.Space(48 + IconAlarmOffset);
+                    //GUILayout.Space(48 + IconAlarmOffset);
+                    GUILayout.Space(21 + IconAlarmOffset);
                 }
                 else
                 {
@@ -205,15 +213,23 @@ namespace KSPAlternateResourcePanel
                     
                     GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
                     StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
-                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147+IconAlarmOffset));
+                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147 + IconAlarmOffset));
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
                 }
             }
             else
             {
-                GUILayout.Space(234 + IconAlarmOffset);
+                //GUILayout.Space(234 + IconAlarmOffset);
+                GUILayout.Space(207 + IconAlarmOffset);
             }
 
-            //Settings ShowAll Button
+            // ShowAll Button
+            if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            {
+                settings.ShowTimeRem = !settings.ShowTimeRem;
+            }
+
+            // ShowAll Button
             if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
             {
                 KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;

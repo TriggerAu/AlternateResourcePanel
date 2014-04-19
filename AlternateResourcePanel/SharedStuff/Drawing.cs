@@ -63,10 +63,17 @@ namespace KSPAlternateResourcePanel
             if ((rectBar.width * fltBarRemainRatio) > 1)
                 Drawing.DrawBarScaled(rectBar, Res ,styleFront, styleFrontThin, fltBarRemainRatio);
 
-            ////add amounts
-            Drawing.DrawUsage(rectBar, Res,ShowRates);
-            ////add rate
-            if (ShowRates) Drawing.DrawRate(rectBar, Res);
+            if (!KSPAlternateResourcePanel.settings.ShowTimeRem)
+            {
+                ////add amounts
+                Drawing.DrawUsage(rectBar, Res, ShowRates);
+                ////add rate
+                if (ShowRates) Drawing.DrawRate(rectBar, Res);
+            }
+            else
+            {
+                Drawing.DrawTimeRemaining(rectBar, Res);
+            }
 
             return blnReturn;
         }
@@ -121,13 +128,128 @@ namespace KSPAlternateResourcePanel
             GUI.Label(rectTemp, string.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted), Styles.styleBarText);
         }
 
+        //internal static Double RatePercent;
         internal static void DrawRate(Rect rectStart, ARPResource Res)
         {
             Rect rectTemp = new Rect(rectStart) { width = rectStart.width - 2, height = 18,y = rectStart.y - 1 };
+            String strLabel = "";
+            switch (KSPAlternateResourcePanel.settings.RateDisplayType)
+            {
+                case Settings.RateDisplayEnum.Default:
+                    GUI.Label(rectTemp, string.Format("({0})", Res.RateFormatted), Styles.styleBarRateText);
+                    break;
+                case Settings.RateDisplayEnum.LeftRight:
+                    //Int32 Arrows=1;
+                    //RatePercent = Math.Abs(Res.Rate) / Res.MaxAmount * 100;
+                    //if (RatePercent < KSPAlternateResourcePanel.APIInstance.windowDebug.intTest1)
+                    //    Arrows = 1;
+                    //else if (RatePercent < KSPAlternateResourcePanel.APIInstance.windowDebug.intTest2)
+                    //    Arrows = 2;
+                    //else if (RatePercent < KSPAlternateResourcePanel.APIInstance.windowDebug.intTest2)
+                    //    Arrows = 3;
+                    //else
+                    //    Arrows = 4;
+                                        
+                    //if (Res.Rate < 0)
+                    //    strLabel = new String('>', Arrows);
+                    //else if (Res.Rate == 0)
+                    //    strLabel = "---";
+                    //else 
+                    //    strLabel = new String('<', Arrows);
 
-            GUI.Label(rectTemp, string.Format("({0})", Res.RateFormatted), Styles.styleBarRateText);
+                    if (Res.Rate < 0)
+                        strLabel = ">>>";
+                    else if (Res.Rate == 0)
+                        strLabel = "---";
+                    else 
+                        strLabel = "<<<";
+                    GUI.Label(rectTemp, string.Format("{0}", strLabel), Styles.styleBarRateText);
+                    break;
+                case Settings.RateDisplayEnum.LeftRightPlus:
+                    strLabel = Res.RateFormattedAbs;
+                    if (Res.Rate < 0)
+                        strLabel += " >";
+                    else if (Res.Rate == 0)
+                        strLabel = "---";
+                    else
+                        strLabel = "< " + strLabel;
+                    GUI.Label(rectTemp, string.Format("{0}", strLabel), Styles.styleBarRateText);
+                    break;
+                case Settings.RateDisplayEnum.UpDown:
+                case Settings.RateDisplayEnum.UpDownPlus:
+                    if (Res.Rate < 0)
+                        GUI.Label(rectTemp, Resources.texRateUp, Styles.styleBarRateText);
+                    else if (Res.Rate > 0)
+                        GUI.Label(rectTemp, Resources.texRateDown, Styles.styleBarRateText);
+
+                    if (KSPAlternateResourcePanel.settings.RateDisplayType == Settings.RateDisplayEnum.UpDownPlus)
+                    {
+                        rectTemp = new Rect(rectTemp) { width = rectTemp.width - 10 };
+                        GUI.Label(rectTemp, string.Format("{0}", Res.RateFormattedAbs), Styles.styleBarRateText);
+                    }
+                    break;
+                default:
+                    GUI.Label(rectTemp, string.Format("({0})", Res.RateFormatted), Styles.styleBarRateText);
+                    break;
+            }
+
         }
 
+        internal static void DrawTimeRemaining(Rect rectStart, ARPResource Res)
+        {
+            Rect rectTemp = new Rect(rectStart) { y = rectStart.y - 1, height = 18 };
+
+            if (Res.Rate < 0) {
+                GUI.Label(rectTemp, Resources.texRateUp, Styles.styleBarRateText);
+
+                Double TimeRemaining = Math.Abs((Res.MaxAmount - Res.Amount) / Res.Rate);
+                String strTime = FormatTime(TimeRemaining);
+                GUI.Label(rectTemp, strTime, Styles.styleBarText);
+            }
+            else if (Res.Rate > 0) {
+                GUI.Label(rectTemp, Resources.texRateDown, Styles.styleBarRateText);
+
+                Double TimeRemaining = Math.Abs(Res.Amount / Res.Rate);
+                String strTime = FormatTime(TimeRemaining);
+                GUI.Label(rectTemp, strTime, Styles.styleBarText);
+            }
+            else
+            {
+                GUI.Label(rectTemp, "---", Styles.styleBarText);
+            }
+
+            //GUI.Label(rectTemp, string.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted), Styles.styleBarText);
+
+        }
+
+        internal static String FormatTime(Double TimeInSecs)
+        {
+            String strReturn = "";
+
+            Double Second = TimeInSecs % 60;
+            Double Minute = Math.Truncate((TimeInSecs / 60) % 60);
+            Double HourRaw = TimeInSecs / 60 / 60;
+            
+            Double Hour;
+            if (GameSettings.KERBIN_TIME)
+                Hour = HourRaw % 6;
+            else
+                Hour = HourRaw % 24;
+
+            Double Day;
+            if (GameSettings.KERBIN_TIME)
+                Day = Math.Truncate((HourRaw % (426 * 6)) / 6);
+            else
+                Day = Math.Truncate((HourRaw % (365 * 24)) / 24);
+
+            if (Day > 0)
+                strReturn = String.Format("{0:00}.{1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
+            else if (Hour > 0)
+                strReturn = String.Format("{1:0}:{2:00}:{3:00}", Day, Hour, Minute, Second);
+            else 
+                strReturn = String.Format("{2:0}:{3:00.0}", Day, Hour, Minute, Second);
+            return strReturn;
+        }
 
 
 

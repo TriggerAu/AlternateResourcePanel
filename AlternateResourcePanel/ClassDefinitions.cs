@@ -122,20 +122,54 @@ namespace KSPAlternateResourcePanel
             {
                 Double oldValue = _Amount;
                 _Amount = value;
-                if (oldValue != value)
-                {
-                    if (value <= 0)
-                    {
-                        IsEmpty = true;
-                        EmptyAt = DateTime.Now;
-                    }
-                    else
-                        IsEmpty=false;
-                }
+                //if (oldValue != value)
+                //{
+                //    if (value <= 0)
+                //    {
+                //        IsEmpty = true;
+                //        EmptyAt = DateTime.Now;
+                //        //IsFull = false;
+                //    }
+                //    //else if (value >= MaxAmount) {
+                //    //    MonoBehaviourExtended.LogFormatted("Full:{0}-{1}", value, MaxAmount);
+                //    //    IsFull = true;
+                //    //    FullAt = DateTime.Now;
+                //    //    IsEmpty = false;
+                //    //}
+                //    else {
+                //        IsEmpty = false;
+                //        //IsFull = false;
+                //    }
+                //}
             }
         }
 
-        internal Boolean IsEmpty=false;
+        internal void CalcEmptyandFull()
+        {
+            IsEmpty = (Amount <= 0);
+            IsFull = (Amount >= MaxAmount);
+
+            //EmptyAt=DateTime.FromFileTime(0);
+            //EmptyAt.ToFileTime()=0;
+
+            if (IsEmpty) {
+                if (EmptyAt == new DateTime())
+                    EmptyAt = DateTime.Now;
+            } else {
+                EmptyAt = new DateTime();
+            }
+
+            if (IsFull) {
+                if (FullAt == new DateTime())
+                    FullAt = DateTime.Now;
+            } else {
+                FullAt = new DateTime();
+            }
+        }
+
+
+        internal Boolean IsEmpty = false;
+        internal Boolean IsFull = false;
 
         //internal Double Amount {get; set;}
         internal Double MaxAmount{get; set;}
@@ -145,6 +179,7 @@ namespace KSPAlternateResourcePanel
         public String MaxAmountFormatted { get { return DisplayValue(this.MaxAmount); } }
 
         internal DateTime EmptyAt { get; set; }
+        internal DateTime FullAt = new DateTime();// { get; set; }
 
         internal void ResetAmounts()
         {
@@ -208,6 +243,9 @@ namespace KSPAlternateResourcePanel
                     if (value != AlarmStateEnum.Unacknowledged && IsEmpty)
                         EmptyAt = DateTime.Now;
 
+                    if (value != AlarmStateEnum.Unacknowledged && IsFull)
+                        FullAt = DateTime.Now;
+
                     if (OnAlarmStateChanged != null)
                         OnAlarmStateChanged(this, oldValue, value,MonitorState);
                 }
@@ -269,6 +307,13 @@ namespace KSPAlternateResourcePanel
             get
             {
                 return DisplayRateValue(this.Rate);
+            }
+        }
+        internal String RateFormattedAbs
+        {
+            get
+            {
+                return DisplayRateValue(Math.Abs(this.Rate));
             }
         }
 
@@ -390,6 +435,9 @@ namespace KSPAlternateResourcePanel
         internal void EndUpdatingList(Boolean CalcRates)
         {
             UpdatingList = false;
+            
+            this.CalcEmptyandFulls();
+
             if (CalcRates)
                 this.CalcListRates();
         }
@@ -488,6 +536,15 @@ namespace KSPAlternateResourcePanel
 
             return r;
         }
+
+        internal void CalcEmptyandFulls()
+        {
+            foreach (ARPResource r in this.Values)
+            {
+                r.CalcEmptyandFull();
+            }
+        }
+
 
         internal void CalcListRates()
         {

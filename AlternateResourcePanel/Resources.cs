@@ -41,6 +41,7 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D btnChevronDown; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
         internal static Texture2D btnViewAll; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnViewTimes;
 
         internal static Texture2D btnSettingsAttention; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
@@ -48,10 +49,16 @@ namespace KSPAlternateResourcePanel
 
         //internal static Texture2D texTooltipBackground; // = new Texture2D(9, 9);//, TextureFormat.ARGB32, false);
 
+        internal static Texture2D texRateUp;
+        internal static Texture2D texRateDown;
+
         internal static Texture2D btnAlarm;
         internal static Texture2D btnAlarmEnabled;
         internal static Texture2D btnAlarmWarn;
         internal static Texture2D btnAlarmAlert;
+
+        //internal static Texture2D btnLock;
+        //internal static Texture2D btnUnlock;
 
         internal static Texture2D btnDropDown;
         internal static Texture2D btnPlay;
@@ -136,6 +143,7 @@ namespace KSPAlternateResourcePanel
             LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.tga");
 
             LoadImageFromGameDB(ref btnViewAll, "img_buttonEye.tga");
+            LoadImageFromGameDB(ref btnViewTimes, "img_buttonClock.tga");
 
             LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.tga");
 
@@ -143,10 +151,16 @@ namespace KSPAlternateResourcePanel
 
             //LoadImageFromGameDB(ref texTooltipBackground, "tex_TooltipBackground.png");
 
+            LoadImageFromGameDB(ref texRateUp, "img_RateUp.tga");
+            LoadImageFromGameDB(ref texRateDown, "img_RateDown.tga");
+
             LoadImageFromGameDB(ref btnAlarm, "img_Alarm.tga");
             LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.tga");
             LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.tga");
             LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.tga");
+
+            //LoadImageFromGameDB(ref btnLock, "img_Lock.png");
+            //LoadImageFromGameDB(ref btnUnlock, "img_Unlock.png");
 
             LoadImageFromGameDB(ref btnDropDown, "img_DropDown.tga");
             LoadImageFromGameDB(ref btnPlay, "img_Play.tga");

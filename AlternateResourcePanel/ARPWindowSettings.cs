@@ -16,6 +16,7 @@ namespace KSPAlternateResourcePanel
         internal Settings settings;
 
         internal DropDownList ddlSettingsTab;
+        private DropDownList ddlSettingsRateStyle;
         private DropDownList ddlSettingsSkin;
         private DropDownList ddlSettingsAlarmsWarning;
         private DropDownList ddlSettingsAlarmsAlert;
@@ -49,8 +50,12 @@ namespace KSPAlternateResourcePanel
             ddlSettingsAlarmsWarning.OnSelectionChanged += ddlSettingsAlarmsWarning_OnSelectionChanged;
             ddlSettingsAlarmsAlert.OnSelectionChanged += ddlSettingsAlarmsAlert_OnSelectionChanged;
 
+            ddlSettingsRateStyle = new DropDownList(EnumExtensions.ToEnumDescriptions<Settings.RateDisplayEnum>(),(Int32)settings.RateDisplayType, this);
+            ddlSettingsRateStyle.OnSelectionChanged += ddlSettingsRateStyle_OnSelectionChanged;
+
             ddlManager.AddDDL(ddlSettingsAlarmsWarning);
             ddlManager.AddDDL(ddlSettingsAlarmsAlert);
+            ddlManager.AddDDL(ddlSettingsRateStyle);
             ddlManager.AddDDL(ddlSettingsTab);
             ddlManager.AddDDL(ddlSettingsSkin);
         }
@@ -88,8 +93,14 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary.SetCurrent(settings.SelectedSkin.ToString());
             settings.Save();
         }
-        
-        private DropDownList LoadSoundsList(String[] Names,String Selected)
+
+        void ddlSettingsRateStyle_OnSelectionChanged(MonoBehaviourWindowPlus.DropDownList sender, int OldIndex, int NewIndex)
+        {
+            settings.RateDisplayType = (Settings.RateDisplayEnum)NewIndex;
+            settings.Save();
+        }
+
+        private DropDownList LoadSoundsList(String[] Names, String Selected)
         {
             DropDownList retDDl = new DropDownList(Names,this);
             
@@ -120,11 +131,11 @@ namespace KSPAlternateResourcePanel
             switch ((SettingsTabs)ddlSettingsTab.SelectedIndex)
             {
                 case SettingsTabs.General:
-                    WindowHeight = MinWindowHeight;
+                    WindowHeight = 160;// MinWindowHeight;
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 241; //174;
+                    WindowHeight = 281;//241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -151,15 +162,20 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2);
             GUILayout.Label("Rates:", Styles.styleStageTextHead);
+            GUILayout.Space(17);
+            GUILayout.Label("Rate Style:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
 
             if (DrawToggle(ref settings.ShowRates, "Show Rate Change Values", Styles.styleToggle))
                 settings.Save();
-            if (DrawToggle(ref settings.ShowRatesForParts,"Show Rates for Parts",Styles.styleToggle))
+            //if (DrawToggle(ref settings.ShowRatesTimeRem, "Toggle Time Remaining", Styles.styleToggle))
+            //    settings.Save();
+            if (DrawToggle(ref settings.ShowRatesForParts, "Show Rates for Parts", Styles.styleToggle))
             {
                 settings.Save();
             }
+            ddlSettingsRateStyle.DrawButton();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
@@ -257,8 +273,10 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("{0}px",settings.SpacerPadding));
             GUILayout.EndHorizontal();
 
-            if (DrawToggle(ref settings.HideEmptyResources, "Hide Empty Resources", Styles.styleToggle))
-            {
+            if (DrawToggle(ref settings.HideEmptyResources, "Hide Empty Resources", Styles.styleToggle)) {
+                settings.Save();
+            }
+            if (DrawToggle(ref settings.HideFullResources, "Hide Full Resources", Styles.styleToggle)) {
                 settings.Save();
             }
             GUILayout.BeginHorizontal();
@@ -279,6 +297,10 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label("Visuals:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
+            if (DrawToggle(ref settings.DisableHover, "Disable Show on Button Hover", Styles.styleToggle)) {
+                settings.Save();
+            }
+
             //if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle)) {
             if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle))
             {

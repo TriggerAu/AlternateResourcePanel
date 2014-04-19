@@ -22,16 +22,22 @@ namespace KSPAlternateResourcePanel
         }
 
         [Persistent] internal Boolean ToggleOn = false;
+        [Persistent] internal Boolean DisableHover = false;
         [Persistent] internal Boolean LockLocation= true;
         internal Rect WindowPosition = new Rect(Screen.width - 298, 19, 299, 20);
         [Persistent] private RectStorage WindowPositionStored = new RectStorage();
 
         [Persistent] internal Int32 SpacerPadding = 0;
         [Persistent] internal Boolean HideEmptyResources = false;
+        [Persistent] internal Boolean HideFullResources = false;
         [Persistent] internal Int32 HideAfter = 2;
 
         [Persistent] internal Boolean ShowRates = true;
         [Persistent] internal Boolean ShowRatesForParts = true;
+        [Persistent] internal RateDisplayEnum RateDisplayType = RateDisplayEnum.Default;
+        
+        //[Persistent] 
+        internal Boolean ShowTimeRem = false;
 
         [Persistent] internal Boolean AlarmsEnabled = true;
         [Persistent] internal String AlarmsWarningSound = "_DefaultWarning";
@@ -106,6 +112,14 @@ namespace KSPAlternateResourcePanel
             [Description("Unity Style")]        Unity,
             [Description("Unity/KSP Buttons")]  UnityWKSPButtons
         }
+        internal enum RateDisplayEnum
+        {
+            [Description("KSP Default")]            Default,
+            [Description("Left/Right")]             LeftRight,
+            [Description("Left/Right + Text")]      LeftRightPlus,
+            [Description("Up/Down")]                UpDown,
+            [Description("Up/Down + Text")]         UpDownPlus
+        }
 
         #region Version Checks
         private String ConvertVersionCheckDateToString(DateTime Date)
@@ -156,7 +170,8 @@ namespace KSPAlternateResourcePanel
 
                 MonoBehaviourExtended.LogFormatted("Reading version from Web");
                 //Page content FormatException is |LATESTVERSION|1.2.0.0|LATESTVERSION|
-                WWW www = new WWW("http://kspalternateresourcepanel.codeplex.com/wikipage?title=LatestVersion");
+//                WWW www = new WWW("http://kspalternateresourcepanel.codeplex.com/wikipage?title=LatestVersion");
+                WWW www = new WWW("https://sites.google.com/site/kspalternateresourcepanel/latestversion");
                 while (!www.isDone) { }
 
                 //Parse it for the version String
@@ -274,6 +289,7 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal VisibilityTypes Visibility = VisibilityTypes.AlwaysOn;
         [Persistent] internal Boolean AlarmEnabled = false;
         [Persistent] internal Boolean HideWhenEmpty = false;
+        [Persistent] internal Boolean HideWhenFull = false;
         [Persistent] internal MonitorDirections MonitorDirection = MonitorDirections.Low;
         [Persistent] internal Int32 MonitorWarningLevel = 20;
         [Persistent] internal Int32 MonitorAlertLevel = 10;
