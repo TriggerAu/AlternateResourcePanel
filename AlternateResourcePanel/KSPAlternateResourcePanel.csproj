@@ -147,6 +147,8 @@
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Icons\Water.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Icons\Xenon.png" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Icons\XenonGas.png" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_RateDown.tga" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_RateUp.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Sounds\_DefaultAlert.wav" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Sounds\_DefaultWarning.wav" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_Alarm.tga" />
@@ -162,6 +164,7 @@
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_BarHighlightRed.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonChevronDown.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonChevronUp.tga" />
+    <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonClock.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonEye.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_buttonSettingsAttention.tga" />
     <Content Include="PlugInFiles\GameData\TriggerTech\KSPAlternateResourcePanel\Textures\img_DropDown.tga" />

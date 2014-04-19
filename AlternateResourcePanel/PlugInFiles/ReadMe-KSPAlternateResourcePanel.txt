@@ -28,6 +28,14 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.2.0.0		-	KSP Version: 0.23.5
+- Added Support for HotRockets to AutoStaging
+- Alternate rate display options
+- Time remaining display options
+- Hide When Full Option
+- "Disable Display on Hover" option
+- Changed version Check file
+
 Version 2.1.3.0		-	KSP Version: 0.23.5
 - 0.23.5 Recompile for new version of Unity/KSP
 

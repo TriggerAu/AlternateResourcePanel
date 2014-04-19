@@ -33,6 +33,8 @@ namespace KSPAlternateResourcePanel
         public Int32 intTest3=0;
         public Int32 intTest4 = 0;
         public Int32 intTest5 = 200;
+
+        //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
             //GUILayout.Label(Drawing.RectTest.ToString());
@@ -75,10 +77,39 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-            foreach (ModuleEngines item in mbARP.lstLastStageEngineModules)
-            {
-                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
-            }
+            //GUILayout.Label(InputLockManager.IsLocked(ControlTypes.STAGING).ToString());
+            //foreach (KeyValuePair<string,ulong> item in InputLockManager.lockStack)
+            //{
+            //    GUILayout.Label(String.Format("{0},{1}", item.Key.ToString(), item.Value.ToString()));
+            //}
+            //if (GUILayout.Button("Lock"))
+            //{
+            //    if (InputLockManager.IsLocked(ControlTypes.STAGING))
+            //        if (InputLockManager.lockStack.ContainsKey("manualStageLock"))
+            //            InputLockManager.RemoveControlLock("manualStageLock");
+            //    else
+            //        InputLockManager.SetControlLock(ControlTypes.STAGING, "manualStageLock");
+            //}
+
+            //foreach (ModuleEngines item in mbARP.lstLastStageEngineModules)
+            //{
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+            //}
+
+            //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            //{
+            //    foreach (PartModule item in p.Modules)
+            //    {
+            //        GUILayout.Label(String.Format("{0}", item.ClassName));
+
+            //        if (item.ClassName=="ModuleEnginesFX")
+            //        {
+            //            ModuleEnginesFX a = (ModuleEnginesFX)item;
+            //            GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", a.getFlameoutState, a.getIgnitionState, a.EngineIgnited, a.isOperational, a.staged, a.status));
+            //        }
+            //    }
+            //}
+
 
             //GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
             //GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
@@ -152,12 +183,13 @@ namespace KSPAlternateResourcePanel
 
             //GUILayout.Label(mbARP.MouseOverToolbarBtn.ToString());
 
-            //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
-            //{
-            //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.AmountLastFormatted));  //, r.RateFormatted2, r.RateSamples.Count));
+            foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
+            {
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+
             //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
             //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.MonitorWarning,r.MonitorAlert,r.MonitorWorstHealth,r.AlarmAcknowledged));  //, r.RateFormatted2, r.RateSamples.Count));
-            //}
+            }
 
             //foreach (Int32 item in mbARP.lstResourcesToDisplay)
             //{
