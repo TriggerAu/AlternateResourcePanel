@@ -68,7 +68,9 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean AutoStagingEnabled = false;
         [Persistent] internal Int32 AutoStagingDelayInTenths = 5;
 
-        [Persistent] internal List<String> lstIconOrder = new List<String>() { "KSPARP", "Mod", "Player" };
+        //Reversing order so player creations are higher up the list
+        //[Persistent] internal List<String> lstIconOrder = new List<String>() { "KSPARP", "Mod", "Player" };
+        [Persistent] internal List<String> lstIconOrder = new List<String>() {"Player", "Mod",  "KSPARP" };
         [Persistent] internal DisplaySkin SelectedSkin = DisplaySkin.Default;
 
         internal Boolean BlizzyToolbarIsAvailable = false;
