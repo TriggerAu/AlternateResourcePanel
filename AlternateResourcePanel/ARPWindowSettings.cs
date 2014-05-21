@@ -242,7 +242,7 @@ namespace KSPAlternateResourcePanel
             //Icons
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Icons:", Styles.styleStageTextHead);
+            GUILayout.Label(new GUIContent("Iconsets:","Select the order of priority for choosing icons. Highest priority to the left"), Styles.styleStageTextHead);
             GUILayout.Space(2);
             GUILayout.Label(new GUIContent("Separator:","Padding around resource separators"), Styles.styleStageTextHead);
             GUILayout.Label("Empties:", Styles.styleStageTextHead);
