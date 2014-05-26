@@ -185,10 +185,10 @@ namespace KSPAlternateResourcePanel
 
             foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
             {
-                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
             //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.MonitorWarning,r.MonitorAlert,r.MonitorWorstHealth,r.AlarmAcknowledged));  //, r.RateFormatted2, r.RateSamples.Count));
+                GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState,r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
             }
 
             //foreach (Int32 item in mbARP.lstResourcesToDisplay)

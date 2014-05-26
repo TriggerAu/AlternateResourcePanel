@@ -178,7 +178,8 @@ namespace KSPAlternateResourcePanel
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsAlert, settings.AlarmsAlertRepeats);
                         break;
                     case ARPResource.MonitorStateEnum.Warn:
-                        if (clipAlarmsAlert != null) 
+                        //dont play the sound if we are coming down from alert
+                        if (oldValue != ARPResource.MonitorStateEnum.Alert && clipAlarmsAlert != null) 
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsWarning, settings.AlarmsWarningRepeats);
                         break;
                 }
