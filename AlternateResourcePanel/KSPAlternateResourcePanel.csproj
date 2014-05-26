@@ -205,7 +205,7 @@ if exist "D:\~Games\KSP_Win_PlugInTest_Minimal\KSP.exe" (
 )
 
 echo Gamepath: %25GAMEPATH%25
-set DestPath="%25GAMEPATH%25\GameData\TriggerTech\KSPAlternateResourcePanel"
+set DestPath="%25GAMEPATH%25\GameData\TriggerTech\$(ProjectName)"
 set Binary="%25GAMEPATH%25\KSP.exe"
 
 if not $(ConfigurationName)==Debug goto DEBUGREBUILDCONFIG
