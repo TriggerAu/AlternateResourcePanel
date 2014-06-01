@@ -384,11 +384,16 @@ namespace KSPAlternateResourcePanel
                 {
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
-                    
+
+                    //Is this resource on the ActivatedSplit List
+                    Boolean HideFromLastStage = false;
+                    if (settings.ActivatedSplitResources.Contains(pr.info.name))
+                        HideFromLastStage = !pr.flowState;
+
                     //update the resource in the vessel list
                     lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
 
-                    if (DecoupledInLastStage)
+                    if (DecoupledInLastStage && !HideFromLastStage)
                     {
                         lstResourcesLastStage.UpdateResource(pr);
                     }

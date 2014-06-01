@@ -77,6 +77,19 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
+
+            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            {
+                foreach (PartResource pr in p.Resources)
+                {
+                    if (pr.info.name == "ElectricCharge")
+                    {
+                        GUILayout.Label(String.Format("{0}-{1}-{2}", p.partInfo.name,pr.flowMode,pr.flowState));
+                        
+                    }
+                }
+            }
+
             //GUILayout.Label(InputLockManager.IsLocked(ControlTypes.STAGING).ToString());
             //foreach (KeyValuePair<string,ulong> item in InputLockManager.lockStack)
             //{
@@ -183,13 +196,13 @@ namespace KSPAlternateResourcePanel
 
             //GUILayout.Label(mbARP.MouseOverToolbarBtn.ToString());
 
-            foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
-            {
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+            //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
+            //{
+            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
-            //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-                GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState,r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
-            }
+            ////    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState,r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+            //}
 
             //foreach (Int32 item in mbARP.lstResourcesToDisplay)
             //{
@@ -279,10 +292,10 @@ namespace KSPAlternateResourcePanel
             //    GUILayout.Label(item.ToString());
             //}
 
-            //foreach (ARPResource r in mbARP.lstResourcesLastStage.Values)
-            //{
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.AmountLastFormatted));  //, r.RateFormatted2, r.RateSamples.Count));
-            //}
+            foreach (ARPResource r in mbARP.lstResourcesLastStage.Values)
+            {
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.AmountLastFormatted));  //, r.RateFormatted2, r.RateSamples.Count));
+            }
 
             //foreach (ARPResource r in KSPAlternateResourcePanel.lstResourcesLastStage)
             //{
