@@ -36,7 +36,7 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean ShowRatesForParts = true;
         [Persistent] internal RateDisplayEnum RateDisplayType = RateDisplayEnum.Default;
         
-        [Persistent] internal List<String> ActivatedSplitResources = new List<string>() {"ElectricCharge"};
+        [Persistent] internal List<String> ResourcesToSplitFlowDisabled = new List<string>() {"ElectricCharge"};
 
         //[Persistent] 
         internal Boolean ShowTimeRem = false;

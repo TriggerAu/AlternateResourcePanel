@@ -385,15 +385,16 @@ namespace KSPAlternateResourcePanel
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
 
-                    //Is this resource on the ActivatedSplit List
-                    Boolean HideFromLastStage = false;
-                    if (settings.ActivatedSplitResources.Contains(pr.info.name))
-                        HideFromLastStage = !pr.flowState;
+                    //Is this resource on the ResourcesToSplitFlowDisabled List - and thus we work out whether to include this parts resource in the last stage counts
+                    Boolean ShowInLastStage = false;
+                    if (settings.ResourcesToSplitFlowDisabled.Contains(pr.info.name))
+                        ShowInLastStage = pr.flowState;
 
                     //update the resource in the vessel list
                     lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
 
-                    if (DecoupledInLastStage && !HideFromLastStage)
+                    //and if it needs to go in the last stage list
+                    if (DecoupledInLastStage || ShowInLastStage)
                     {
                         lstResourcesLastStage.UpdateResource(pr);
                     }
@@ -401,7 +402,7 @@ namespace KSPAlternateResourcePanel
                     //is the resource in the selected list
                     if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible)
                         lstPartWindows.AddPartWindow(p, pr,this);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage)
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && (DecoupledInLastStage || ShowInLastStage)) //adjusted this last piece so if its in the last stage list it gets toggled - not just decoupled
                         lstPartWindows.AddPartWindow(p, pr,this);
                     else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
                     {

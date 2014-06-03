@@ -122,11 +122,11 @@ namespace KSPAlternateResourcePanel
                     //Is this resource selected
                     Boolean Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].AllVisible;
 
-                    //NEED TO SORT OUT THIS BIT - Something missing in this logic so it shows split bars when ot shouldnt
-
-                    //For resources with no stage specifics
-                    if ((lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.ALL_VESSEL) &&
-                        ((!settings.ActivatedSplitResources.Contains(lstResources[ResourceID].ResourceDef.name)) || (lstResources[ResourceID].Amount!=lstResourcesLastStage[ResourceID].Amount))
+                    //For resources with no stage specifics - or in the ResourcesToSplitFlowDisabled list and values are different for all vessel and flow enabled ones
+                    if ((lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
+                            lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
+                        ((!settings.ResourcesToSplitFlowDisabled.Contains(lstResources[ResourceID].ResourceDef.name)) 
+                            || (lstResources[ResourceID].Amount == lstResourcesLastStage[ResourceID].Amount))
                         )
                     {
                         //full width bar
