@@ -178,7 +178,8 @@ namespace KSPAlternateResourcePanel
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsAlert, settings.AlarmsAlertRepeats);
                         break;
                     case ARPResource.MonitorStateEnum.Warn:
-                        if (clipAlarmsAlert != null) 
+                        //dont play the sound if we are coming down from alert
+                        if (oldValue != ARPResource.MonitorStateEnum.Alert && clipAlarmsAlert != null) 
                             KSPAlternateResourcePanel.audioController.Play(clipAlarmsWarning, settings.AlarmsWarningRepeats);
                         break;
                 }
@@ -383,11 +384,17 @@ namespace KSPAlternateResourcePanel
                 {
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
-                    
+
+                    //Is this resource set to split on disabled parts List - and thus we work out whether to include this parts resource in the last stage counts
+                    Boolean ShowInLastStage = false;
+                    if (settings.Resources[pr.info.id].SplitOnFlowDisabled)
+                        ShowInLastStage = pr.flowState;
+
                     //update the resource in the vessel list
                     lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
 
-                    if (DecoupledInLastStage)
+                    //and if it needs to go in the last stage list
+                    if (DecoupledInLastStage || ShowInLastStage)
                     {
                         lstResourcesLastStage.UpdateResource(pr);
                     }
@@ -395,7 +402,7 @@ namespace KSPAlternateResourcePanel
                     //is the resource in the selected list
                     if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible)
                         lstPartWindows.AddPartWindow(p, pr,this);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage)
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && (DecoupledInLastStage || ShowInLastStage)) //adjusted this last piece so if its in the last stage list it gets toggled - not just decoupled
                         lstPartWindows.AddPartWindow(p, pr,this);
                     else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
                     {

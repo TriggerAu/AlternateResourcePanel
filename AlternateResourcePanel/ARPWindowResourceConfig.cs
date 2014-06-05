@@ -205,6 +205,13 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120));
                     DrawToggle(ref settings.Resources[item.id].HideWhenFull, "Hide When Full", Styles.styleToggle);
                     GUILayout.EndHorizontal();
+                    if (PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode== ResourceFlowMode.ALL_VESSEL ||
+                        PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) { 
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120));
+                        DrawToggle(ref settings.Resources[item.id].SplitOnFlowDisabled, "Hide disabled flows from last stage", Styles.styleToggle);
+                        GUILayout.EndHorizontal();
+                    }
                     GUILayout.Space(3);
                     GUILayout.EndVertical();
                 }
