@@ -36,8 +36,6 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean ShowRatesForParts = true;
         [Persistent] internal RateDisplayEnum RateDisplayType = RateDisplayEnum.Default;
         
-        [Persistent] internal List<String> ResourcesToSplitFlowDisabled = new List<string>() {"ElectricCharge"};
-
         //[Persistent] 
         internal Boolean ShowTimeRem = false;
 
@@ -297,6 +295,8 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal MonitorDirections MonitorDirection = MonitorDirections.Low;
         [Persistent] internal Int32 MonitorWarningLevel = 20;
         [Persistent] internal Int32 MonitorAlertLevel = 10;
+
+        [Persistent] internal Boolean SplitOnFlowDisabled = false;
 
         internal enum VisibilityTypes
         {

@@ -385,9 +385,9 @@ namespace KSPAlternateResourcePanel
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
 
-                    //Is this resource on the ResourcesToSplitFlowDisabled List - and thus we work out whether to include this parts resource in the last stage counts
+                    //Is this resource set to split on disabled parts List - and thus we work out whether to include this parts resource in the last stage counts
                     Boolean ShowInLastStage = false;
-                    if (settings.ResourcesToSplitFlowDisabled.Contains(pr.info.name))
+                    if (settings.Resources[pr.info.id].SplitOnFlowDisabled)
                         ShowInLastStage = pr.flowState;
 
                     //update the resource in the vessel list
