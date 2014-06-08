@@ -385,25 +385,39 @@ namespace KSPAlternateResourcePanel
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
                     if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
 
-                    //Is this resource set to split on disabled parts List - and thus we work out whether to include this parts resource in the last stage counts
-                    Boolean ShowInLastStage = false;
-                    if (settings.Resources[pr.info.id].SplitOnFlowDisabled)
-                        ShowInLastStage = pr.flowState;
-
-                    //update the resource in the vessel list
-                    lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
-
-                    //and if it needs to go in the last stage list
-                    if (DecoupledInLastStage || ShowInLastStage)
+                    //Is this resource set to split on disabled parts instead of staging
+                    if ((PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
+                        PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
+                        settings.Resources[pr.info.id].ShowReserveLevels)
                     {
-                        lstResourcesLastStage.UpdateResource(pr);
+                        if (pr.flowState) {
+                            //update the resource in the vessel list
+                            lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
+                        } else { 
+                            //and if it needs to go in the last stage list
+                            lstResourcesLastStage.UpdateResource(pr);
+                        }
+                    }
+                    else { 
+                        //update the resource in the vessel list
+                        lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
+
+                        //and if it needs to go in the last stage list
+                        if (DecoupledInLastStage)
+                        {
+                            lstResourcesLastStage.UpdateResource(pr);
+                        }
                     }
 
                     //is the resource in the selected list
-                    if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible)
+                    if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
                         lstPartWindows.AddPartWindow(p, pr,this);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && (DecoupledInLastStage || ShowInLastStage)) //adjusted this last piece so if its in the last stage list it gets toggled - not just decoupled
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage && !settings.Resources[pr.info.id].ShowReserveLevels) 
                         lstPartWindows.AddPartWindow(p, pr,this);
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && settings.Resources[pr.info.id].ShowReserveLevels && pr.flowState)
+                        lstPartWindows.AddPartWindow(p, pr, this);
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && settings.Resources[pr.info.id].ShowReserveLevels && !pr.flowState)
+                        lstPartWindows.AddPartWindow(p, pr, this);
                     else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
                     {
                         //or not,but the window is in the list

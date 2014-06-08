@@ -209,7 +209,7 @@ namespace KSPAlternateResourcePanel
                         PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) { 
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120));
-                        DrawToggle(ref settings.Resources[item.id].SplitOnFlowDisabled, "Hide disabled flows from last stage", Styles.styleToggle);
+                        DrawToggle(ref settings.Resources[item.id].ShowReserveLevels, new GUIContent("Show Reserve Levels","instead of Whole Vessel/Last Stage split"), Styles.styleToggle);
                         GUILayout.EndHorizontal();
                     }
                     GUILayout.Space(3);
