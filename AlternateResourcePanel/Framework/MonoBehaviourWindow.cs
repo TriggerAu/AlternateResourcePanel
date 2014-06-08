@@ -332,6 +332,10 @@ namespace KSPPluginFramework
                 TooltipShown = false;
             }
 
+            //if we've moved to a diffn tooltip then reset the counter
+            if (strToolTipText != strLastTooltipText) fltTooltipTime = 0f;
+
+            //make sure the last text is correct
             strLastTooltipText = strToolTipText;
         }
 

@@ -1,16 +1,52 @@
-	$GitHubName="AlternateResourcePanel"
-	$PluginName="KSPAlternateResourcePanel"
-	$Version="2.2.1.0"
-	$UploadDir = "..\_Uploads\KSPAlternateResourcePanel"
+$GitHubName="AlternateResourcePanel"
+$PluginName="KSPAlternateResourcePanel"
+$UploadDir = "..\_Uploads\KSPAlternateResourcePanel"
 
-	git add -A *
-	git commit -m "Version history $($Version)"
+$Version = Read-Host -Prompt "Enter the Version Number to Publish" 
+
+
+if ($Version -eq "")
+{
+    "No version string supplied... Quitting"
+    return
+}
+else
+{
+    if (Test-Path "$UploadDir\v$($Version)\$($PluginName)_$($Version)\GameData\TriggerTech\$($PluginName)\$($PluginName).dll")
+    {
+	    $dll = get-item "$UploadDir\v$($Version)\$($PluginName)_$($Version)\GameData\TriggerTech\$($PluginName)\$($PluginName).dll"
+	    $VersionString = $dll.VersionInfo.ProductVersion
+
+        if ($Version -ne $VersionString) {
+            "Versions dont match`r`nEntered:`t$Version`r`nFrom File:`t$VersionString"
+            return
+        } else {
+            $OAuthToken = Read-Host -Prompt "OAuth Token"
+        }
+    } else {
+        "Cant find the dll - have you built the dll first?"
+        return
+    }
+}
+
+
+    
+
+"`r`nThis will Merge the devbranch with master and push the release of v$($Version) of the $($PluginName)"
+"`tFrom:`t$UploadDir\v$($Version)"
+"`tOAauth:`t$OAuthToken"
+$Choices= [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes","&No")
+$ChoiceRtn = $host.ui.PromptForChoice("Do you wish to Continue?","Be sure dveelop is ready before hitting yes",$Choices,1)
+
+if($ChoiceRtn -eq 0)
+{
+	#git add -A *
+	#git commit -m "Version history $($Version)"
 	
-	write-host -ForegroundColor Yellow "`r`nPUSHING DEVELOP TO GITHUB"
-	git push
+	#write-host -ForegroundColor Yellow "`r`nPUSHING DEVELOP TO GITHUB"
+	#git push
 
-	$CommitDate = "{0:yyyy-MM-ddTHH:mm:ss+11:00}" -f $CommitDateValue.AddMinutes(1)
-	Set-Commitdate $CommitDate
+    write-host -ForegroundColor Yellow "`r`nMERGING DVEELOP TO MASTER"
 
 	git checkout master
 	git merge --no-ff develop -m "Merge $($Version) to master"
@@ -45,7 +81,7 @@
 	
 	$RestResult = Invoke-RestMethod -Method Post `
 		-Uri "https://api.github.com/repos/TriggerAu/$($GitHubName)/releases" `
-		-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token 585a29de3d6a38a3cb777f49335e8024572a23dc"} `
+		-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token " + $OAuthToken} `
 		-Body $CreateBody
 	if ($?)
 	{
@@ -62,3 +98,8 @@
 	write-host -ForegroundColor Yellow "----------------------------"
 	write-host -ForegroundColor Yellow "Finished Release $($Version)"
 	write-host -ForegroundColor Yellow "----------------------------"
+}
+else
+{
+    "Skipping..."
+}
