@@ -256,10 +256,15 @@ namespace KSPPluginFramework
             /// <summary>
             /// This is for DropDowns inside extra containers like scrollviews - where getlastrect does not cater to the scrollview position 
             /// </summary>
-            private Vector2 vectListBoxOffset = new Vector2(0,0);
+            private Vector2 vectListBoxOffset = new Vector2(0, 0);
             internal void SetListBoxOffset(Vector2 WrapperOffset)
             {
-                vectListBoxOffset = WrapperOffset;
+                if (vectListBoxOffset != WrapperOffset)
+                {
+                    vectListBoxOffset = WrapperOffset;
+                    if (_ListVisible)
+                     CalcPagesAndSizes();
+                }
             }
             
             private GUIStyle stylePager;

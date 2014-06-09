@@ -19,6 +19,7 @@ namespace KSPAlternateResourcePanel
         Int32 ScrollAreaWidth = 395;
 
         internal Vector2 ScrollPosition = new Vector2();
+        internal Vector2 vectMonTypeOffset = new Vector2(8, 56);
         Int32 ResourceToShowAlarm;
         Int32 ResourceToShowAlarmChanger = 0;
         Boolean ResourceToShowAlarmChangeNeeded = false;
@@ -31,7 +32,7 @@ namespace KSPAlternateResourcePanel
             WindowRect = new Rect(300, 0, 410, WindowHeight);
 
             ddlMonType = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
-            ddlMonType.SetListBoxOffset(new Vector2(8,56));
+            ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
 
             ddlMonType.OnSelectionChanged += ddlMonType_OnSelectionChanged;
             ddlManager.AddDDL(ddlMonType);
@@ -167,6 +168,7 @@ namespace KSPAlternateResourcePanel
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Monitoring Levels:",Styles.styleStageTextHead, GUILayout.Width(151));
                     //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
+                    ddlMonType.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
                     ddlMonType.DrawButton();
                     GUILayout.Space(4);
                     GUILayout.EndHorizontal();
