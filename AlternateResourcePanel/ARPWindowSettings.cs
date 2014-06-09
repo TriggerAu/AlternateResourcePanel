@@ -522,7 +522,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
             //GUILayout.Label("Written by:", Styles.styleStageTextHead);
             GUILayout.Label("Documentation and Links:", Styles.styleStageTextHead);
-            GUILayout.Label("Spaceport Page:", Styles.styleStageTextHead);
+            GUILayout.Label("GitHub Page:", Styles.styleStageTextHead);
             GUILayout.Label("Forum Page:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 
@@ -531,7 +531,7 @@ namespace KSPAlternateResourcePanel
             if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
                 Application.OpenURL("https://sites.google.com/site/kspalternateresourcepanel/");
             if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
-                Application.OpenURL("http://kerbalspaceport.com/kspalternateresourcepanel/");
+                Application.OpenURL("https://github.com/TriggerAu/AlternateResourcePanel/");
             if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
                 Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60227-KSP-Alternate-Resource-Panel");
 

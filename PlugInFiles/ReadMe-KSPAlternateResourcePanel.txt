@@ -28,6 +28,13 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.2.2.0        -    KSP Version: 0.23.5
+- Removed links to spaceport
+- Updated PluginFramework Tooltip issue
+- Reworked split display to be Active and Reserve resources (Issue #1)
+- Fixed Issues with dropdown and scrollview in resources Config (Issue #10)
+- Adjusted display value for large values to use K and M suffixes (Issue #11)
+
 Version 2.2.1.0		-	KSP Version: 0.23.5
 - Added option for splitting display of All_Vessel resources on flow enabled
 - Fixed Alarm firing on transitioning from Alert to Warn (Issue #6)

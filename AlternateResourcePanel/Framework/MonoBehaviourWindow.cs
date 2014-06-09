@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* Part of KSPPluginFramework
+Version 1.2
+
+Forum Thread:http://forum.kerbalspaceprogram.com/threads/66503-KSP-Plugin-Framework
+Author: TriggerAu, 2014
+License: The MIT License (MIT)
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -332,6 +339,10 @@ namespace KSPPluginFramework
                 TooltipShown = false;
             }
 
+			//if we've moved to a diffn tooltip then reset the counter
+			if (strToolTipText != strLastTooltipText) fltTooltipTime = 0f;
+			
+			//make sure the last text is correct
             strLastTooltipText = strToolTipText;
         }
 

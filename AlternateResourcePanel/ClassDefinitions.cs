@@ -322,7 +322,14 @@ namespace KSPAlternateResourcePanel
             String strFormat = "{0:0}";
             if (Amount < 100)
                 strFormat = "{0:0.00}";
-            return String.Format(strFormat, Amount);
+
+            if (Amount<10000)
+                return String.Format(strFormat, Amount);
+            else if (Amount < 1000000)
+                return String.Format("{0:0.0}K", Amount / 1000);
+            else 
+                return String.Format("{0:0.0}M", Amount / 1000000);
+
         }
         internal static String DisplayRateValue(Double Amount)
         {
