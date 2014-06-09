@@ -1,6 +1,6 @@
 $GitHubName="AlternateResourcePanel"
 $PluginName="KSPAlternateResourcePanel"
-$UploadDir = "..\_Uploads\KSPAlternateResourcePanel"
+$UploadDir = "$($PSScriptRoot)\..\..\_Uploads\$($PluginName)"
 
 $Version = Read-Host -Prompt "Enter the Version Number to Publish" 
 
@@ -12,9 +12,11 @@ if ($Version -eq "")
 }
 else
 {
-    if (Test-Path "$UploadDir\v$($Version)\$($PluginName)_$($Version)\GameData\TriggerTech\$($PluginName)\$($PluginName).dll")
+    $Path = "$UploadDir\v$($Version)\$($PluginName)_$($Version)\GameData\TriggerTech\$($PluginName)\$($PluginName).dll"
+    "DLL Path:`t$($Path)"
+    if (Test-Path $Path)
     {
-	    $dll = get-item "$UploadDir\v$($Version)\$($PluginName)_$($Version)\GameData\TriggerTech\$($PluginName)\$($PluginName).dll"
+	    $dll = get-item $Path
 	    $VersionString = $dll.VersionInfo.ProductVersion
 
         if ($Version -ne $VersionString) {
@@ -36,7 +38,7 @@ else
 "`tFrom:`t$UploadDir\v$($Version)"
 "`tOAauth:`t$OAuthToken"
 $Choices= [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes","&No")
-$ChoiceRtn = $host.ui.PromptForChoice("Do you wish to Continue?","Be sure dveelop is ready before hitting yes",$Choices,1)
+$ChoiceRtn = $host.ui.PromptForChoice("Do you wish to Continue?","Be sure develop is ready before hitting yes",$Choices,1)
 
 if($ChoiceRtn -eq 0)
 {
@@ -46,7 +48,7 @@ if($ChoiceRtn -eq 0)
 	#write-host -ForegroundColor Yellow "`r`nPUSHING DEVELOP TO GITHUB"
 	#git push
 
-    write-host -ForegroundColor Yellow "`r`nMERGING DVEELOP TO MASTER"
+    write-host -ForegroundColor Yellow "`r`nMERGING DEVELOP TO MASTER"
 
 	git checkout master
 	git merge --no-ff develop -m "Merge $($Version) to master"
