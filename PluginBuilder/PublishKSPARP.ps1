@@ -63,7 +63,12 @@ if($ChoiceRtn -eq 0)
 	write-host -ForegroundColor Yellow "----------------------------"
 	
 	write-host -ForegroundColor Yellow "`r`n Creating Release"
-	$readme = (Get-Content -Raw "PluginFiles\ReadMe-$($PluginName).txt")
+	$readme = (Get-Content -Raw "$($PSScriptRoot)\..\PluginFiles\ReadMe-$($PluginName).txt")
+
+    if ($?) {
+        "Couldn't load the readme file. Quitting..."
+        return
+    }
 	$reldescr = [regex]::match($readme,"Version\s$($Version).+?(?=[\r\n]*Version\s\d+|$)","singleline,ignorecase").Value
 
 	#Now get the KSPVersion from the first line
@@ -83,7 +88,7 @@ if($ChoiceRtn -eq 0)
 	
 	$RestResult = Invoke-RestMethod -Method Post `
 		-Uri "https://api.github.com/repos/TriggerAu/$($GitHubName)/releases" `
-		-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token " + $OAuthToken} `
+		-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token $($OAuthToken)"} `
 		-Body $CreateBody
 	if ($?)
 	{
@@ -91,7 +96,7 @@ if($ChoiceRtn -eq 0)
 		$File = get-item "$($UploadDir)\v$($Version)\$($pluginname)_$($Version).zip"
 		$RestResult = Invoke-RestMethod -Method Post `
 			-Uri "https://uploads.github.com/repos/TriggerAu/$($GitHubName)/releases/$($RestResult.id)/assets?name=$($File.Name)" `
-			-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token 585a29de3d6a38a3cb777f49335e8024572a23dc";"Content-Type"="application/zip"} `
+			-Headers @{"Accept"="application/vnd.github.v3+json";"Authorization"="token $($OAuthToken)";"Content-Type"="application/zip"} `
 			-InFile $File.fullname
 		
 		"Result = $($RestResult.state)"
@@ -100,6 +105,9 @@ if($ChoiceRtn -eq 0)
 	write-host -ForegroundColor Yellow "----------------------------"
 	write-host -ForegroundColor Yellow "Finished Release $($Version)"
 	write-host -ForegroundColor Yellow "----------------------------"
+
+	write-host -ForegroundColor Yellow "Back to Develop Branch"
+    git checkout develop
 }
 else
 {
