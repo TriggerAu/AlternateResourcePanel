@@ -224,17 +224,17 @@ namespace KSPAlternateResourcePanel
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-Forced");
                 }
-                else if (this.VersionWeb == "")
-                {
-                    blnDoCheck = true;
-                    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
-                }
-                else if (this.VersionCheckDate_Success < DateTime.Now.AddYears(-9))
+                //else if (this.VersionWeb == "")
+                //{
+                //    blnDoCheck = true;
+                //    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
+                //}
+                else if (this.VersionCheckDate_Attempt < DateTime.Now.AddYears(-9))
                 {
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-No current date stored");
                 }
-                else if (this.VersionCheckDate_Success.Date != DateTime.Now.Date)
+                else if (this.VersionCheckDate_Attempt.Date != DateTime.Now.Date)
                 {
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-stored date is not today");
