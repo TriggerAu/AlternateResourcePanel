@@ -498,10 +498,18 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(settings.VersionCheckDate_AttemptString, Styles.styleTextGreen);
             GUILayout.Label(settings.Version, Styles.styleTextGreen);
 
-            if (settings.VersionAvailable)
-                GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextYellowBold);
+            if (settings.VersionCheckRunning)
+            {
+                Int32 intDots = Convert.ToInt32(Math.Truncate(DateTime.Now.Millisecond / 250d)) + 1;
+                GUILayout.Label(String.Format("{0} Checking", new String('.', intDots)), KACResources.styleVersionHighlight);
+            }
             else
-                GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextGreen);
+            {
+                if (settings.VersionAvailable)
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), KACResources.styleVersionHighlight);
+                else
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), KACResources.styleContent);
+            }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
