@@ -319,10 +319,17 @@ namespace KSPAlternateResourcePanel
 
         internal static String DisplayValue(Double Amount)
         {
+            //Format string - Default
             String strFormat = "{0:0}";
-            if (Amount < 100)
+            if (Amount < 100){
                 strFormat = "{0:0.00}";
 
+                //handle the miniature negative value that gets rounded to 0 by string format
+                if (String.Format(strFormat,Amount) == "0.00" && Amount < 0)
+                    strFormat = "-" + strFormat;
+            }
+
+            //Handle large values
             if (Amount<10000)
                 return String.Format(strFormat, Amount);
             else if (Amount < 1000000)
