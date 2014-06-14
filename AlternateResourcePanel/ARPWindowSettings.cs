@@ -501,14 +501,14 @@ namespace KSPAlternateResourcePanel
             if (settings.VersionCheckRunning)
             {
                 Int32 intDots = Convert.ToInt32(Math.Truncate(DateTime.Now.Millisecond / 250d)) + 1;
-                GUILayout.Label(String.Format("{0} Checking", new String('.', intDots)), KACResources.styleVersionHighlight);
+                GUILayout.Label(String.Format("{0} Checking", new String('.', intDots)), Styles.styleTextYellowBold);
             }
             else
             {
                 if (settings.VersionAvailable)
-                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), KACResources.styleVersionHighlight);
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextYellowBold);
                 else
-                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), KACResources.styleContent);
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextGreen);
             }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
