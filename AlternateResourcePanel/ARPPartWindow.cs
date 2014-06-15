@@ -454,13 +454,13 @@ namespace KSPAlternateResourcePanel
         /// <param name="PartToAddorUpdate">Part to Add the Window For</param>
         /// <param name="PartsResource">A PartResource to Add/Update in the PartWindows details</param>
         /// <returns>The PartWindow for this part</returns>
-        internal ARPPartWindow AddPartWindow(Part PartToAddorUpdate, PartResource PartsResource, KSPAlternateResourcePanel mbARP)
+        internal ARPPartWindow AddPartWindow(Part PartToAddorUpdate, PartResource PartsResource, KSPAlternateResourcePanel mbARP,Double Period)
         {
             //Ensure PartWindow Exists first
             ARPPartWindow pwTemp= AddPartWindow(PartToAddorUpdate,mbARP);
 
             //Then add the Resource
-            pwTemp.ResourceList.SetUTPeriod(mbARP.RepeatingWorkerUTPeriod);
+            pwTemp.ResourceList.SetUTPeriod(Period);
             pwTemp.ResourceList.UpdateResource(PartsResource,CalcRates:KSPAlternateResourcePanel.settings.ShowRatesForParts);
 
             return pwTemp;

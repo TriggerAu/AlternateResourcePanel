@@ -131,11 +131,11 @@ namespace KSPAlternateResourcePanel
             switch ((SettingsTabs)ddlSettingsTab.SelectedIndex)
             {
                 case SettingsTabs.General:
-                    WindowHeight = 160;// MinWindowHeight;
+                    WindowHeight = 180; //160 ;// MinWindowHeight;
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 281;//241; //174;
+                    WindowHeight = 281; //241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -162,7 +162,8 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2);
             GUILayout.Label("Rates:", Styles.styleStageTextHead);
-            GUILayout.Space(17);
+            GUILayout.Space(13);
+            GUILayout.Label("Calc By:", Styles.styleStageTextHead);
             GUILayout.Label("Rate Style:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
@@ -175,6 +176,18 @@ namespace KSPAlternateResourcePanel
             {
                 settings.Save();
             }
+
+            GUILayout.BeginHorizontal();
+            if (DrawToggle(ref settings.RatesUseUT, "UT", Styles.styleToggle,GUILayout.Width(60)))
+                settings.Save();
+            Boolean NotUT = !settings.RatesUseUT;
+            if (DrawToggle(ref NotUT, "Real Time", Styles.styleToggle))
+            {
+                settings.RatesUseUT=!settings.RatesUseUT;
+                settings.Save();
+            }
+            GUILayout.EndHorizontal();
+
             ddlSettingsRateStyle.DrawButton();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();

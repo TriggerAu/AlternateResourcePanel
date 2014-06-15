@@ -35,6 +35,10 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean ShowRates = true;
         [Persistent] internal Boolean ShowRatesForParts = true;
         [Persistent] internal RateDisplayEnum RateDisplayType = RateDisplayEnum.Default;
+        /// <summary>
+        /// Whether the rates are calculated versus UT periods or Real time periods
+        /// </summary>
+        [Persistent] internal Boolean RatesUseUT = true;
         
         //[Persistent] 
         internal Boolean ShowTimeRem = false;

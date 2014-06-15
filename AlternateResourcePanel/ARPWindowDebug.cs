@@ -72,7 +72,8 @@ namespace KSPAlternateResourcePanel
             }
 
             GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
-            GUILayout.Label(String.Format("UT Passed: {0}s",mbARP.RepeatingWorkerUTPeriod.ToString()));
+            GUILayout.Label(String.Format("UT Passed: {0}s", mbARP.RepeatingWorkerUTPeriod.ToString()));
+            GUILayout.Label(String.Format("RT Passed: {0}s", (mbARP.RepeatingWorkerUTPeriod * TimeWarp.CurrentRate).ToString()));
 
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
