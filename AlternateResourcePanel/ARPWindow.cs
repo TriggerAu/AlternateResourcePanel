@@ -123,7 +123,7 @@ namespace KSPAlternateResourcePanel
                     Boolean Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].AllVisible;
 
                     //For resources with no stage specifics - or the Resources is set to split display and values are different for all vessel and flow enabled ones
-                    if (!settings.SplitLastStage ||
+                    if (!settings.SplitLastStage || !lstResources[ResourceID].ResourceConfig.SplitLastStage ||
                         (lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
                             lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
                         (( !settings.Resources[ResourceID].ShowReserveLevels )

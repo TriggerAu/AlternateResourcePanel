@@ -358,6 +358,7 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Int32 MonitorWarningLevel = 20;
         [Persistent] internal Int32 MonitorAlertLevel = 10;
 
+        [Persistent] internal Boolean SplitLastStage = true;
         [Persistent] internal Boolean ShowReserveLevels = false;
 
         internal enum VisibilityTypes
