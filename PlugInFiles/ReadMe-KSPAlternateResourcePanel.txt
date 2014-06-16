@@ -30,7 +30,7 @@ Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unporte
 VERSION HISTORY
 Version 2.2.3.0        -    KSP Version: 0.23.5
 - Made Version Check download truly background so no lock ups (Issue #20) - big thanks to Ted
-- Fixed rates with tiny negative value not displaying minus indicator (Issue #19)
+- Fixed rates with tiny negative value not displaying minus indicator (Issue #17)
 - Added Rate Display Options for under warp - can now choose UT or RealTime (RT) (Issue #16)
 - Added option to disable split bars for all resources (Request #18)
 - Added option to disable split bars per resources as well (Issue/Request #14)
