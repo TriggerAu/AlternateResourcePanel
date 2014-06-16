@@ -131,11 +131,11 @@ namespace KSPAlternateResourcePanel
             switch ((SettingsTabs)ddlSettingsTab.SelectedIndex)
             {
                 case SettingsTabs.General:
-                    WindowHeight = 160;// MinWindowHeight;
+                    WindowHeight = 212;// 180; //160 ;// MinWindowHeight;
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 281;//241; //174;
+                    WindowHeight = 281; //241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -162,7 +162,8 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2);
             GUILayout.Label("Rates:", Styles.styleStageTextHead);
-            GUILayout.Space(17);
+            GUILayout.Space(13);
+            GUILayout.Label("Calc By:", Styles.styleStageTextHead);
             GUILayout.Label("Rate Style:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
@@ -175,7 +176,32 @@ namespace KSPAlternateResourcePanel
             {
                 settings.Save();
             }
+
+            GUILayout.BeginHorizontal();
+            if (DrawToggle(ref settings.RatesUseUT, "UT", Styles.styleToggle,GUILayout.Width(60)))
+                settings.Save();
+            Boolean NotUT = !settings.RatesUseUT;
+            if (DrawToggle(ref NotUT, "Real Time", Styles.styleToggle))
+            {
+                settings.RatesUseUT=!settings.RatesUseUT;
+                settings.Save();
+            }
+            GUILayout.EndHorizontal();
+
             ddlSettingsRateStyle.DrawButton();
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
+            GUILayout.BeginVertical(GUILayout.Width(60));
+
+            GUILayout.Space(2);
+            GUILayout.Label("Stage Bars:", Styles.styleStageTextHead);
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+            GUILayout.Space(2);
+            if (DrawToggle(ref settings.SplitLastStage, new GUIContent("Enabled", "Turn this off to show single green bars and no last stage separation."), Styles.styleToggle))
+                settings.Save();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
@@ -498,10 +524,18 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(settings.VersionCheckDate_AttemptString, Styles.styleTextGreen);
             GUILayout.Label(settings.Version, Styles.styleTextGreen);
 
-            if (settings.VersionAvailable)
-                GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextYellowBold);
+            if (settings.VersionCheckRunning)
+            {
+                Int32 intDots = Convert.ToInt32(Math.Truncate(DateTime.Now.Millisecond / 250d)) + 1;
+                GUILayout.Label(String.Format("{0} Checking", new String('.', intDots)), Styles.styleTextYellowBold);
+            }
             else
-                GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextGreen);
+            {
+                if (settings.VersionAvailable)
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextYellowBold);
+                else
+                    GUILayout.Label(String.Format("{0} @ {1}", settings.VersionWeb, settings.VersionCheckDate_SuccessString), Styles.styleTextGreen);
+            }
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 

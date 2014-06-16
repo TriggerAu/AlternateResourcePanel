@@ -28,6 +28,14 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.2.3.0        -    KSP Version: 0.23.5
+- Made Version Check download truly background so no lock ups (Issue #20) - big thanks to Ted
+- Fixed rates with tiny negative value not displaying minus indicator (Issue #19)
+- Added Rate Display Options for under warp - can now choose UT or RealTime (RT) (Issue #16)
+- Added option to disable split bars for all resources (Request #18)
+- Added option to disable split bars per resources as well (Issue/Request #14)
+- Fixed bug with Reserve display not working on initial vessel load (Issue #21)
+
 Version 2.2.2.0        -    KSP Version: 0.23.5
 - Removed links to spaceport
 - Updated PluginFramework Tooltip issue

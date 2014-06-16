@@ -35,9 +35,15 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean ShowRates = true;
         [Persistent] internal Boolean ShowRatesForParts = true;
         [Persistent] internal RateDisplayEnum RateDisplayType = RateDisplayEnum.Default;
+        /// <summary>
+        /// Whether the rates are calculated versus UT periods or Real time periods
+        /// </summary>
+        [Persistent] internal Boolean RatesUseUT = true;
         
         //[Persistent] 
         internal Boolean ShowTimeRem = false;
+
+        [Persistent] internal Boolean SplitLastStage = true;
 
         [Persistent] internal Boolean AlarmsEnabled = true;
         [Persistent] internal String AlarmsWarningSound = "_DefaultWarning";
@@ -161,51 +167,6 @@ namespace KSPAlternateResourcePanel
 
         public String VersionCheckResult = "";
 
-        public Boolean getLatestVersion()
-        {
-            Boolean blnReturn = false;
-            try
-            {
-                //Get the file from Codeplex
-                this.VersionCheckResult = "Unknown - check again later";
-                this.VersionCheckDate_Attempt = DateTime.Now;
-
-                MonoBehaviourExtended.LogFormatted("Reading version from Web");
-                //Page content FormatException is |LATESTVERSION|1.2.0.0|LATESTVERSION|
-//                WWW www = new WWW("http://kspalternateresourcepanel.codeplex.com/wikipage?title=LatestVersion");
-                WWW www = new WWW("https://sites.google.com/site/kspalternateresourcepanel/latestversion");
-                while (!www.isDone) { }
-
-                //Parse it for the version String
-                String strFile = www.text;
-                MonoBehaviourExtended.LogFormatted("Response Length:" + strFile.Length);
-
-                Match matchVersion;
-                matchVersion = Regex.Match(strFile, "(?<=\\|LATESTVERSION\\|).+(?=\\|LATESTVERSION\\|)", System.Text.RegularExpressions.RegexOptions.Singleline);
-                MonoBehaviourExtended.LogFormatted("Got Version '" + matchVersion.ToString() + "'");
-
-                String strVersionWeb = matchVersion.ToString();
-                if (strVersionWeb != "")
-                {
-                    this.VersionCheckResult = "Success";
-                    this.VersionCheckDate_Success = DateTime.Now;
-                    this.VersionWeb = strVersionWeb;
-                    blnReturn = true;
-                }
-                else
-                {
-                    this.VersionCheckResult = "Unable to parse web service";
-                }
-            }
-            catch (Exception ex)
-            {
-                MonoBehaviourExtended.LogFormatted("Failed to read Version info from web");
-                MonoBehaviourExtended.LogFormatted(ex.Message);
-
-            }
-            MonoBehaviourExtended.LogFormatted("Version Check result:" + VersionCheckResult);
-            return blnReturn;
-        }
 
         /// <summary>
         /// Does some logic to see if a check is needed, and returns true if there is a different version
@@ -224,17 +185,17 @@ namespace KSPAlternateResourcePanel
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-Forced");
                 }
-                else if (this.VersionWeb == "")
-                {
-                    blnDoCheck = true;
-                    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
-                }
-                else if (this.VersionCheckDate_Success < DateTime.Now.AddYears(-9))
+                //else if (this.VersionWeb == "")
+                //{
+                //    blnDoCheck = true;
+                //    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
+                //}
+                else if (this.VersionCheckDate_Attempt < DateTime.Now.AddYears(-9))
                 {
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-No current date stored");
                 }
-                else if (this.VersionCheckDate_Success.Date != DateTime.Now.Date)
+                else if (this.VersionCheckDate_Attempt.Date != DateTime.Now.Date)
                 {
                     blnDoCheck = true;
                     MonoBehaviourExtended.LogFormatted("Starting Version Check-stored date is not today");
@@ -245,15 +206,13 @@ namespace KSPAlternateResourcePanel
 
                 if (blnDoCheck)
                 {
-                    getLatestVersion();
-                    this.Save();
-                    //if (getLatestVersion())
-                    //{
-                    //    //save all the details to the file
-                    //    this.Save();
-                    //}
-                    //if theres a new version then set the flag
-                    VersionAttentionFlag = VersionAvailable;
+                    //prep the background thread
+                    bwVersionCheck = new BackgroundWorker();
+                    bwVersionCheck.DoWork += bwVersionCheck_DoWork;
+                    bwVersionCheck.RunWorkerCompleted += bwVersionCheck_RunWorkerCompleted;
+
+                    //fire the worker
+                    bwVersionCheck.RunWorkerAsync();
                 }
                 blnReturn = true;
             }
@@ -264,6 +223,109 @@ namespace KSPAlternateResourcePanel
             }
             return blnReturn;
         }
+
+        internal Boolean VersionCheckRunning = false;
+        BackgroundWorker bwVersionCheck;
+        WWW wwwVersionCheck;
+
+        void bwVersionCheck_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //set initial stuff and save it
+            VersionCheckRunning = true;
+            this.VersionCheckResult = "Unknown - check again later";
+            this.VersionCheckDate_Attempt = DateTime.Now;
+            this.Save();
+
+            //now do the download
+            MonoBehaviourExtended.LogFormatted("Reading version from Web");
+            wwwVersionCheck = new WWW("https://sites.google.com/site/kspalternateresourcepanel/latestversion");
+            while (!wwwVersionCheck.isDone) { }
+            MonoBehaviourExtended.LogFormatted("Download complete:{0}", wwwVersionCheck.text.Length);
+            VersionCheckRunning = false;
+        }
+
+        void bwVersionCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                //get the response from the variable and work with it
+                //Parse it for the version String
+                String strFile = wwwVersionCheck.text;
+                MonoBehaviourExtended.LogFormatted("Response Length:" + strFile.Length);
+
+                Match matchVersion;
+                matchVersion = Regex.Match(strFile, "(?<=\\|LATESTVERSION\\|).+(?=\\|LATESTVERSION\\|)", System.Text.RegularExpressions.RegexOptions.Singleline);
+                MonoBehaviourExtended.LogFormatted("Got Version '" + matchVersion.ToString() + "'");
+
+                String strVersionWeb = matchVersion.ToString();
+                if (strVersionWeb != "")
+                {
+                    this.VersionCheckResult = "Success";
+                    this.VersionCheckDate_Success = DateTime.Now;
+                    this.VersionWeb = strVersionWeb;
+                }
+                else
+                {
+                    this.VersionCheckResult = "Unable to parse web service";
+                }
+            }
+            catch (Exception ex)
+            {
+                MonoBehaviourExtended.LogFormatted("Failed to read Version info from web");
+                MonoBehaviourExtended.LogFormatted(ex.Message);
+
+            }
+            MonoBehaviourExtended.LogFormatted("Version Check result:" + VersionCheckResult);
+
+            this.Save();
+            VersionAttentionFlag = VersionAvailable;
+        }
+
+        //public Boolean getLatestVersion()
+        //{
+        //    Boolean blnReturn = false;
+        //    try
+        //    {
+        //        //Get the file from Codeplex
+        //        this.VersionCheckResult = "Unknown - check again later";
+        //        this.VersionCheckDate_Attempt = DateTime.Now;
+
+        //        MonoBehaviourExtended.LogFormatted("Reading version from Web");
+        //        //Page content FormatException is |LATESTVERSION|1.2.0.0|LATESTVERSION|
+        //        //                WWW www = new WWW("http://kspalternateresourcepanel.codeplex.com/wikipage?title=LatestVersion");
+        //        WWW www = new WWW("https://sites.google.com/site/kspalternateresourcepanel/latestversion");
+        //        while (!www.isDone) { }
+
+        //        //Parse it for the version String
+        //        String strFile = www.text;
+        //        MonoBehaviourExtended.LogFormatted("Response Length:" + strFile.Length);
+
+        //        Match matchVersion;
+        //        matchVersion = Regex.Match(strFile, "(?<=\\|LATESTVERSION\\|).+(?=\\|LATESTVERSION\\|)", System.Text.RegularExpressions.RegexOptions.Singleline);
+        //        MonoBehaviourExtended.LogFormatted("Got Version '" + matchVersion.ToString() + "'");
+
+        //        String strVersionWeb = matchVersion.ToString();
+        //        if (strVersionWeb != "")
+        //        {
+        //            this.VersionCheckResult = "Success";
+        //            this.VersionCheckDate_Success = DateTime.Now;
+        //            this.VersionWeb = strVersionWeb;
+        //            blnReturn = true;
+        //        }
+        //        else
+        //        {
+        //            this.VersionCheckResult = "Unable to parse web service";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MonoBehaviourExtended.LogFormatted("Failed to read Version info from web");
+        //        MonoBehaviourExtended.LogFormatted(ex.Message);
+
+        //    }
+        //    MonoBehaviourExtended.LogFormatted("Version Check result:" + VersionCheckResult);
+        //    return blnReturn;
+        //}
         #endregion
     }
 
@@ -296,6 +358,7 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Int32 MonitorWarningLevel = 20;
         [Persistent] internal Int32 MonitorAlertLevel = 10;
 
+        [Persistent] internal Boolean SplitLastStage = true;
         [Persistent] internal Boolean ShowReserveLevels = false;
 
         internal enum VisibilityTypes

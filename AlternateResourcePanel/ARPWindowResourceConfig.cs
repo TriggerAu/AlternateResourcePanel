@@ -207,8 +207,14 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120));
                     DrawToggle(ref settings.Resources[item.id].HideWhenFull, "Hide When Full", Styles.styleToggle);
                     GUILayout.EndHorizontal();
-                    if (PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode== ResourceFlowMode.ALL_VESSEL ||
-                        PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) { 
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Stage Bars:", temp, GUILayout.Width(120));
+                    DrawToggle(ref settings.Resources[item.id].SplitLastStage, "Split Enabled", Styles.styleToggle);
+                    GUILayout.EndHorizontal();
+                    if (settings.Resources[item.id].SplitLastStage && (
+                        PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
+                        PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW)
+                        ) { 
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120));
                         DrawToggle(ref settings.Resources[item.id].ShowReserveLevels, new GUIContent("Show Reserve Levels","instead of Whole Vessel/Last Stage split"), Styles.styleToggle);

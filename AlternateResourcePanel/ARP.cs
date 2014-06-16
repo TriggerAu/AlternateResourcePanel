@@ -367,9 +367,12 @@ namespace KSPAlternateResourcePanel
             Vessel active = FlightGlobals.ActiveVessel;
             LastStage = GetLastStage(active.parts);
 
+            Double RatePeriod = RepeatingWorkerUTPeriod;
+            if (!settings.RatesUseUT) RatePeriod = RepeatingWorkerUTPeriod / TimeWarp.CurrentRate;
+
             //trigger the start loop and store the UT that has passed - only calc rates where necessary
-            lstResourcesVessel.StartUpdatingList(settings.ShowRates, RepeatingWorkerUTPeriod);
-            lstResourcesLastStage.StartUpdatingList(settings.ShowRates, RepeatingWorkerUTPeriod);
+            lstResourcesVessel.StartUpdatingList(settings.ShowRates, RatePeriod);
+            lstResourcesLastStage.StartUpdatingList(settings.ShowRates, RatePeriod);
 
             //flush the temporary lists
             lstPartsLastStageEngines= new ARPPartList();
@@ -393,6 +396,14 @@ namespace KSPAlternateResourcePanel
                         if (pr.flowState) {
                             //update the resource in the vessel list
                             lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
+                            
+                            //if it dont exist in the last stage list - add a 0 value
+                            if (!lstResourcesLastStage.ContainsKey(pr.info.id))
+                            {
+                                LogFormatted_DebugOnly("Adding 0 value into last stage");
+                                PartResource prTemp = new PartResource() { info = pr.info, amount = 0, maxAmount = 0 };
+                                lstResourcesLastStage.UpdateResource(prTemp);
+                            }
                         } else { 
                             //and if it needs to go in the last stage list
                             lstResourcesLastStage.UpdateResource(pr);
@@ -411,13 +422,13 @@ namespace KSPAlternateResourcePanel
 
                     //is the resource in the selected list
                     if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
-                        lstPartWindows.AddPartWindow(p, pr,this);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage && !settings.Resources[pr.info.id].ShowReserveLevels) 
-                        lstPartWindows.AddPartWindow(p, pr,this);
+                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
+                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage && !settings.Resources[pr.info.id].ShowReserveLevels)
+                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
                     else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && settings.Resources[pr.info.id].ShowReserveLevels && pr.flowState)
-                        lstPartWindows.AddPartWindow(p, pr, this);
+                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
                     else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && settings.Resources[pr.info.id].ShowReserveLevels && !pr.flowState)
-                        lstPartWindows.AddPartWindow(p, pr, this);
+                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
                     else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
                     {
                         //or not,but the window is in the list
