@@ -43,6 +43,8 @@ namespace KSPAlternateResourcePanel
         //[Persistent] 
         internal Boolean ShowTimeRem = false;
 
+        [Persistent] internal Boolean SplitLastStage = true;
+
         [Persistent] internal Boolean AlarmsEnabled = true;
         [Persistent] internal String AlarmsWarningSound = "_DefaultWarning";
         [Persistent] internal Int32 AlarmsWarningRepeats = 2;

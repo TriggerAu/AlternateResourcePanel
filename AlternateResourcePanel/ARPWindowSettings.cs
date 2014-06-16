@@ -131,7 +131,7 @@ namespace KSPAlternateResourcePanel
             switch ((SettingsTabs)ddlSettingsTab.SelectedIndex)
             {
                 case SettingsTabs.General:
-                    WindowHeight = 180; //160 ;// MinWindowHeight;
+                    WindowHeight = 212;// 180; //160 ;// MinWindowHeight;
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
@@ -189,6 +189,19 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
 
             ddlSettingsRateStyle.DrawButton();
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
+            GUILayout.BeginVertical(GUILayout.Width(60));
+
+            GUILayout.Space(2);
+            GUILayout.Label("Stage Bars:", Styles.styleStageTextHead);
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+            GUILayout.Space(2);
+            if (DrawToggle(ref settings.SplitLastStage, new GUIContent("Enabled", "Turn this off to show single green bars and no last stage separation."), Styles.styleToggle))
+                settings.Save();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
