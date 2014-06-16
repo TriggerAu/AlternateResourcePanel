@@ -65,7 +65,8 @@ if($ChoiceRtn -eq 0)
 	write-host -ForegroundColor Yellow "`r`n Creating Release"
 	$readme = (Get-Content -Raw "$($PSScriptRoot)\..\PluginFiles\ReadMe-$($PluginName).txt")
 
-    if ($?) {
+    #If couldn't load it then bork out
+    if (!$?) {
         "Couldn't load the readme file. Quitting..."
         return
     }
