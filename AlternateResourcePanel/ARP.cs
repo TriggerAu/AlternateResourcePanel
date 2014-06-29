@@ -77,6 +77,15 @@ namespace KSPAlternateResourcePanel
             if (!settings.Load())
                 LogFormatted("Settings Load Failed");
 
+            //If the window is in the pre0.24 default then move it down so its not over the app launcher
+            if (!settings.WindowPosUpdatedv24 && settings.WindowPosition == new Rect(new Rect(Screen.width - 298, 19, 299, 20)))
+            {
+                MonoBehaviourExtended.LogFormatted("Moving window for 0.24");
+                settings.WindowPosUpdatedv24 = true;
+                settings.Save();
+                blnResetWindow = true;
+            }
+
             //Ensure settings.resources contains all the resources in the loaded game
             VerifyResources();
 
@@ -280,10 +289,14 @@ namespace KSPAlternateResourcePanel
 
             //Set the current Skin
             SkinsLibrary.SetCurrent(settings.SelectedSkin.ToString());
+
+            //Set Button Rectangle position
+            rectButton.x = settings.vectButtonPos.x;
+            rectButton.y = settings.vectButtonPos.y;
         }
 
         //Position of screen button
-        static Rect rectButton = new Rect(Screen.width - 109, 0, 80, 30);
+        static Rect rectButton = new Rect(Screen.width - 309, 0, 80, 30);
         //Hover Status for mouse
         internal static Boolean HoverOn = false;
         //Hover Status for mouse
@@ -315,7 +328,7 @@ namespace KSPAlternateResourcePanel
                 windowMain.Visible = true;
                 if (blnResetWindow)
                 {
-                    windowMain.WindowRect = new Rect(Screen.width - 298, 19, 299, 20);
+                    windowMain.WindowRect = new Rect(Screen.width - 298, 40, 299, 20);
                     blnResetWindow = false;
                     settings.WindowPosition = windowMain.WindowRect;
                     settings.Save();
