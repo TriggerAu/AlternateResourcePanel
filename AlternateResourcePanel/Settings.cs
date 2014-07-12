@@ -352,6 +352,13 @@ namespace KSPAlternateResourcePanel
 
     public class ResourceSettings:ConfigNodeStorage
     {
+        public ResourceSettings(Int32 id, String name) :this()
+        {
+            this.id = id;
+            this.name = name;
+        }
+        public ResourceSettings() { }
+
         [Persistent] internal Int32 id;
         [Persistent] internal String name="";
         [Persistent] internal Boolean IsSeparator=false;        
