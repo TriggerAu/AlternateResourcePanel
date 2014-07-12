@@ -28,8 +28,8 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1=0;
-        public Int32 intTest2=0;
+        public Int32 intTest1=-8;
+        public Int32 intTest2=-54;
         public Int32 intTest3=0;
         public Int32 intTest4 = 0;
         public Int32 intTest5 = 200;
@@ -66,18 +66,24 @@ namespace KSPAlternateResourcePanel
             //base.DrawWindow(id);
             GUILayout.BeginVertical();
 
-            if (GUILayout.Button("Remove"))
-            {
-                ResourceDisplay.Instance.HideResourceList();
-            }
-
-            GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
+                        GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
             GUILayout.Label(String.Format("UT Passed: {0}s", mbARP.RepeatingWorkerUTPeriod.ToString()));
             GUILayout.Label(String.Format("RT Passed: {0}s", (mbARP.RepeatingWorkerUTPeriod * TimeWarp.CurrentRate).ToString()));
 
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
+
+            GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MP));
+            GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MP + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
+
+            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.rp == null ? "None" : mbARP.windowResourceConfig.rp.name));
+            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.ip == null ? "None" : mbARP.windowResourceConfig.ip.name));
+
+            foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
+            {
+                GUILayout.Label(String.Format("{0}({1})-{2}", item.name,item.id,item.resourceRect));
+            }
 
             //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             //{

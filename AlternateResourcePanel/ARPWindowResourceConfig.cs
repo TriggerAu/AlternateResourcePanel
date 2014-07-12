@@ -85,6 +85,9 @@ namespace KSPAlternateResourcePanel
             //wrapper for preventing horiz scroll
             GUILayout.BeginVertical(GUILayout.Width(ScrollAreaWidth - 23));
             //foreach (PartResourceDefinition item in PartResourceLibrary.Instance.resourceDefinitions)
+
+            if (Event.current.type == EventType.Repaint)
+                lstResPositions = new List<ResourcePosition>();
             for (int i = 0; i < settings.Resources.Count; i++)
             {
                 ResourceSettings item = settings.Resources.Values.ElementAt(i);
@@ -100,6 +103,17 @@ namespace KSPAlternateResourcePanel
                     GUILayout.BeginVertical();
                     GUILayout.Space(6);
                     Drawing.DrawResourceIcon(item.name);
+
+                    Rect IconRect;
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        IconRect = GUILayoutUtility.GetLastRect();
+                        //float intOffset = 0;
+                        //if (lstResPositions.Count != 0)
+                        //    intOffset = lstResPositions.Last().resourceRect.y + 22;
+                        //Rect resResourcePos = new Rect(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2 + intOffset, 0, 0);
+                        lstResPositions.Add(new ResourcePosition(item.id, item.name, IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                    }
                     GUILayout.EndVertical();
                     //GUILayout.Label(item.name, GUILayout.Width(NameWidth));
                     if (GUILayout.Button(item.name, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
@@ -118,6 +132,12 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Label("", Styles.styleSeparatorH, GUILayout.Width(120+36));
                     GUILayout.Space(7);
                     GUILayout.EndVertical();
+
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
+                        lstResPositions.Add(new ResourcePosition(item.id, "Sep", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                    }
                 }
                 if (i > 0) {
                     if (GUILayout.Button("↑", GUILayout.Width(28))) {
@@ -268,7 +288,86 @@ namespace KSPAlternateResourcePanel
                 ResourceToShowAlarmChangeNeeded = false;
                 ResourceToShowAlarm = ResourceToShowAlarmChanger;
             }
+
+            IconMouseEvents();
+            DragEnabled = !Dragging;
         }
+
+        void IconMouseEvents()
+        {
+            //if (Event.current.type == EventType.mouseDown && resIcon.Contains(Event.current.mousePosition))
+            //{
+            //    LogFormatted_DebugOnly("Drag Start");
+            //    Dragging = true;
+            //}
+
+            //if (Event.current.type == EventType.mouseUp)
+            //{
+            //    LogFormatted_DebugOnly("Drag Stop");
+            //    Dragging = false;
+            //}
+
+
+
+            MP = Event.current.mousePosition;
+            MP3 = Input.mousePosition;
+
+            rp = lstResPositions.FirstOrDefault(x => x.resourceRect.Contains(MP+new Vector2(mbARP.windowDebug.intTest1,mbARP.windowDebug.intTest2)));
+            ip = lstResPositions.FirstOrDefault(x => x.iconRect.Contains(MP+new Vector2(mbARP.windowDebug.intTest1,mbARP.windowDebug.intTest2)));
+
+            if (Event.current.type == EventType.mouseDown && ip!=null)
+            {
+                LogFormatted_DebugOnly("Drag Start");
+                Dragging = true;
+            }
+            if (Event.current.type == EventType.mouseUp)
+            {
+
+                LogFormatted_DebugOnly("Drag Stop:{0}-{1}", rp == null ? "None" : lstResPositions.FindIndex(x => x.id == rp.id).ToString(), rp == null?"":settings.Resources[rp.id].name);
+
+                Dragging = false;
+            }
+
+        }
+        internal ResourcePosition rp = null;
+        internal ResourcePosition ip = null;
+        internal class ResourcePosition
+        {
+            internal ResourcePosition(Int32 id, String name, Rect iconRect,Int32 width,Boolean Expanded)
+            {
+                this.id = id;
+                this.name=name;
+                this.iconRect = iconRect;
+                this._resWidth = width;
+                this._expanded = Expanded;
+            }
+
+            internal Rect iconRect { get; private set; }
+            internal Int32 id { get; private set; }
+            internal String name { get; private set; }
+
+            Int32 _resWidth;
+            Boolean _expanded;
+
+            internal Rect resourceRect
+            {
+                get
+                {
+                    Rect tmp = new Rect(iconRect);
+                    tmp.width = _resWidth;
+                    tmp.height = _expanded?204:22;
+                    return tmp;
+                }
+            }
+        }
+        internal List<ResourcePosition> lstResPositions = new List<ResourcePosition>();
+
+
+        public Vector2 MP;
+        public Vector3 MP3;
+        public Boolean Dragging = false;
+        
+
 
         private void SortGroups()
         {
