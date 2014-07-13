@@ -64,6 +64,8 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D btnPlay;
         internal static Texture2D btnStop;
 
+        internal static Texture2D texResourceMove;
+
         internal static Texture2D texBox;
         internal static Texture2D texBoxUnity;
 
@@ -169,6 +171,8 @@ namespace KSPAlternateResourcePanel
 
             //LoadImageFromGameDB(ref texDropDownListBox, "tex_DropDownListBox.tga");
             //LoadImageFromGameDB(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.tga");
+
+            LoadImageFromGameDB(ref texResourceMove, "img_ResourceMove.tga");
 
             LoadImageFromGameDB(ref texBox, "tex_Box.tga");
             LoadImageFromGameDB(ref texBoxUnity, "tex_BoxUnity.tga");

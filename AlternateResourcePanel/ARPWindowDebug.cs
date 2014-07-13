@@ -30,8 +30,8 @@ namespace KSPAlternateResourcePanel
 
         public Int32 intTest1=-8;
         public Int32 intTest2=-54;
-        public Int32 intTest3=0;
-        public Int32 intTest4 = 0;
+        public Int32 intTest3=4;
+        public Int32 intTest4 = 49;
         public Int32 intTest5 = 200;
 
         //Boolean Clicked = false;
@@ -74,11 +74,15 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
 
-            GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MP));
-            GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MP + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
+            GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
+            GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MousePosition + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
 
-            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.rp == null ? "None" : mbARP.windowResourceConfig.rp.name));
-            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.ip == null ? "None" : mbARP.windowResourceConfig.ip.name));
+            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
+            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
+            GUILayout.Label(String.Format("ResMove:{0}", mbARP.windowResourceConfig.rectResMove));
+
+            GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
+            GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
 
             foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
             {
