@@ -261,7 +261,11 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndVertical();
 
             if (SepToDelete != 0)
+            {
                 settings.Resources.Remove(SepToDelete);
+                List<ResourceSettings> lstTemp = settings.Resources.Values.ToList();
+                settings.Resources = lstTemp.ToDictionary(x => x.id);
+            }
 
             GUILayout.BeginHorizontal();
             if (DrawButton("Add Separator"))
