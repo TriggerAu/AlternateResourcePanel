@@ -139,28 +139,36 @@ namespace KSPAlternateResourcePanel
                         lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
                     }
                 }
+                if (GUILayout.Button(new GUIContent("S","Add Separator"), GUILayout.Width(21)))
+                {
+                    AddSeparatorAtEnd();
+                    MoveResource(settings.Resources.Count - 1, i + 1);
+                }
                 if (i > 0) {
-                    if (GUILayout.Button("↑", GUILayout.Width(28))) {
+                    if (GUILayout.Button("↑", GUILayout.Width(21)))
+                    {
                         SwapResource(i - 1, i);
                     }
                 } else {
-                    GUILayout.Space(28 + 4);
+                    GUILayout.Space(21 + 4);
                 }
                 if (i < settings.Resources.Count - 1) {
-                    if (GUILayout.Button("↓", GUILayout.Width(28)))
+                    if (GUILayout.Button("↓", GUILayout.Width(21)))
                     {
                         SwapResource(i, i+1);
                     }
                 } else {
-                    GUILayout.Space(28 + 4);
+                    GUILayout.Space(21 + 4);
                 }
 
                 if (!item.IsSeparator)
                 {
-                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(80))) {
+                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75)))
+                    {
                         settings.Resources[item.id].Visibility = settings.Resources[item.id].Visibility.Next();
                     }
-                    if (GUILayout.Button(string.Format("{0}/{1}", settings.Resources[item.id].MonitorWarningLevel, settings.Resources[item.id].MonitorAlertLevel), GUILayout.Width(60))) {
+                    if (GUILayout.Button(string.Format("{0}/{1}", settings.Resources[item.id].MonitorWarningLevel, settings.Resources[item.id].MonitorAlertLevel), GUILayout.Width(58)))
+                    {
                         if (ResourceToShowAlarmChanger == item.id) 
                             ResourceToShowAlarmChanger = 0; 
                         else
@@ -173,7 +181,8 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    if (GUILayout.Button("Delete", GUILayout.Width(80 + 60 + 4))) {
+                    if (GUILayout.Button("Delete", GUILayout.Width(75 + 58 + 4)))
+                    {
                         SepToDelete = item.id;
                     }
                 }
@@ -257,20 +266,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal();
             if (DrawButton("Add Separator"))
             {
-                Int32 SepID = 0;
-                Int32 SepAttempts=0;
-                while (SepID==0 || settings.Resources.ContainsKey(SepID))
-                {
-                    SepID= UnityEngine.Random.Range(1,100);
-                    SepAttempts++;
-                    if (SepAttempts > 100) 
-                        break;
-                }
-                if (SepAttempts > 100)
-                {
-                    ScreenMessages.PostScreenMessage("Unable to find a new Separator ID", 3, ScreenMessageStyle.UPPER_RIGHT);
-                }
-                settings.Resources.Add(SepID, new ResourceSettings() { id = SepID, IsSeparator = true });
+                AddSeparatorAtEnd();
             }
             if (DrawButton("Sort Groups"))
             {
@@ -303,6 +299,24 @@ namespace KSPAlternateResourcePanel
 
             //Disable the Window from dragging if we are dragging a resource
             DragEnabled = !DraggingResource;
+        }
+
+        private void AddSeparatorAtEnd()
+        {
+            Int32 SepID = 0;
+            Int32 SepAttempts = 0;
+            while (SepID == 0 || settings.Resources.ContainsKey(SepID))
+            {
+                SepID = UnityEngine.Random.Range(1, 100);
+                SepAttempts++;
+                if (SepAttempts > 100)
+                    break;
+            }
+            if (SepAttempts > 100)
+            {
+                ScreenMessages.PostScreenMessage("Unable to find a new Separator ID", 3, ScreenMessageStyle.UPPER_RIGHT);
+            }
+            settings.Resources.Add(SepID, new ResourceSettings() { id = SepID, IsSeparator = true });
         }
 
         void IconMouseEvents()

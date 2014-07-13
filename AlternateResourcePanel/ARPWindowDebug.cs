@@ -28,11 +28,11 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1=-8;
-        public Int32 intTest2=-54;
-        public Int32 intTest3=4;
-        public Int32 intTest4 = 49;
-        public Int32 intTest5 = 200;
+        public Int32 intTest1=18;
+        public Int32 intTest2=18;
+        public Int32 intTest3=80;
+        public Int32 intTest4 = 60;
+        public Int32 intTest5 = 50;
 
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
@@ -79,15 +79,15 @@ namespace KSPAlternateResourcePanel
 
             GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
             GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
-            GUILayout.Label(String.Format("ResMove:{0}", mbARP.windowResourceConfig.rectResMove));
+            //GUILayout.Label(String.Format("ResMove:{0}", mbARP.windowResourceConfig.rectResMove));
 
-            GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
+            //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
             GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
 
-            foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
-            {
-                GUILayout.Label(String.Format("{0}({1})-{2}", item.name,item.id,item.resourceRect));
-            }
+            //foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
+            //{
+            //    GUILayout.Label(String.Format("{0}({1})-{2}", item.name,item.id,item.resourceRect));
+            //}
 
             //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             //{
