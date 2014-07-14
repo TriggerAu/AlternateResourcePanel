@@ -337,15 +337,17 @@ namespace KSPAlternateResourcePanel
             }
             else { resourceOver = null; iconOver = null; }
 
-            //did we click on an Icon
-            if (Event.current.type == EventType.mouseDown && iconOver!=null)
+            //did we click on an Icon with mouse button 0
+            if (Event.current.type == EventType.mouseDown && 
+                Event.current.button==0 && iconOver!=null)
             {
                 LogFormatted_DebugOnly("Drag Start");
                 resourceDrag = iconOver;
                 DraggingResource = true;
             }
             //did we release the mouse
-            if (Event.current.type == EventType.mouseUp)
+            if (Event.current.type == EventType.mouseUp &&
+                Event.current.button == 0)
             {
                 if (resourceOver != null)
                 {
@@ -354,8 +356,9 @@ namespace KSPAlternateResourcePanel
 
                     MoveResource(lstResPositions.FindIndex(x => x.id == resourceDrag.id), lstResPositions.FindIndex(x => x.id == resourceOver.id));
                 }
-                //disable draggingh flag
+                //disable dragging flag
                 DraggingResource = false;
+                resourceDrag = null;
             }
 
             //If we are dragging and in the bottom or top area then scrtoll the list
@@ -371,7 +374,12 @@ namespace KSPAlternateResourcePanel
             base.OnGUIEvery();
 
             //disable resource dragging if we mouseup outside the window
-            if (Event.current.type == EventType.mouseUp) DraggingResource = false;
+            if (Event.current.type == EventType.mouseUp &&
+                Event.current.button == 0)
+            {
+                DraggingResource = false;
+                resourceDrag = null;
+            }
 
             //If we are dragging, show what we are dragging
             if (DraggingResource && resourceDrag!=null)
