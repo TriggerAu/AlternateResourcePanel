@@ -375,7 +375,8 @@ namespace KSPAlternateResourcePanel
 
             //disable resource dragging if we mouseup outside the window
             if (Event.current.type == EventType.mouseUp &&
-                Event.current.button == 0)
+                Event.current.button == 0 &&
+                !this.WindowRect.Contains(new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)))
             {
                 DraggingResource = false;
                 resourceDrag = null;

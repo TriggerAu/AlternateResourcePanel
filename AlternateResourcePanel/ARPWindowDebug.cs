@@ -79,7 +79,8 @@ namespace KSPAlternateResourcePanel
 
             GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
             GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
-            //GUILayout.Label(String.Format("ResMove:{0}", mbARP.windowResourceConfig.rectResMove));
+            if (mbARP.windowResourceConfig.resourceDrag!=null)
+            GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
 
             //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
             GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
