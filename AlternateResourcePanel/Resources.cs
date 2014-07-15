@@ -130,55 +130,55 @@ namespace KSPAlternateResourcePanel
             dictSecond = texIconsResourceDefs;
             dictThird = texIconsPlayer;
 
-            LoadImageFromGameDB(ref texPanel, "img_PanelBack.tga");
+            LoadImageFromGameDB(ref texPanel, "img_PanelBack.png");
 
-            LoadImageFromGameDB(ref texBarBlue, "img_BarBlue.tga");
-            LoadImageFromGameDB(ref texBarBlue_Back, "img_BarBlue_Back.tga");
-            LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.tga");
-            LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.tga");
+            LoadImageFromGameDB(ref texBarBlue, "img_BarBlue.png");
+            LoadImageFromGameDB(ref texBarBlue_Back, "img_BarBlue_Back.png");
+            LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.png");
+            LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.png");
 
-            LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.tga");
-            LoadImageFromGameDB(ref texBarHighlightGreen, "img_BarHighlightGreen.tga");
-            LoadImageFromGameDB(ref texBarHighlightRed, "img_BarHighlightRed.tga");
+            LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.png");
+            LoadImageFromGameDB(ref texBarHighlightGreen, "img_BarHighlightGreen.png");
+            LoadImageFromGameDB(ref texBarHighlightRed, "img_BarHighlightRed.png");
 
-            LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.tga");
-            LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.tga");
+            LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.png");
+            LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.png");
 
-            LoadImageFromGameDB(ref btnViewAll, "img_buttonEye.tga");
-            LoadImageFromGameDB(ref btnViewTimes, "img_buttonClock.tga");
+            LoadImageFromGameDB(ref btnViewAll, "img_buttonEye.png");
+            LoadImageFromGameDB(ref btnViewTimes, "img_buttonClock.png");
 
-            LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.tga");
+            LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
 
-            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.tga");
+            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.png");
 
             //LoadImageFromGameDB(ref texTooltipBackground, "tex_TooltipBackground.png");
 
-            LoadImageFromGameDB(ref texRateUp, "img_RateUp.tga");
-            LoadImageFromGameDB(ref texRateDown, "img_RateDown.tga");
+            LoadImageFromGameDB(ref texRateUp, "img_RateUp.png");
+            LoadImageFromGameDB(ref texRateDown, "img_RateDown.png");
 
-            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.tga");
-            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.tga");
-            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.tga");
-            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.tga");
+            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.png");
+            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.png");
+            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.png");
+            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.png");
 
             //LoadImageFromGameDB(ref btnLock, "img_Lock.png");
             //LoadImageFromGameDB(ref btnUnlock, "img_Unlock.png");
 
-            LoadImageFromGameDB(ref btnDropDown, "img_DropDown.tga");
-            LoadImageFromGameDB(ref btnPlay, "img_Play.tga");
-            LoadImageFromGameDB(ref btnStop, "img_Stop.tga");
-            //LoadImageFromGameDB(ref btnDropDownSep, "img_DropDownSep.tga");
+            LoadImageFromGameDB(ref btnDropDown, "img_DropDown.png");
+            LoadImageFromGameDB(ref btnPlay, "img_Play.png");
+            LoadImageFromGameDB(ref btnStop, "img_Stop.png");
+            //LoadImageFromGameDB(ref btnDropDownSep, "img_DropDownSep.png");
 
-            //LoadImageFromGameDB(ref texDropDownListBox, "tex_DropDownListBox.tga");
-            //LoadImageFromGameDB(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.tga");
+            //LoadImageFromGameDB(ref texDropDownListBox, "tex_DropDownListBox.png");
+            //LoadImageFromGameDB(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.png");
 
-            LoadImageFromGameDB(ref texResourceMove, "img_ResourceMove.tga");
+            LoadImageFromGameDB(ref texResourceMove, "img_ResourceMove.png");
 
-            LoadImageFromGameDB(ref texBox, "tex_Box.tga");
-            LoadImageFromGameDB(ref texBoxUnity, "tex_BoxUnity.tga");
+            LoadImageFromGameDB(ref texBox, "tex_Box.png");
+            LoadImageFromGameDB(ref texBoxUnity, "tex_BoxUnity.png");
 
-            LoadImageFromGameDB(ref texSeparatorH , "img_SeparatorHorizontal.tga");
-            LoadImageFromGameDB(ref texSeparatorV, "img_SeparatorVertical.tga");
+            LoadImageFromGameDB(ref texSeparatorH , "img_SeparatorHorizontal.png");
+            LoadImageFromGameDB(ref texSeparatorV, "img_SeparatorVertical.png");
         }
 
 
