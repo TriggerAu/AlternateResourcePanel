@@ -14,6 +14,18 @@ namespace KSPAlternateResourcePanel
         internal static Rect DrawResourceIcon(String ResourceName)
         {
             GUIContent contLabel;
+            contLabel = GetResourceIcon(ResourceName);
+
+            contLabel.tooltip = ResourceName;
+            GUILayout.Label(contLabel, Styles.styleBarName, GUILayout.ExpandWidth(false));
+
+            //return the rect that is the position of the Icon
+            return GUILayoutUtility.GetLastRect();
+        }
+
+        internal static GUIContent GetResourceIcon(String ResourceName)
+        {
+            GUIContent contLabel;
             if (Resources.dictFirst.ContainsKey(ResourceName.ToLower()))
             {
                 contLabel = new GUIContent(Resources.dictFirst[ResourceName.ToLower()]);
@@ -34,12 +46,7 @@ namespace KSPAlternateResourcePanel
                 else if (contLabel.text.Length < 2)
                     contLabel.text = ResourceName.Substring(0, 3) + "...";
             }
-
-            contLabel.tooltip = ResourceName;
-            GUILayout.Label(contLabel, Styles.styleBarName, GUILayout.ExpandWidth(false));
-
-            //return the rect that is the position of the Icon
-            return GUILayoutUtility.GetLastRect();
+            return contLabel;
         }
 
         internal static Boolean DrawResourceBar(Rect rectBar, ARPResource Res, GUIStyle styleBack, GUIStyle styleFront, GUIStyle styleFrontThin, Boolean ShowRates, Boolean Highlight, GUIStyle HighlightStyle)

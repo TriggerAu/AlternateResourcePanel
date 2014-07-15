@@ -77,6 +77,15 @@ namespace KSPAlternateResourcePanel
             if (!settings.Load())
                 LogFormatted("Settings Load Failed");
 
+            //If the window is in the pre0.24 default then move it down so its not over the app launcher
+            if (!settings.WindowPosUpdatedv24 && settings.WindowPosition == new Rect(new Rect(Screen.width - 298, 19, 299, 20)))
+            {
+                MonoBehaviourExtended.LogFormatted("Moving window for 0.24");
+                settings.WindowPosUpdatedv24 = true;
+                settings.Save();
+                blnResetWindow = true;
+            }
+
             //Ensure settings.resources contains all the resources in the loaded game
             VerifyResources();
 
@@ -198,6 +207,22 @@ namespace KSPAlternateResourcePanel
         private void VerifyResources()
         {
             Boolean AddedResources = false;
+
+            if (settings.Resources.Count == 0) {
+                // Set a Default config
+                LogFormatted("Setting a Default Res Config");
+                settings.Resources.Add(1576437329, new ResourceSettings(1576437329, "ElectricCharge"));
+                settings.Resources.Add(2001413032, new ResourceSettings(2001413032, "MonoPropellant"));
+                settings.Resources.Add(-792463147, new ResourceSettings(-792463147, "EVA Propellant"));
+                settings.Resources.Add(35, new ResourceSettings(35, "") { IsSeparator = true });
+                settings.Resources.Add(374119730, new ResourceSettings(374119730, "LiquidFuel"));
+                settings.Resources.Add(-1823983486, new ResourceSettings(-1823983486, "Oxidizer"));
+                settings.Resources.Add(650317537, new ResourceSettings(650317537, "SolidFuel"));
+                settings.Resources.Add(36, new ResourceSettings(36, "") { IsSeparator = true });
+                settings.Resources.Add(-1909417378, new ResourceSettings(-1909417378, "IntakeAir"));
+                settings.Resources.Add(1447111193, new ResourceSettings(1447111193, "XenonGas"));
+            }
+
             foreach (PartResourceDefinition item in PartResourceLibrary.Instance.resourceDefinitions)
             {
                 if (!settings.Resources.ContainsKey(item.id))
@@ -280,10 +305,14 @@ namespace KSPAlternateResourcePanel
 
             //Set the current Skin
             SkinsLibrary.SetCurrent(settings.SelectedSkin.ToString());
+
+            //Set Button Rectangle position
+            rectButton.x = settings.vectButtonPos.x;
+            rectButton.y = settings.vectButtonPos.y;
         }
 
         //Position of screen button
-        static Rect rectButton = new Rect(Screen.width - 109, 0, 80, 30);
+        static Rect rectButton = new Rect(Screen.width - 309, 0, 80, 30);
         //Hover Status for mouse
         internal static Boolean HoverOn = false;
         //Hover Status for mouse
@@ -315,7 +344,7 @@ namespace KSPAlternateResourcePanel
                 windowMain.Visible = true;
                 if (blnResetWindow)
                 {
-                    windowMain.WindowRect = new Rect(Screen.width - 298, 19, 299, 20);
+                    windowMain.WindowRect = new Rect(Screen.width - 298, 40, 299, 20);
                     blnResetWindow = false;
                     settings.WindowPosition = windowMain.WindowRect;
                     settings.Save();

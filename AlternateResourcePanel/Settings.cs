@@ -21,11 +21,16 @@ namespace KSPAlternateResourcePanel
             OnEncodeToConfigNode();
         }
 
+        [Persistent]
+        internal Vector3 vectButtonPos = new Vector3()
+            { x = Screen.width - 309, y = 0 };
+
         [Persistent] internal Boolean ToggleOn = false;
         [Persistent] internal Boolean DisableHover = false;
         [Persistent] internal Boolean LockLocation= true;
-        internal Rect WindowPosition = new Rect(Screen.width - 298, 19, 299, 20);
+        internal Rect WindowPosition = new Rect(Screen.width - 298, 40, 299, 20);
         [Persistent] private RectStorage WindowPositionStored = new RectStorage();
+        [Persistent] internal Boolean WindowPosUpdatedv24=false;
 
         [Persistent] internal Int32 SpacerPadding = 0;
         [Persistent] internal Boolean HideEmptyResources = false;
@@ -347,6 +352,13 @@ namespace KSPAlternateResourcePanel
 
     public class ResourceSettings:ConfigNodeStorage
     {
+        public ResourceSettings(Int32 id, String name) :this()
+        {
+            this.id = id;
+            this.name = name;
+        }
+        public ResourceSettings() { }
+
         [Persistent] internal Int32 id;
         [Persistent] internal String name="";
         [Persistent] internal Boolean IsSeparator=false;        

@@ -28,6 +28,12 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.3.0.0        -    KSP Version: 0.23.5
+- Added Drag and Drop reordering to Resource Config (Issue #29)
+- Added Insert Separator function in Resource Config (Issue #23)
+- Added Default resource Layout for Stick Resources (Issue #27)
+- Changed all Textures to be PNG to prevent blurring at lower texture qualities
+
 Version 2.2.3.0        -    KSP Version: 0.23.5
 - Made Version Check download truly background so no lock ups (Issue #20) - big thanks to Ted
 - Fixed rates with tiny negative value not displaying minus indicator (Issue #17)
