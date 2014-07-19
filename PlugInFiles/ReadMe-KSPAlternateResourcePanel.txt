@@ -28,6 +28,12 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.4.0.0        -    KSP Version: 0.24.0
+- Compiled against 0.24 binaries
+- Changed Button Options so you can choose from Basic, Blizzy's Toolbar or KSP Launcher
+- Added KSP Launcher Button stuff
+- Changed texture loading to blurless method (from KAC Issue 33)
+
 Version 2.3.0.0        -    KSP Version: 0.23.5
 - Added Drag and Drop reordering to Resource Config (Issue #29)
 - Added Insert Separator function in Resource Config (Issue #23)

@@ -30,6 +30,16 @@ namespace KSPAlternateResourcePanel
             [Description("About...")]   About,
         }
 
+
+        internal enum ButtonStyleEnum
+        {
+            [Description("Basic button")]                       Basic,
+            [Description("Common Toolbar (by Blizzy78)")]       Toolbar,
+            [Description("KSP Launcher")]                       Launcher,
+        }
+
+        private DropDownList ddlSettingsButtonStyle;
+        
         internal Single WindowHeight;
         Int32 MinWindowHeight = 136;
         Int32 SettingsAreaWidth = 284;
@@ -53,6 +63,10 @@ namespace KSPAlternateResourcePanel
             ddlSettingsRateStyle = new DropDownList(EnumExtensions.ToEnumDescriptions<Settings.RateDisplayEnum>(),(Int32)settings.RateDisplayType, this);
             ddlSettingsRateStyle.OnSelectionChanged += ddlSettingsRateStyle_OnSelectionChanged;
 
+            ddlSettingsButtonStyle = new DropDownList(EnumExtensions.ToEnumDescriptions<ButtonStyleEnum>(), (Int32)settings.ButtonStyleChosen, this);
+            ddlSettingsButtonStyle.OnSelectionChanged += ddlSettingsButtonStyle_OnSelectionChanged; 
+
+            ddlManager.AddDDL(ddlSettingsButtonStyle);
             ddlManager.AddDDL(ddlSettingsAlarmsWarning);
             ddlManager.AddDDL(ddlSettingsAlarmsAlert);
             ddlManager.AddDDL(ddlSettingsRateStyle);
@@ -99,6 +113,34 @@ namespace KSPAlternateResourcePanel
             settings.RateDisplayType = (Settings.RateDisplayEnum)NewIndex;
             settings.Save();
         }
+        void ddlSettingsButtonStyle_OnSelectionChanged(MonoBehaviourWindowPlus.DropDownList sender, int OldIndex, int NewIndex)
+        {
+            settings.ButtonStyleChosen = (ButtonStyleEnum)NewIndex;
+            settings.Save();
+
+            //destroy Old Objects
+            switch ((ButtonStyleEnum)OldIndex)
+	        {
+                case ButtonStyleEnum.Toolbar:
+                    mbARP.DestroyToolbarButton(mbARP.btnToolbar);
+                    break;
+                case ButtonStyleEnum.Launcher:
+                    mbARP.DestroyAppLauncherButton();
+                    break;
+            }
+
+            //CReate New ones
+            switch ((ButtonStyleEnum)NewIndex)
+	        {
+                case ButtonStyleEnum.Toolbar:
+                    mbARP.btnToolbar = mbARP.InitToolbarButton();
+                    break;
+                case ButtonStyleEnum.Launcher:
+                    mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
+                    break;
+            }
+        }
+
 
         private DropDownList LoadSoundsList(String[] Names, String Selected)
         {
@@ -111,6 +153,7 @@ namespace KSPAlternateResourcePanel
             return retDDl;
         }
 
+        private Int32 intBlizzyToolbarMissingHeight = 0;
 
         internal override void DrawWindow(int id)
         {
@@ -135,7 +178,7 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 281; //241; //174;
+                    WindowHeight = 281 + intBlizzyToolbarMissingHeight;// 281; //241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -238,30 +281,40 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2); //to even up the text
             GUILayout.Label("Styling:", Styles.styleStageTextHead);
+            GUILayout.Label("Button:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
             ddlSettingsSkin.DrawButton();
 
-            if (settings.BlizzyToolbarIsAvailable)
+            ddlSettingsButtonStyle.DrawButton();
+
+            intBlizzyToolbarMissingHeight = 0;
+            if (!settings.BlizzyToolbarIsAvailable)
             {
-                if (DrawToggle(ref settings.UseBlizzyToolbarIfAvailable, new GUIContent("Use Common Toolbar", "Choose to use the Common  Toolbar or the native KSP ARP button"), Styles.styleToggle))
+                if (settings.ButtonStyleChosen == ButtonStyleEnum.Toolbar)
                 {
-                    if (settings.BlizzyToolbarIsAvailable)
-                    {
-                        if (settings.UseBlizzyToolbarIfAvailable)
-                            mbARP.btnToolbar = mbARP.InitToolbarButton();
-                        else
-                            mbARP.DestroyToolbarButton(mbARP.btnToolbar);
-                    }
-                    settings.Save();
+                    if (GUILayout.Button(new GUIContent("Not Installed. Click for Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
+                        Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
+                    intBlizzyToolbarMissingHeight=18;
                 }
-            }
-            else
-            {
-                if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
-                    Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
-            }
+                //if (DrawToggle(ref settings.UseBlizzyToolbarIfAvailable, new GUIContent("Use Common Toolbar", "Choose to use the Common  Toolbar or the native KSP ARP button"), Styles.styleToggle))
+                //{
+                //    if (settings.BlizzyToolbarIsAvailable)
+                //    {
+                //        if (settings.UseBlizzyToolbarIfAvailable)
+                //            mbARP.btnToolbar = mbARP.InitToolbarButton();
+                //        else
+                //            mbARP.DestroyToolbarButton(mbARP.btnToolbar);
+                //    }
+                //    settings.Save();
+                //}
+            } 
+            //else
+            //{
+            //    if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
+            //        Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
+            //}
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 

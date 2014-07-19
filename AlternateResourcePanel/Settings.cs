@@ -22,8 +22,7 @@ namespace KSPAlternateResourcePanel
         }
 
         [Persistent]
-        internal Vector3 vectButtonPos = new Vector3()
-            { x = Screen.width - 309, y = 0 };
+        internal Vector3 vectButtonPos = new Vector3(Screen.width - 405, 0,0 );
 
         [Persistent] internal Boolean ToggleOn = false;
         [Persistent] internal Boolean DisableHover = false;
@@ -31,6 +30,7 @@ namespace KSPAlternateResourcePanel
         internal Rect WindowPosition = new Rect(Screen.width - 298, 40, 299, 20);
         [Persistent] private RectStorage WindowPositionStored = new RectStorage();
         [Persistent] internal Boolean WindowPosUpdatedv24=false;
+        [Persistent] internal Boolean ButtonPosUpdatedv24=false;
 
         [Persistent] internal Int32 SpacerPadding = 0;
         [Persistent] internal Boolean HideEmptyResources = false;
@@ -86,6 +86,16 @@ namespace KSPAlternateResourcePanel
 
         internal Boolean BlizzyToolbarIsAvailable = false;
         [Persistent] internal Boolean UseBlizzyToolbarIfAvailable = false;
+
+        internal ARPWindowSettings.ButtonStyleEnum ButtonStyleToDisplay {
+            get {
+                if (BlizzyToolbarIsAvailable || ButtonStyleChosen != ARPWindowSettings.ButtonStyleEnum.Toolbar)
+                    return ButtonStyleChosen;
+                else
+                    return ARPWindowSettings.ButtonStyleEnum.Basic;
+            }
+        }
+        [Persistent] internal ARPWindowSettings.ButtonStyleEnum ButtonStyleChosen = ARPWindowSettings.ButtonStyleEnum.Basic;
 
         //Version Stuff
         [Persistent] internal Boolean DailyVersionCheck = true;

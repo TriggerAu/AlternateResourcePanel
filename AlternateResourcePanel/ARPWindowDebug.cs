@@ -28,8 +28,8 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1=18;
-        public Int32 intTest2=18;
+        public Int32 intTest1 = 281;
+        public Int32 intTest2=54;
         public Int32 intTest3=80;
         public Int32 intTest4 = 60;
         public Int32 intTest5 = 50;
@@ -46,6 +46,8 @@ namespace KSPAlternateResourcePanel
             DrawTextBox(ref intTest4);
             DrawTextBox(ref intTest5);
 
+
+            
             //if (DrawButton("KSP")) SkinsLibrary.SetCurrent( SkinsLibrary.DefSkinType.KSP);
             //if (DrawButton("Unity")) SkinsLibrary.SetCurrent(SkinsLibrary.DefSkinType.Unity);
             //if (DrawButton("UnityandKSP")) SkinsLibrary.SetCurrent("UnityStyleWKSPBtns");
@@ -66,24 +68,27 @@ namespace KSPAlternateResourcePanel
             //base.DrawWindow(id);
             GUILayout.BeginVertical();
 
-                        GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
+            GUILayout.Label(String.Format("Repeating Worker: {0:0.00}ms  Config:{1}-{2}-{3}", mbARP.RepeatingWorkerDuration.TotalMilliseconds, mbARP.RepeatingWorkerRunning, mbARP.RepeatingWorkerInitialWait, mbARP.RepeatingWorkerRate));
             GUILayout.Label(String.Format("UT Passed: {0}s", mbARP.RepeatingWorkerUTPeriod.ToString()));
             GUILayout.Label(String.Format("RT Passed: {0}s", (mbARP.RepeatingWorkerUTPeriod * TimeWarp.CurrentRate).ToString()));
 
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
+            GUILayout.Label(String.Format("{0}", settings.ButtonStyleChosen));
+            GUILayout.Label(String.Format("{0}", settings.ButtonStyleToDisplay));
 
-            GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
-            GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MousePosition + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
 
-            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
-            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
-            if (mbARP.windowResourceConfig.resourceDrag!=null)
-            GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
+            //GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
+            //GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MousePosition + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
+
+            //GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
+            //GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
+            //if (mbARP.windowResourceConfig.resourceDrag!=null)
+            //GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
 
             //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
-            GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
+            //GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
 
             //foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
             //{
