@@ -379,7 +379,7 @@ namespace KSPPluginFramework
                             }
                         }
                         //Throw an event or some such from here
-                        if (OnSelectionChanged != null)
+                        if ((oldIndex!= SelectedIndex) && (OnSelectionChanged != null))
                             OnSelectionChanged(this,oldIndex, SelectedIndex);
                         ListVisible = false;
                     }
