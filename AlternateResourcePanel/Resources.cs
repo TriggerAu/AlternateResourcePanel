@@ -72,6 +72,8 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D texSeparatorV;
         internal static Texture2D texSeparatorH;
 
+        internal static Texture2D texAppLaunchIcon;
+
         //Icon Libraries
         internal static Dictionary<String, Texture2D> texIconsKSPARP;
         internal static Dictionary<String, Texture2D> texIconsPlayer;
@@ -179,6 +181,8 @@ namespace KSPAlternateResourcePanel
 
             LoadImageFromGameDB(ref texSeparatorH , "img_SeparatorHorizontal.png");
             LoadImageFromGameDB(ref texSeparatorV, "img_SeparatorVertical.png");
+
+            LoadImageFromGameDB(ref texAppLaunchIcon, "KSPARPaBig.png", "TriggerTech/KSPAlternateResourcePanel/ToolbarIcons");
         }
 
 

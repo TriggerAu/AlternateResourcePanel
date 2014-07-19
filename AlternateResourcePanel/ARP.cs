@@ -102,9 +102,20 @@ namespace KSPAlternateResourcePanel
             //Get whether the toolbar is there
             settings.BlizzyToolbarIsAvailable = ToolbarManager.ToolbarAvailable;
 
-            //if requested use that button
-            if (settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable)
-                btnToolbar = InitToolbarButton();
+            //convert blizzy bool to display enum
+            if (settings.UseBlizzyToolbarIfAvailable) {
+                settings.UseBlizzyToolbarIfAvailable = false; 
+                settings.ButtonStyleChosen = ARPWindowSettings.ButtonStyleEnum.Toolbar;
+            }
+
+            //setup the Toolbar button if necessary
+            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Toolbar)
+            {
+                    btnToolbar = InitToolbarButton();
+            }
+            ////if requested use that button
+            //if (settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable)
+            //    btnToolbar = InitToolbarButton();
 
             //init the global variables
             lstPartWindows = new ARPPartWindowList();
@@ -137,6 +148,10 @@ namespace KSPAlternateResourcePanel
             GameEvents.onStageActivate.Add(OnStageActivate);
             GameEvents.onFlightReady.Add(OnFlightReady);
 
+            //Hook the App Launcher
+            GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+
             //do the daily version check if required
             if (settings.DailyVersionCheck)
                 settings.VersionCheck(false);
@@ -161,6 +176,9 @@ namespace KSPAlternateResourcePanel
 
             GameEvents.onStageActivate.Remove(OnStageActivate);
             GameEvents.onFlightReady.Remove(OnFlightReady);
+
+            GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            DestroyAppLauncherButton();
 
             DestroyToolbarButton(btnToolbar);
 
@@ -372,9 +390,14 @@ namespace KSPAlternateResourcePanel
         /// <returns></returns>
         internal Boolean IsMouseOver()
         {
-            if ((settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
+            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Toolbar)
                 //return MouseOverToolbarBtn || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
                 return (MouseOverToolbarBtn && !settings.DisableHover) || 
+                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
+
+            //App Launcher version
+            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Launcher && MouseOverAppLauncherBtn)
+                return (MouseOverAppLauncherBtn && !settings.DisableHover) ||
                     (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
 
             //are we painting?

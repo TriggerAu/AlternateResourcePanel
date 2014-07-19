@@ -125,18 +125,20 @@ namespace KSPAlternateResourcePanel
                     mbARP.DestroyToolbarButton(mbARP.btnToolbar);
                     break;
                 case ButtonStyleEnum.Launcher:
+                    mbARP.DestroyAppLauncherButton();
                     break;
             }
 
             //CReate New ones
             switch ((ButtonStyleEnum)NewIndex)
 	        {
-		        case ButtonStyleEnum.Basic:
-                    break;
                 case ButtonStyleEnum.Toolbar:
                     mbARP.btnToolbar = mbARP.InitToolbarButton();
                     break;
-	        }
+                case ButtonStyleEnum.Launcher:
+                    mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
+                    break;
+            }
         }
 
 
@@ -279,6 +281,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2); //to even up the text
             GUILayout.Label("Styling:", Styles.styleStageTextHead);
+            GUILayout.Label("Button:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
