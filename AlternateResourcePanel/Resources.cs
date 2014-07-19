@@ -16,10 +16,12 @@ namespace KSPAlternateResourcePanel
         //WHERE SHOULD THESE BE???
         internal static String PathApp = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         internal static String PathTriggerTech = string.Format("{0}GameData/TriggerTech", PathApp);
-        internal static String PathPlugin = string.Format("{0}/{1}", PathTriggerTech, KSPAlternateResourcePanel._AssemblyName);
-        internal static String PathPluginSounds = string.Format("{0}/Sounds", PathPlugin);
+        //internal static String PathPlugin = string.Format("{0}/{1}", PathTriggerTech, KSPAlternateResourcePanel._AssemblyName);
+        internal static String PathPlugin = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        internal static String PathPluginToolbarIcons = string.Format("{0}/ToolbarIcons", PathPlugin);
+        internal static String PathPluginTextures = string.Format("{0}/Textures", PathPlugin);
         //internal static String PathPluginData = string.Format("{0}/Data", PathPlugin);
-        //internal static String PathPluginTextures = string.Format("{0}/Textures", PathPlugin);
+        internal static String PathPluginSounds = string.Format("{0}/Sounds", PathPlugin);
 
         internal static String DBPathTriggerTech = string.Format("TriggerTech");
         internal static String DBPathPlugin = string.Format("TriggerTech/{0}", KSPAlternateResourcePanel._AssemblyName);
@@ -27,52 +29,53 @@ namespace KSPAlternateResourcePanel
         internal static String DBPathTextures = string.Format("{0}/Textures", DBPathPlugin);
         internal static String DBPathPluginSounds = string.Format("{0}/Sounds", DBPathPlugin);
 
-        internal static Texture2D texPanel;
-        internal static Texture2D texBarBlue; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        internal static Texture2D texBarBlue_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        internal static Texture2D texBarGreen; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        internal static Texture2D texBarGreen_Back; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texBarHighlight; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        internal static Texture2D texBarHighlightGreen; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
-        internal static Texture2D texBarHighlightRed; // = new Texture2D(14, 14, TextureFormat.ARGB32, false);
+        internal static Texture2D texPanel = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarBlue  = new Texture2D(13, 13, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarBlue_Back = new Texture2D(13, 13, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarGreen = new Texture2D(13, 13, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarGreen_Back = new Texture2D(13, 13, TextureFormat.ARGB32, false);
 
-        internal static Texture2D btnChevronUp; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
-        internal static Texture2D btnChevronDown; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarHighlight = new Texture2D(9, 9, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarHighlightGreen = new Texture2D(9, 9, TextureFormat.ARGB32, false);
+        internal static Texture2D texBarHighlightRed = new Texture2D(9, 9, TextureFormat.ARGB32, false);
 
-        internal static Texture2D btnViewAll; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
-        internal static Texture2D btnViewTimes;
+        internal static Texture2D btnChevronUp = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnChevronDown = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
-        internal static Texture2D btnSettingsAttention; // = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnViewAll = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnViewTimes = new Texture2D(16, 16, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texPartWindowHead;
+        internal static Texture2D btnSettingsAttention = new Texture2D(17, 16, TextureFormat.ARGB32, false);
+
+        internal static Texture2D texPartWindowHead = new Texture2D(16, 16, TextureFormat.ARGB32, false);
 
         //internal static Texture2D texTooltipBackground; // = new Texture2D(9, 9);//, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texRateUp;
-        internal static Texture2D texRateDown;
+        internal static Texture2D texRateUp = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        internal static Texture2D texRateDown = new Texture2D(10, 10, TextureFormat.ARGB32, false);
 
-        internal static Texture2D btnAlarm;
-        internal static Texture2D btnAlarmEnabled;
-        internal static Texture2D btnAlarmWarn;
-        internal static Texture2D btnAlarmAlert;
+        internal static Texture2D btnAlarm = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnAlarmEnabled = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnAlarmWarn = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnAlarmAlert = new Texture2D(16, 16, TextureFormat.ARGB32, false);
 
         //internal static Texture2D btnLock;
         //internal static Texture2D btnUnlock;
 
-        internal static Texture2D btnDropDown;
-        internal static Texture2D btnPlay;
-        internal static Texture2D btnStop;
+        internal static Texture2D btnDropDown = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        internal static Texture2D btnPlay = new Texture2D(10, 10, TextureFormat.ARGB32, false);
+        internal static Texture2D btnStop = new Texture2D(10, 10, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texResourceMove;
+        internal static Texture2D texResourceMove = new Texture2D(378, 9, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texBox;
-        internal static Texture2D texBoxUnity;
+        internal static Texture2D texBox = new Texture2D(9, 9, TextureFormat.ARGB32, false);
+        internal static Texture2D texBoxUnity = new Texture2D(9, 9, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texSeparatorV;
-        internal static Texture2D texSeparatorH;
+        internal static Texture2D texSeparatorV = new Texture2D(6, 2, TextureFormat.ARGB32, false);
+        internal static Texture2D texSeparatorH = new Texture2D(2, 20, TextureFormat.ARGB32, false);
 
-        internal static Texture2D texAppLaunchIcon;
+        internal static Texture2D texAppLaunchIcon = new Texture2D(38, 38, TextureFormat.ARGB32, false);
 
         //Icon Libraries
         internal static Dictionary<String, Texture2D> texIconsKSPARP;
@@ -132,57 +135,57 @@ namespace KSPAlternateResourcePanel
             dictSecond = texIconsResourceDefs;
             dictThird = texIconsPlayer;
 
-            LoadImageFromGameDB(ref texPanel, "img_PanelBack.png");
+            LoadImageFromFile(ref texPanel, "img_PanelBack.png");
 
-            LoadImageFromGameDB(ref texBarBlue, "img_BarBlue.png");
-            LoadImageFromGameDB(ref texBarBlue_Back, "img_BarBlue_Back.png");
-            LoadImageFromGameDB(ref texBarGreen, "img_BarGreen.png");
-            LoadImageFromGameDB(ref texBarGreen_Back, "img_BarGreen_Back.png");
+            LoadImageFromFile(ref texBarBlue, "img_BarBlue.png");
+            LoadImageFromFile(ref texBarBlue_Back, "img_BarBlue_Back.png");
+            LoadImageFromFile(ref texBarGreen, "img_BarGreen.png");
+            LoadImageFromFile(ref texBarGreen_Back, "img_BarGreen_Back.png");
 
-            LoadImageFromGameDB(ref texBarHighlight, "img_BarHighlight.png");
-            LoadImageFromGameDB(ref texBarHighlightGreen, "img_BarHighlightGreen.png");
-            LoadImageFromGameDB(ref texBarHighlightRed, "img_BarHighlightRed.png");
+            LoadImageFromFile(ref texBarHighlight, "img_BarHighlight.png");
+            LoadImageFromFile(ref texBarHighlightGreen, "img_BarHighlightGreen.png");
+            LoadImageFromFile(ref texBarHighlightRed, "img_BarHighlightRed.png");
 
-            LoadImageFromGameDB(ref btnChevronUp, "img_buttonChevronUp.png");
-            LoadImageFromGameDB(ref btnChevronDown, "img_buttonChevronDown.png");
+            LoadImageFromFile(ref btnChevronUp, "img_buttonChevronUp.png");
+            LoadImageFromFile(ref btnChevronDown, "img_buttonChevronDown.png");
 
-            LoadImageFromGameDB(ref btnViewAll, "img_buttonEye.png");
-            LoadImageFromGameDB(ref btnViewTimes, "img_buttonClock.png");
+            LoadImageFromFile(ref btnViewAll, "img_buttonEye.png");
+            LoadImageFromFile(ref btnViewTimes, "img_buttonClock.png");
 
-            LoadImageFromGameDB(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
+            LoadImageFromFile(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
 
-            LoadImageFromGameDB(ref texPartWindowHead, "img_PartWindowHead.png");
+            LoadImageFromFile(ref texPartWindowHead, "img_PartWindowHead.png");
 
-            //LoadImageFromGameDB(ref texTooltipBackground, "tex_TooltipBackground.png");
+            //LoadImageFromFile(ref texTooltipBackground, "tex_TooltipBackground.png");
 
-            LoadImageFromGameDB(ref texRateUp, "img_RateUp.png");
-            LoadImageFromGameDB(ref texRateDown, "img_RateDown.png");
+            LoadImageFromFile(ref texRateUp, "img_RateUp.png");
+            LoadImageFromFile(ref texRateDown, "img_RateDown.png");
 
-            LoadImageFromGameDB(ref btnAlarm, "img_Alarm.png");
-            LoadImageFromGameDB(ref btnAlarmEnabled, "img_AlarmEnabled.png");
-            LoadImageFromGameDB(ref btnAlarmWarn, "img_AlarmWarn.png");
-            LoadImageFromGameDB(ref btnAlarmAlert, "img_AlarmAlert.png");
+            LoadImageFromFile(ref btnAlarm, "img_Alarm.png");
+            LoadImageFromFile(ref btnAlarmEnabled, "img_AlarmEnabled.png");
+            LoadImageFromFile(ref btnAlarmWarn, "img_AlarmWarn.png");
+            LoadImageFromFile(ref btnAlarmAlert, "img_AlarmAlert.png");
 
-            //LoadImageFromGameDB(ref btnLock, "img_Lock.png");
-            //LoadImageFromGameDB(ref btnUnlock, "img_Unlock.png");
+            //LoadImageFromFile(ref btnLock, "img_Lock.png");
+            //LoadImageFromFile(ref btnUnlock, "img_Unlock.png");
 
-            LoadImageFromGameDB(ref btnDropDown, "img_DropDown.png");
-            LoadImageFromGameDB(ref btnPlay, "img_Play.png");
-            LoadImageFromGameDB(ref btnStop, "img_Stop.png");
-            //LoadImageFromGameDB(ref btnDropDownSep, "img_DropDownSep.png");
+            LoadImageFromFile(ref btnDropDown, "img_DropDown.png");
+            LoadImageFromFile(ref btnPlay, "img_Play.png");
+            LoadImageFromFile(ref btnStop, "img_Stop.png");
+            //LoadImageFromFile(ref btnDropDownSep, "img_DropDownSep.png");
 
-            //LoadImageFromGameDB(ref texDropDownListBox, "tex_DropDownListBox.png");
-            //LoadImageFromGameDB(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.png");
+            //LoadImageFromFile(ref texDropDownListBox, "tex_DropDownListBox.png");
+            //LoadImageFromFile(ref texDropDownListBoxUnity, "tex_DropDownListBoxUnity.png");
 
-            LoadImageFromGameDB(ref texResourceMove, "img_ResourceMove.png");
+            LoadImageFromFile(ref texResourceMove, "img_ResourceMove.png");
 
-            LoadImageFromGameDB(ref texBox, "tex_Box.png");
-            LoadImageFromGameDB(ref texBoxUnity, "tex_BoxUnity.png");
+            LoadImageFromFile(ref texBox, "tex_Box.png");
+            LoadImageFromFile(ref texBoxUnity, "tex_BoxUnity.png");
 
-            LoadImageFromGameDB(ref texSeparatorH , "img_SeparatorHorizontal.png");
-            LoadImageFromGameDB(ref texSeparatorV, "img_SeparatorVertical.png");
+            LoadImageFromFile(ref texSeparatorH, "img_SeparatorHorizontal.png");
+            LoadImageFromFile(ref texSeparatorV, "img_SeparatorVertical.png");
 
-            LoadImageFromGameDB(ref texAppLaunchIcon, "KSPARPaBig.png", "TriggerTech/KSPAlternateResourcePanel/ToolbarIcons");
+            LoadImageFromFile(ref texAppLaunchIcon, "KSPARPaBig.png", PathPluginToolbarIcons);
         }
 
 
@@ -194,7 +197,7 @@ namespace KSPAlternateResourcePanel
 
             //Where are the Icons
             String strIconPath = string.Format("{0}/{1}", PathPlugin, IconFolderName);
-            String strIconDBPath = string.Format("{0}/{1}", DBPathPlugin, IconFolderName);
+            //String strIconDBPath = string.Format("{0}/{1}", DBPathPlugin, IconFolderName);
 
             if (Directory.Exists(strIconPath))
             {
@@ -208,8 +211,8 @@ namespace KSPAlternateResourcePanel
                     try
                     {
                         //load the file from the GameDB
-                        texLoading = null;
-                        if (LoadImageFromGameDB(ref texLoading, fileIcon.Name, strIconDBPath))
+                        texLoading = new Texture2D(32, 16, TextureFormat.ARGB32, false);
+                        if (LoadImageFromFile(ref texLoading, fileIcon.Name, strIconPath))
                             dictReturn.Add(fileIcon.Name.ToLower().Replace(".png", "").Replace(".tga", ""), texLoading);
                     }
                     catch (Exception)
@@ -298,31 +301,31 @@ namespace KSPAlternateResourcePanel
         }
 
         #region Util Stuff
-        internal static Boolean LoadImageFromGameDB(ref Texture2D tex, String FileName, String FolderPath = "")
-        {
-            Boolean blnReturn = false;
-            try
-            {
-                //trim off the tga and png extensions
-                if (FileName.ToLower().EndsWith(".png")) FileName = FileName.Substring(0, FileName.Length - 4);
-                if (FileName.ToLower().EndsWith(".tga")) FileName = FileName.Substring(0, FileName.Length - 4); 
-                //default folder
-                if (FolderPath == "") FolderPath = DBPathTextures;
+        //internal static Boolean LoadImageFromGameDB(ref Texture2D tex, String FileName, String FolderPath = "")
+        //{
+        //    Boolean blnReturn = false;
+        //    try
+        //    {
+        //        //trim off the tga and png extensions
+        //        if (FileName.ToLower().EndsWith(".png")) FileName = FileName.Substring(0, FileName.Length - 4);
+        //        if (FileName.ToLower().EndsWith(".tga")) FileName = FileName.Substring(0, FileName.Length - 4); 
+        //        //default folder
+        //        if (FolderPath == "") FolderPath = DBPathTextures;
 
-                //Look for case mismatches
-                if (!GameDatabase.Instance.ExistsTexture(String.Format("{0}/{1}", FolderPath, FileName)))
-                    throw new Exception();
+        //        //Look for case mismatches
+        //        if (!GameDatabase.Instance.ExistsTexture(String.Format("{0}/{1}", FolderPath, FileName)))
+        //            throw new Exception();
                 
-                //now load it
-                tex = GameDatabase.Instance.GetTexture(String.Format("{0}/{1}", FolderPath, FileName), false);
-                blnReturn = true;
-            }
-            catch (Exception)
-            {
-                MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file - and check case):{0}/{1}", FolderPath, FileName);
-            }
-            return blnReturn;
-        }
+        //        //now load it
+        //        tex = GameDatabase.Instance.GetTexture(String.Format("{0}/{1}", FolderPath, FileName), false);
+        //        blnReturn = true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file - and check case):{0}/{1}", FolderPath, FileName);
+        //    }
+        //    return blnReturn;
+        //}
 
         internal static Boolean LoadAudioClipFromGameDB(ref AudioClip clip, String FileName, String FolderPath = "")
         {
@@ -345,6 +348,49 @@ namespace KSPAlternateResourcePanel
             catch (Exception)
             {
                 MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file - and check case):{0}/{1}", FolderPath, FileName);
+            }
+            return blnReturn;
+        }
+
+        /// <summary>
+        /// Loads a texture from the file system directly
+        /// </summary>
+        /// <param name="tex">Unity Texture to Load</param>
+        /// <param name="FileName">Image file name</param>
+        /// <param name="FolderPath">Optional folder path of image</param>
+        /// <returns></returns>
+        public static Boolean LoadImageFromFile(ref Texture2D tex, String FileName, String FolderPath = "")
+        {
+            //DebugLogFormatted("{0},{1}",FileName, FolderPath);
+            Boolean blnReturn = false;
+            try
+            {
+                if (FolderPath == "") FolderPath = PathPluginTextures;
+
+                //File Exists check
+                if (System.IO.File.Exists(String.Format("{0}/{1}", FolderPath, FileName)))
+                {
+                    try
+                    {
+                        MonoBehaviourExtended.LogFormatted_DebugOnly("Loading: {0}", String.Format("{0}/{1}", FolderPath, FileName));
+                        tex.LoadImage(System.IO.File.ReadAllBytes(String.Format("{0}/{1}", FolderPath, FileName)));
+                        blnReturn = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MonoBehaviourExtended.LogFormatted("Failed to load the texture:{0} ({1})", String.Format("{0}/{1}", FolderPath, FileName), ex.Message);
+                    }
+                }
+                else
+                {
+                    MonoBehaviourExtended.LogFormatted("Cannot find texture to load:{0}", String.Format("{0}/{1}", FolderPath, FileName));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                MonoBehaviourExtended.LogFormatted("Failed to load (are you missing a file):{0} ({1})", String.Format("{0}/{1}", FolderPath, FileName), ex.Message);
             }
             return blnReturn;
         }
