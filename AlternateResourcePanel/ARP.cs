@@ -78,6 +78,12 @@ namespace KSPAlternateResourcePanel
                 LogFormatted("Settings Load Failed");
 
             //If the window is in the pre0.24 default then move it down so its not over the app launcher
+            if (new Rect(Screen.width - 310, 0, 310, 40).Contains(settings.vectButtonPos))
+            {
+                settings.vectButtonPos = new Vector3(Screen.width - 405, 0,0 );
+                settings.ButtonPosUpdatedv24 = true;
+                settings.Save();
+            }
             if (!settings.WindowPosUpdatedv24 && settings.WindowPosition == new Rect(new Rect(Screen.width - 298, 19, 299, 20)))
             {
                 MonoBehaviourExtended.LogFormatted("Moving window for 0.24");
@@ -95,6 +101,7 @@ namespace KSPAlternateResourcePanel
 
             //Get whether the toolbar is there
             settings.BlizzyToolbarIsAvailable = ToolbarManager.ToolbarAvailable;
+
             //if requested use that button
             if (settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable)
                 btnToolbar = InitToolbarButton();
@@ -306,13 +313,10 @@ namespace KSPAlternateResourcePanel
             //Set the current Skin
             SkinsLibrary.SetCurrent(settings.SelectedSkin.ToString());
 
-            //Set Button Rectangle position
-            rectButton.x = settings.vectButtonPos.x;
-            rectButton.y = settings.vectButtonPos.y;
         }
 
         //Position of screen button
-        static Rect rectButton = new Rect(Screen.width - 309, 0, 80, 30);
+        static Rect rectButton = new Rect(Screen.width - 405, 0, 80, 30);
         //Hover Status for mouse
         internal static Boolean HoverOn = false;
         //Hover Status for mouse
@@ -321,8 +325,13 @@ namespace KSPAlternateResourcePanel
         void DrawGUI()
         {
             //Draw the button - if we arent using blizzy's toolbar
-            if (!(settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
+            //if (!(settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
+            if (settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.Basic)
             {
+                //Set Button Rectangle position
+                rectButton.x = settings.vectButtonPos.x;
+                rectButton.y = settings.vectButtonPos.y;
+
                 if (GUI.Button(rectButton, "Alternate", SkinsLibrary.CurrentSkin.GetStyle("ButtonMain")))
                 {
                     settings.ToggleOn = !settings.ToggleOn;
