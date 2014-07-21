@@ -75,23 +75,23 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-            ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
-            if (lstButtons!=null){
-            GUILayout.Label(String.Format("Buttons:{0}",lstButtons.Length));
-            foreach (ApplicationLauncherButton item in lstButtons)
-            {
-                try
-                {
-                    GUILayout.Label(String.Format("{0}", item.name));
-                    GUILayout.Label(String.Format("{0}", item.tag));
-                    GUILayout.Label(String.Format("{0}", item.container.Text));
-                }
-                catch (Exception)
-                {
+            //ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+            //if (lstButtons!=null){
+            //GUILayout.Label(String.Format("Buttons:{0}",lstButtons.Length));
+            //foreach (ApplicationLauncherButton item in lstButtons)
+            //{
+            //    try
+            //    {
+            //        GUILayout.Label(String.Format("{0}", item.name));
+            //        GUILayout.Label(String.Format("{0}", item.tag));
+            //        GUILayout.Label(String.Format("{0}", item.container.Text));
+            //    }
+            //    catch (Exception)
+            //    {
                     
-                }
-            }
-            }
+            //    }
+            //}
+            //}
 
             //GUILayout.Label(String.Format("{0}", settings.ButtonStyleChosen));
             //GUILayout.Label(String.Format("{0}", settings.ButtonStyleToDisplay));
@@ -100,18 +100,19 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
             //GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MousePosition + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
 
-            //GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
-            //GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
-            //if (mbARP.windowResourceConfig.resourceDrag!=null)
-            //GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
+            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
+            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
+            if (mbARP.windowResourceConfig.resourceDrag != null)
+                GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
+            GUILayout.Label(String.Format("Reorder:{0}", mbARP.windowResourceConfig.DropWillReorderList));
 
             //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
             //GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
 
-            //foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
-            //{
-            //    GUILayout.Label(String.Format("{0}({1})-{2}", item.name,item.id,item.resourceRect));
-            //}
+            foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
+            {
+                GUILayout.Label(String.Format("{0}({1})-{2}", item.name, item.id, item.resourceRect));
+            }
 
             //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             //{

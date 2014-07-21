@@ -290,7 +290,7 @@ namespace KSPAlternateResourcePanel
             }
 
             // Draw the Yellow insertion strip
-            if(DraggingResource && resourceOver!=null)
+            if (DraggingResource && DropWillReorderList && resourceOver != null)
             {
                 Rect rectResMove = new Rect(4,
                     resourceOver.resourceRect.y + 49 - ScrollPosition.y,
@@ -328,12 +328,19 @@ namespace KSPAlternateResourcePanel
             //Mouse position relatiuve to the window
             MousePosition = Event.current.mousePosition;
 
-            //If the Mouse is inside teh scroll window
+            //If the Mouse is inside the scroll window
             if (MousePosition.y > 54 && MousePosition.y < 374)
             {
                 //check what we are over
                 resourceOver = lstResPositions.FirstOrDefault(x => x.resourceRect.Contains(MousePosition + ScrollPosition - new Vector2(8, 54)));
+                if (resourceOver != null) 
+                    resourceOverIndex = lstResPositions.FindIndex(x => x.id == resourceOver.id);
+                else 
+                    resourceOverIndex = -1;
                 iconOver = lstResPositions.FirstOrDefault(x => x.iconRect.Contains(MousePosition + ScrollPosition + -new Vector2(8, 54)));
+
+                //Will the drop actually change the list
+                DropWillReorderList = (resourceOverIndex != resourceDragIndex) && (resourceOverIndex != resourceDragIndex+1);
             }
             else { resourceOver = null; iconOver = null; }
 
@@ -343,7 +350,9 @@ namespace KSPAlternateResourcePanel
             {
                 LogFormatted_DebugOnly("Drag Start");
                 resourceDrag = iconOver;
+                resourceDragIndex = lstResPositions.FindIndex(x=>x.id==resourceDrag.id);
                 DraggingResource = true;
+                DropWillReorderList = false;
             }
             //did we release the mouse
             if (Event.current.type == EventType.mouseUp &&
@@ -380,6 +389,7 @@ namespace KSPAlternateResourcePanel
             {
                 DraggingResource = false;
                 resourceDrag = null;
+                resourceDragIndex = -1;
             }
 
             //If we are dragging, show what we are dragging
@@ -414,14 +424,16 @@ namespace KSPAlternateResourcePanel
         /// <summary>
         /// where the mouse is
         /// </summary>
-        public Vector2 MousePosition;
+        internal Vector2 MousePosition;
         //are we currently dragging a resource
-        public Boolean DraggingResource = false;
+        internal Boolean DraggingResource = false;
 
         /// <summary>
         /// Resource the mouse is over
         /// </summary>
         internal ResourcePosition resourceOver = null;
+        internal Int32 resourceOverIndex = -1;
+
         /// <summary>
         /// Icon the Mouse is Over
         /// </summary>
@@ -430,6 +442,9 @@ namespace KSPAlternateResourcePanel
         /// Resource that is being Dragged
         /// </summary>
         internal ResourcePosition resourceDrag = null;
+        internal Int32 resourceDragIndex = -1;
+
+        internal Boolean DropWillReorderList = false;
 
         //Rects to define where the scroll detection should be
         internal Rect rectScrollBottom = new Rect(8, 360, 394, 15);
