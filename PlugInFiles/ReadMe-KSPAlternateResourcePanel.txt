@@ -28,6 +28,12 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.4.1.0        -    KSP Version: 0.24.0
+- Fixed issue with AppLauncher button not displaying in MapView (Issue #32)
+- Added option to be able to choopse left or right for Last Stage Bars (Issue #30)
+- Stopped displaying the insertion icon when dragging of no change would occur (Issue #33)
+- Adjusted Drag and Drop detection to better use the mouse position (Issue #34)
+
 Version 2.4.0.0        -    KSP Version: 0.24.0
 - Compiled against 0.24 binaries
 - Changed Button Options so you can choose from Basic, Blizzy's Toolbar or KSP Launcher

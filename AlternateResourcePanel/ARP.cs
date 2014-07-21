@@ -604,8 +604,8 @@ namespace KSPAlternateResourcePanel
                 windowMain.IconAlarmOffset = 0;
 
             windowMain.WindowRect.width = 299 + windowMain.IconAlarmOffset;
-            windowMain.Icon2BarOffset = 40+ windowMain.IconAlarmOffset ;
-            windowMain.Icon2StageBarOffset = 40 + 125 + windowMain.IconAlarmOffset ;
+            windowMain.Icon2BarOffset_Left = 40+ windowMain.IconAlarmOffset ;
+            windowMain.Icon2BarOffset_Right = 40 + 125 + windowMain.IconAlarmOffset ;
 
             if (lstResourcesToDisplay.Count == 0)
                 windowMain.WindowRect.height = (2 * windowMain.intLineHeight) + 16;

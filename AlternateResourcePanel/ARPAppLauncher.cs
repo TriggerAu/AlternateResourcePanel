@@ -26,6 +26,7 @@ namespace KSPAlternateResourcePanel
 
         void OnGameSceneLoadRequestedForAppLauncher(GameScenes SceneToLoad)
         {
+            LogFormatted_DebugOnly("GameSceneLoadRequest");
             DestroyAppLauncherButton();
         }
         internal ApplicationLauncherButton btnAppLauncher = null;
@@ -40,7 +41,7 @@ namespace KSPAlternateResourcePanel
                     onAppLaunchToggleOn, onAppLaunchToggleOff,
                     onAppLaunchHoverOn, onAppLaunchHoverOff,
                     null, null,
-                    ApplicationLauncher.AppScenes.FLIGHT,
+                    ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW,
                     (Texture)Resources.texAppLaunchIcon);
 
                 //appButton = ApplicationLauncher.Instance.AddApplication(
