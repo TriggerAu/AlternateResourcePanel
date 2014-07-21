@@ -75,8 +75,26 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-            GUILayout.Label(String.Format("{0}", settings.ButtonStyleChosen));
-            GUILayout.Label(String.Format("{0}", settings.ButtonStyleToDisplay));
+            ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+            if (lstButtons!=null){
+            GUILayout.Label(String.Format("Buttons:{0}",lstButtons.Length));
+            foreach (ApplicationLauncherButton item in lstButtons)
+            {
+                try
+                {
+                    GUILayout.Label(String.Format("{0}", item.name));
+                    GUILayout.Label(String.Format("{0}", item.tag));
+                    GUILayout.Label(String.Format("{0}", item.container.Text));
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
+            }
+
+            //GUILayout.Label(String.Format("{0}", settings.ButtonStyleChosen));
+            //GUILayout.Label(String.Format("{0}", settings.ButtonStyleToDisplay));
 
 
             //GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
