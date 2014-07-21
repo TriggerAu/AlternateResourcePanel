@@ -51,8 +51,8 @@ namespace KSPAlternateResourcePanel
 
         //public Rect rectIcon;
         internal Int32 IconAlarmOffset = 12;
-        internal Int32 Icon2BarOffset = 40;
-        internal Int32 Icon2StageBarOffset = 40 + 125;
+        internal Int32 Icon2BarOffset_Left = 40;
+        internal Int32 Icon2BarOffset_Right = 40 + 125;
 
         internal override void DrawWindow(Int32 id)
         {
@@ -131,26 +131,29 @@ namespace KSPAlternateResourcePanel
                         )
                     {
                         //full width bar
-                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset, 245, 15);
+                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset_Left, 245, 15);
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             //MonoBehaviourExtended.LogFormatted_DebugOnly("Clicked");
                             SelectedResources.TogglePartResourceVisible(ResourceID);
                     }
                     else
                     {
+                        Int32 FullVesselBarOffset = settings.StageBarOnRight ? Icon2BarOffset_Left : Icon2BarOffset_Right;
+                        Int32 StageBarOffset = settings.StageBarOnRight ? Icon2BarOffset_Right : Icon2BarOffset_Left;
+
                         //need full Vessel and current stage bars
-                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset, 120, 15);
+                        rectBar = Drawing.CalcBarRect(rectIcon, FullVesselBarOffset, 120, 15);
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             SelectedResources.TogglePartResourceVisible(ResourceID);
 
                         //get last stage of this resource and set it
-                        if (lstResourcesLastStage.ContainsKey(ResourceID))
-                        {
+                        //if (lstResourcesLastStage.ContainsKey(ResourceID))
+                        //{
                             Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].LastStageVisible;
-                            rectBar = Drawing.CalcBarRect(rectIcon, Icon2StageBarOffset, 120, 15);
+                            rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, 120, 15);
                             if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                                 SelectedResources.TogglePartResourceVisible(ResourceID, true);
-                        }
+                        //}
                     }
                     GUILayout.EndHorizontal();
                 }

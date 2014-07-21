@@ -174,7 +174,7 @@ namespace KSPAlternateResourcePanel
             switch ((SettingsTabs)ddlSettingsTab.SelectedIndex)
             {
                 case SettingsTabs.General:
-                    WindowHeight = 212;// 180; //160 ;// MinWindowHeight;
+                    WindowHeight = 212 + ((settings.SplitLastStage)?20:0);// 180; //160 ;// MinWindowHeight;
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
@@ -240,11 +240,32 @@ namespace KSPAlternateResourcePanel
 
             GUILayout.Space(2);
             GUILayout.Label("Stage Bars:", Styles.styleStageTextHead);
+            if (settings.SplitLastStage)
+            {
+                GUILayout.Space(-6);
+                GUILayout.Label("Bars Pos:", Styles.styleStageTextHead);
+            }
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             GUILayout.Space(2);
             if (DrawToggle(ref settings.SplitLastStage, new GUIContent("Enabled", "Turn this off to show single green bars and no last stage separation."), Styles.styleToggle))
                 settings.Save();
+            if (settings.SplitLastStage)
+            {
+                GUILayout.BeginHorizontal();
+                Boolean NotRight = !settings.StageBarOnRight;
+                if (DrawToggle(ref NotRight, "On Left", Styles.styleToggle, GUILayout.Width(90)))
+                {
+                    settings.StageBarOnRight = !settings.StageBarOnRight; 
+                    settings.Save();
+                }
+                if (DrawToggle(ref settings.StageBarOnRight, "On Right", Styles.styleToggle))
+                {
+                    settings.Save();
+                }
+                GUILayout.EndHorizontal();
+            }
+
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 

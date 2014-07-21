@@ -49,6 +49,7 @@ namespace KSPAlternateResourcePanel
         internal Boolean ShowTimeRem = false;
 
         [Persistent] internal Boolean SplitLastStage = true;
+        [Persistent] internal Boolean StageBarOnRight = true;
 
         [Persistent] internal Boolean AlarmsEnabled = true;
         [Persistent] internal String AlarmsWarningSound = "_DefaultWarning";
@@ -144,6 +145,7 @@ namespace KSPAlternateResourcePanel
             [Description("Up/Down + Text")]         UpDownPlus
         }
 
+        
         #region Version Checks
         private String ConvertVersionCheckDateToString(DateTime Date)
         {
