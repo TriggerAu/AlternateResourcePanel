@@ -292,8 +292,13 @@ namespace KSPAlternateResourcePanel
             // Draw the Yellow insertion strip
             if (DraggingResource && DropWillReorderList && resourceOver != null)
             {
+                Single rectResMoveY;
+                if (resourceInsertIndex<lstResPositions.Count)
+                    rectResMoveY=lstResPositions[resourceInsertIndex].resourceRect.y;
+                else
+                    rectResMoveY = lstResPositions[lstResPositions.Count - 1].resourceRect.y + lstResPositions[lstResPositions.Count - 1].resourceRect.height;
                 Rect rectResMove = new Rect(4,
-                    resourceOver.resourceRect.y + 49 - ScrollPosition.y,
+                    rectResMoveY + 49 - ScrollPosition.y,
                     378,9);
                 GUI.Box(rectResMove, new GUIContent(Resources.texResourceMove),new GUIStyle());
             }
@@ -333,14 +338,18 @@ namespace KSPAlternateResourcePanel
             {
                 //check what we are over
                 resourceOver = lstResPositions.FirstOrDefault(x => x.resourceRect.Contains(MousePosition + ScrollPosition - new Vector2(8, 54)));
-                if (resourceOver != null) 
-                    resourceOverIndex = lstResPositions.FindIndex(x => x.id == resourceOver.id);
-                else 
-                    resourceOverIndex = -1;
+                if (resourceOver != null)
+                {
+                    resourceOverUpper = ((MousePosition + ScrollPosition - new Vector2(8, 54)).y - resourceOver.resourceRect.y) < resourceOver.resourceRect.height / 2;
+                    resourceInsertIndex = lstResPositions.FindIndex(x => x.id == resourceOver.id);
+                    if (!resourceOverUpper) resourceInsertIndex += 1;
+                }
+                else
+                    resourceInsertIndex = -1;
                 iconOver = lstResPositions.FirstOrDefault(x => x.iconRect.Contains(MousePosition + ScrollPosition + -new Vector2(8, 54)));
 
                 //Will the drop actually change the list
-                DropWillReorderList = (resourceOverIndex != resourceDragIndex) && (resourceOverIndex != resourceDragIndex+1);
+                DropWillReorderList = (resourceInsertIndex != resourceDragIndex) && (resourceInsertIndex != resourceDragIndex + 1);
             }
             else { resourceOver = null; iconOver = null; }
 
@@ -360,10 +369,12 @@ namespace KSPAlternateResourcePanel
             {
                 if (resourceOver != null)
                 {
-                    //And dropped on a resource
-                    LogFormatted_DebugOnly("Drag Stop:{0}-{1}-{2}", resourceOver == null ? "None" : lstResPositions.FindIndex(x => x.id == resourceOver.id).ToString(), resourceOver == null ? "" : settings.Resources[resourceOver.id].name, resourceDrag.name);
+                    //And dropped on a resource - cater to the above below code in this new one
+                    //LogFormatted_DebugOnly("Drag Stop:{0}-{1}-{2}", resourceOver == null ? "None" : resourceDragIndex.ToString(), resourceOver == null ? "" : (resourceInsertIndex< lstResPositions.Count ? settings.Resources[lstResPositions[resourceInsertIndex].id].name:"Last"), resourceDrag.name);
+                    MoveResource(resourceDragIndex, resourceInsertIndex);
 
-                    MoveResource(lstResPositions.FindIndex(x => x.id == resourceDrag.id), lstResPositions.FindIndex(x => x.id == resourceOver.id));
+                    //LogFormatted_DebugOnly("Drag Stop:{0}-{1}-{2}", resourceOver == null ? "None" : lstResPositions.FindIndex(x => x.id == resourceOver.id).ToString(), resourceOver == null ? "" : settings.Resources[resourceOver.id].name, resourceDrag.name);
+                    //MoveResource(lstResPositions.FindIndex(x => x.id == resourceDrag.id), lstResPositions.FindIndex(x => x.id == resourceOver.id));
                 }
                 //disable dragging flag
                 DraggingResource = false;
@@ -402,14 +413,14 @@ namespace KSPAlternateResourcePanel
                 //set and draw the text like a tooltip
                 String Message = "  Moving";
                 if (resourceDrag.name == "Separator") Message += " Separator";
-                Rect LabelPos = new Rect(Input.mousePosition.x-5,Screen.height-Input.mousePosition.y-5,120,22);
+                Rect LabelPos = new Rect(Input.mousePosition.x-5,Screen.height-Input.mousePosition.y-9,120,22);
                 GUI.Label(LabelPos, Message, SkinsLibrary.CurrentTooltip);
                 
                 //If its a resourcethen draw the icon too
                 if (resourceDrag.name != "Separator")
                 {
                     GUIContent contIcon = Drawing.GetResourceIcon(resourceDrag.name); ;
-                    Rect ResPos = new Rect(Input.mousePosition.x + 55, Screen.height - Input.mousePosition.y-2, 32, 16);
+                    Rect ResPos = new Rect(Input.mousePosition.x + 55, Screen.height - Input.mousePosition.y-6, 32, 16);
                     GUI.Box(ResPos, contIcon, new GUIStyle());
                 }
                 //On top of everything
@@ -432,7 +443,10 @@ namespace KSPAlternateResourcePanel
         /// Resource the mouse is over
         /// </summary>
         internal ResourcePosition resourceOver = null;
-        internal Int32 resourceOverIndex = -1;
+        /// <summary>
+        /// Is the mouse over the top half of the resource - ie drop it above or below the resource
+        /// </summary>
+        internal Boolean resourceOverUpper = false;
 
         /// <summary>
         /// Icon the Mouse is Over
@@ -442,7 +456,9 @@ namespace KSPAlternateResourcePanel
         /// Resource that is being Dragged
         /// </summary>
         internal ResourcePosition resourceDrag = null;
+
         internal Int32 resourceDragIndex = -1;
+        internal Int32 resourceInsertIndex = -1;
 
         internal Boolean DropWillReorderList = false;
 
@@ -522,13 +538,13 @@ namespace KSPAlternateResourcePanel
             settings.Resources= lstTemp.ToDictionary(x => x.id);
         }
 
-        private void MoveResource(Int32 indexFrom, Int32 InsertBeforeIndex)
+        private void MoveResource(Int32 indexFrom, Int32 InsertIndex)
         {
-            LogFormatted_DebugOnly("Move Resource from {0} to {1}", indexFrom, InsertBeforeIndex);
+            LogFormatted_DebugOnly("Move Resource from {0} to {1}", indexFrom, InsertIndex);
             //do a swap for each pair in between moving the item to its new spot
-            if (InsertBeforeIndex > indexFrom)
+            if (InsertIndex > indexFrom)
             {
-                for (int i = indexFrom; i < InsertBeforeIndex-1; i++)
+                for (int i = indexFrom; i < InsertIndex-1; i++)
                 {
                     LogFormatted_DebugOnly("Swap Resource - {0}<->{1}", i, i+1);
                     SwapResource(i, i + 1);
@@ -536,7 +552,7 @@ namespace KSPAlternateResourcePanel
             }
             else
             {
-                for (int i = indexFrom; i > InsertBeforeIndex; i--)
+                for (int i = indexFrom; i > InsertIndex; i--)
                 {
                     SwapResource(i, i - 1);
                 }

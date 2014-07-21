@@ -103,16 +103,21 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
             GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
             if (mbARP.windowResourceConfig.resourceDrag != null)
+            {
                 GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
-            GUILayout.Label(String.Format("Reorder:{0}", mbARP.windowResourceConfig.DropWillReorderList));
+                GUILayout.Label(String.Format("Reorder:{0}", mbARP.windowResourceConfig.DropWillReorderList));
+                GUILayout.Label(String.Format("resourceOverUpper:{0}", mbARP.windowResourceConfig.resourceOverUpper));
+                GUILayout.Label(String.Format("resourceInsertIndex:{0}", mbARP.windowResourceConfig.resourceInsertIndex));
+                
+            }
 
             //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
             //GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
 
-            foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
-            {
-                GUILayout.Label(String.Format("{0}({1})-{2}", item.name, item.id, item.resourceRect));
-            }
+            //foreach (ARPWindowResourceConfig.ResourcePosition item in mbARP.windowResourceConfig.lstResPositions)
+            //{
+            //    GUILayout.Label(String.Format("{0}({1})-{2}", item.name, item.id, item.resourceRect));
+            //}
 
             //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             //{
