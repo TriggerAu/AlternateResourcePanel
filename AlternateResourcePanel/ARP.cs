@@ -892,67 +892,6 @@ namespace KSPAlternateResourcePanel
 
     }
 
-    //[KSPAddon(KSPAddon.Startup.MainMenu, false)]
-    //public class DDLTest:MonoBehaviourWindowPlus
-    //{
-    //    DropDownList ddltest;
-
-    //    internal override void Awake()
-    //    {
-    //        WindowRect = new Rect(300, 0, 300, 200);
-    //        Visible = true;
-
-    //        List<String> Test = new List<String>() { "Option 1", "Option 2", "Option 3", "Option 4"};
-
-    //        ddltest = new DropDownList(Test,this);
-
-    //        ddltest.OnSelectionChanged += ddltest_OnSelectionChanged;
-    //        ddlManager.Add(ddltest);
-    //    }
-
-    //    void ddltest_OnSelectionChanged(MonoBehaviourWindowPlus.DropDownList sender, int OldIndex, int NewIndex)
-    //    {
-    //        ScreenMessages.PostScreenMessage(ddltest.SelectedValue, 3, ScreenMessageStyle.UPPER_RIGHT);
-    //    }
-
-    //    internal override void OnGUIOnceOnly()
-    //    {
-    //        ddlManager.DropDownGlyphs = new GUIContentWithStyle(Resources.btnDropDown, Styles.styleDropDownGlyph);
-    //        ddlManager.DropDownSeparators = new GUIContentWithStyle("", Styles.styleSeparatorV);
-    //    }
-
-    //    internal override void DrawWindow(int id)
-    //    {
-    //        if (GUILayout.Button("Add"))
-    //        {
-    //            ddltest.Items.Add("Option " + (ddltest.Items.Count + 1).ToString());
-    //        }
-    //        if (GUILayout.Button("Remove"))
-    //        {
-    //            ddltest.Items.RemoveAt(ddltest.Items.Count-1);
-    //        }
-
-    //        ddltest.DrawButton();
-
-    //        GUILayout.Label(String.Format("{0}",ddltest.SelectedIndex));
-    //        if(ddltest.ListVisible)
-    //            GUILayout.Label(((Int32)Math.Floor((Event.current.mousePosition.y - ddltest.rectListBox.y) / (ddltest.rectListBox.height / ddltest.ListPageLength))).ToString());
-    //    }
-    //}
-
-//#if DEBUG
-//    //This will kick us into the save called default and set the first vessel active
-//    [KSPAddon(KSPAddon.Startup.Flight, false)]
-//    public class Debug_Drawline : MonoBehaviourExtended
-//    {
-//        internal override void OnGUIEvery()
-//        {
-//            Vector2 pointA = new Vector2(Screen.width / 2, Screen.height / 2);
-//            Vector2 pointB = Event.current.mousePosition;
-//            Drawing.DrawLine(pointA, pointB, 3);
-//        }
-//    }
-//#endif
 
 #if DEBUG
     //This will kick us into the save called default and set the first vessel active

@@ -147,13 +147,13 @@ namespace KSPAlternateResourcePanel
                             SelectedResources.TogglePartResourceVisible(ResourceID);
 
                         //get last stage of this resource and set it
-                        //if (lstResourcesLastStage.ContainsKey(ResourceID))
-                        //{
+                        if (lstResourcesLastStage.ContainsKey(ResourceID))
+                        {
                             Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].LastStageVisible;
                             rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, 120, 15);
                             if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                                 SelectedResources.TogglePartResourceVisible(ResourceID, true);
-                        //}
+                        }
                     }
                     GUILayout.EndHorizontal();
                 }
