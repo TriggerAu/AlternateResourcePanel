@@ -66,6 +66,43 @@ namespace KSPAlternateResourcePanel
             return retButton;
         }
 
+        //internal ApplicationLauncherButton btnAppLauncher2 = null;
+
+        //internal ApplicationLauncherButton InitAppLauncherButton2()
+        //{
+        //    ApplicationLauncherButton retButton = null;
+
+        //    try
+        //    {
+        //        retButton = ApplicationLauncher.Instance.AddApplication(
+        //            onAppLaunchToggleOn, onAppLaunchToggleOff,
+        //            onAppLaunchHoverOn, onAppLaunchHoverOff,
+        //            null, null,
+        //            (Texture)Resources.texAppLaunchIcon);
+        //        retButton.VisibleInScenes = ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW;
+
+
+        //        //ApplicationLauncher.Instance.EnableMutuallyExclusive(retButton);
+
+        //        //appButton = ApplicationLauncher.Instance.AddApplication(
+        //        //    onAppLaunchToggleOn, onAppLaunchToggleOff,
+        //        //    onAppLaunchHoverOn, onAppLaunchHoverOff,
+        //        //    null, null,
+        //        //    (Texture)Resources.texAppLaunchIcon);
+        //        //appButton.VisibleInScenes = ApplicationLauncher.AppScenes.FLIGHT;
+
+
+        //        if (KSPAlternateResourcePanel.settings.ToggleOn)
+        //            retButton.toggleButton.SetTrue();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MonoBehaviourExtended.LogFormatted("Failed to set up App Launcher Button\r\n{0}", ex.Message);
+        //        retButton = null;
+        //    }
+        //    return retButton;
+        //}
+
         internal void DestroyAppLauncherButton()
         {
             if (btnAppLauncher != null)

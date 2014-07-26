@@ -28,6 +28,10 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.4.3.0        -    KSP Version: 0.24.2
+- Compiled against 0.24 binaries
+- Mad Resource Display Mutually exclusive to other apps (Fixes #37)
+
 Version 2.4.2.0        -    KSP Version: 0.24.0
 - Fixed issue caused by overzealous commenting syndrome in previous release (Fixes #36)
 - Changed AppLauncher Icon to be more visible (Fixes #35)
