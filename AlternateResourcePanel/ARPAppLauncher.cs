@@ -44,6 +44,9 @@ namespace KSPAlternateResourcePanel
                     ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW,
                     (Texture)Resources.texAppLaunchIcon);
 
+
+                ApplicationLauncher.Instance.EnableMutuallyExclusive(retButton);
+
                 //appButton = ApplicationLauncher.Instance.AddApplication(
                 //    onAppLaunchToggleOn, onAppLaunchToggleOff,
                 //    onAppLaunchHoverOn, onAppLaunchHoverOff,
