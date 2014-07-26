@@ -75,6 +75,17 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
+
+            //if(GUILayout.Button("Remove"))
+            //{
+            //    ResourceDisplay.Instance.appLauncherButton.VisibleInScenes = ApplicationLauncher.AppScenes.NEVER;
+            //    mbARP.btnAppLauncher2 = mbARP.InitAppLauncherButton2();
+            //}
+            //if (GUILayout.Button("Add"))
+            //{
+            //    ResourceDisplay.Instance.appLauncherButton.VisibleInScenes = ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW;
+            //    mbARP.btnAppLauncher2.VisibleInScenes = ApplicationLauncher.AppScenes.NEVER;
+            //}
             //ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
             //if (lstButtons!=null){
             //GUILayout.Label(String.Format("Buttons:{0}",lstButtons.Length));
