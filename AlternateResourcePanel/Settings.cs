@@ -96,7 +96,8 @@ namespace KSPAlternateResourcePanel
                     return ARPWindowSettings.ButtonStyleEnum.Basic;
             }
         }
-        [Persistent] internal ARPWindowSettings.ButtonStyleEnum ButtonStyleChosen = ARPWindowSettings.ButtonStyleEnum.Basic;
+        [Persistent] internal ARPWindowSettings.ButtonStyleEnum ButtonStyleChosen = ARPWindowSettings.ButtonStyleEnum.Launcher;
+        [Persistent] internal Boolean AppLauncherMutuallyExclusive = true;
 
         //Version Stuff
         [Persistent] internal Boolean DailyVersionCheck = true;
