@@ -396,7 +396,7 @@ namespace KSPAlternateResourcePanel
                     (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
 
             //App Launcher version
-            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Launcher && MouseOverAppLauncherBtn)
+            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Launcher)
                 return (MouseOverAppLauncherBtn && !settings.DisableHover) ||
                     (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
 
