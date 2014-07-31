@@ -38,6 +38,20 @@ namespace KSPAlternateResourcePanel
         internal override void Awake()
         {
             TooltipMouseOffset = new Vector2d(-10, 10);
+
+            onWindowMoveComplete += ARPWindow_onWindowMoveComplete;
+        }
+        internal override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            onWindowMoveComplete -= ARPWindow_onWindowMoveComplete;
+        }
+
+        void ARPWindow_onWindowMoveComplete()
+        {
+            settings.WindowPosition = WindowRect;
+            settings.Save();
         }
 
         private void SetLocalVariables()

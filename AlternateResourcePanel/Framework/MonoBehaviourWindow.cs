@@ -93,6 +93,46 @@ namespace KSPPluginFramework
         /// </summary>
         internal Rect WindowRect;
 
+        private Boolean _WindowMoveEventsEnabled=false;
+        public Boolean WindowMoveEventsEnabled
+        {
+            get { return _WindowMoveEventsEnabled; }
+            set { _WindowMoveEventsEnabled = value;
+                if (WindowMoveEventsEnabled)
+                {
+                    WindowPosLast = new Vector2(WindowRect.x, WindowRect.y);
+                    WindowMoveStarted = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Location of the window at last OnGUI
+        /// </summary>
+        private Vector2 WindowPosLast;
+        /// <summary>
+        /// What datetime did we detect the window pos changing
+        /// </summary>
+        private DateTime WindowMoveDetectedAt;
+        /// <summary>
+        /// Has a move of the window been started
+        /// </summary>
+        private Boolean WindowMoveStarted = false;
+        
+        /// <summary>
+        /// If a move is started how long must it stay still for to be finished
+        /// </summary>
+        private Double _WindowMoveCompleteAfter=1;
+        /// <summary>
+        /// How long after a window move is finished do we fire the window moved event
+        /// </summary>
+        internal Double WindowMoveCompleteAfter
+        {
+            get { return _WindowMoveCompleteAfter; }
+            set { _WindowMoveCompleteAfter = value; }
+        }
+
+
         /// <summary>
         /// Caption of the Window
         /// </summary>
@@ -173,10 +213,37 @@ namespace KSPPluginFramework
                 WindowRect = GUILayout.Window(WindowID, WindowRect, DrawWindowInternal, WindowCaption, WindowStyle, WindowOptions);
             }
 
+            if (WindowMoveEventsEnabled)
+            {
+                //Is the window in the same position?
+                if (WindowRect.x != WindowPosLast.x || WindowRect.y != WindowPosLast.y)
+                {
+                    if (!WindowMoveStarted)
+                    {
+                        //LogFormatted_DebugOnly("{0}-{1}", WindowRect, WindowPosLast);
+                        WindowMoveStarted = true;
+                        if (onWindowMoveStarted != null)
+                            onWindowMoveStarted();
+                    }
+                    WindowMoveDetectedAt = DateTime.Now;
+                }
+                if(WindowMoveStarted && WindowMoveDetectedAt.AddSeconds(WindowMoveCompleteAfter)<DateTime.Now)
+                {
+                    if (onWindowMoveComplete != null)
+                        onWindowMoveComplete();
+                    WindowMoveStarted = false;
+                }
+                WindowPosLast = new Vector2(WindowRect.x, WindowRect.y);
+            }
             //Draw the tooltip of its there to be drawn
             if (TooltipsEnabled)
                 DrawToolTip();
         }
+
+        public event WindowMoveHandler onWindowMoveStarted;
+        public event WindowMoveHandler onWindowMoveComplete;
+        public delegate void WindowMoveHandler();
+
 
         /// <summary>
         /// Time that the last iteration of RepeatingWorkerFunction ran for. Can use this value to see how much impact your code is having

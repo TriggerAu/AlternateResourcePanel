@@ -276,6 +276,8 @@ namespace KSPAlternateResourcePanel
             windowMain.DragEnabled = !settings.LockLocation;
             windowMain.ClampToScreenOffset = new RectOffset(-1, -1, -1, -1);
             windowMain.TooltipsEnabled = true;
+
+            windowMain.WindowMoveEventsEnabled = true;
         }
 
         private void InitSettingsWindow()
