@@ -44,8 +44,7 @@ namespace KSPAlternateResourcePanel
                     ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW,
                     (Texture)Resources.texAppLaunchIcon);
 
-
-                ApplicationLauncher.Instance.EnableMutuallyExclusive(retButton);
+                AppLauncherButtonMutuallyExclusive(settings.AppLauncherMutuallyExclusive);
 
                 //appButton = ApplicationLauncher.Instance.AddApplication(
                 //    onAppLaunchToggleOn, onAppLaunchToggleOff,
@@ -64,6 +63,21 @@ namespace KSPAlternateResourcePanel
                 retButton = null;
             }
             return retButton;
+        }
+
+        internal void AppLauncherButtonMutuallyExclusive(Boolean Enable)
+        {
+            if (btnAppLauncher == null) return;
+            if (Enable)
+            {
+                MonoBehaviourExtended.LogFormatted("Setting Mutually Exclusive");
+                ApplicationLauncher.Instance.EnableMutuallyExclusive(btnAppLauncher);
+            }
+            else
+            {
+                MonoBehaviourExtended.LogFormatted("Clearing Mutually Exclusive");
+                ApplicationLauncher.Instance.DisableMutuallyExclusive(btnAppLauncher);
+            }
         }
 
         //internal ApplicationLauncherButton btnAppLauncher2 = null;

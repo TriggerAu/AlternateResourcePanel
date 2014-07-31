@@ -154,6 +154,7 @@ namespace KSPAlternateResourcePanel
         }
 
         private Int32 intBlizzyToolbarMissingHeight = 0;
+        private Int32 intAppLauncherOptionsHeight = 22;
 
         internal override void DrawWindow(int id)
         {
@@ -178,7 +179,8 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 281 + intBlizzyToolbarMissingHeight;// 281; //241; //174;
+                    WindowHeight = 281 + intBlizzyToolbarMissingHeight + 
+                        ((settings.ButtonStyleToDisplay== ButtonStyleEnum.Launcher)?intAppLauncherOptionsHeight:0);// 281; //241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -330,7 +332,30 @@ namespace KSPAlternateResourcePanel
                 //    }
                 //    settings.Save();
                 //}
-            } 
+            }
+            if (settings.ButtonStyleToDisplay == ButtonStyleEnum.Launcher)
+            {
+                if (DrawToggle(ref settings.AppLauncherMutuallyExclusive, new GUIContent("Hide when other Apps show", "Hide the ARP when other stock Apps display (like the stock Resource App)"), Styles.styleToggle))
+                {
+                    mbARP.AppLauncherButtonMutuallyExclusive(settings.AppLauncherMutuallyExclusive);
+
+                    mbARP.btnAppLauncher.SetTrue();
+                    //Something needed here so the change sticks immediately - currently need to toggle the buttons once for it all to be in sync
+                    //if (settings.AppLauncherMutuallyExclusive)
+                    //{
+                    //    //set other apps hidden
+                    //    ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+                    //    foreach (ApplicationLauncherButton item in lstButtons)
+                    //    {
+                    //        if (item!=mbARP.btnAppLauncher)
+                    //                item.SetFalse();
+                    //    }
+                    //}
+                    settings.Save();
+                }
+                GUILayout.Space(4);
+            }
+
             //else
             //{
             //    if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
