@@ -24,6 +24,7 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
+        internal Rect windowMainResetPos = new Rect(Screen.width - 298, 40, 299, 20);
         //variables
         internal PartResourceVisibleList SelectedResources;
 
@@ -273,7 +274,7 @@ namespace KSPAlternateResourcePanel
             windowMain = AddComponent<ARPWindow>();
             windowMain.mbARP = this;
             windowMain.WindowRect = settings.WindowPosition;
-            windowMain.DragEnabled = !settings.LockLocation;
+            windowMain.DragEnabled = (settings.ButtonStyleChosen== ARPWindowSettings.ButtonStyleEnum.StockReplace ? false : !settings.LockLocation);
             windowMain.ClampToScreenOffset = new RectOffset(-1, -1, -1, -1);
             windowMain.TooltipsEnabled = true;
 
@@ -373,7 +374,7 @@ namespace KSPAlternateResourcePanel
                 windowMain.Visible = true;
                 if (blnResetWindow)
                 {
-                    windowMain.WindowRect = new Rect(Screen.width - 298, 40, 299, 20);
+                    windowMain.WindowRect = new Rect(windowMainResetPos);
                     blnResetWindow = false;
                     settings.WindowPosition = windowMain.WindowRect;
                     settings.Save();
@@ -395,12 +396,14 @@ namespace KSPAlternateResourcePanel
             if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Toolbar)
                 //return MouseOverToolbarBtn || (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
                 return (MouseOverToolbarBtn && !settings.DisableHover) || 
-                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
+                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition)) ||
+                    (windowSettings.Visible && windowSettings.WindowRect.Contains(Event.current.mousePosition));
 
-            //App Launcher version
-            if (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Launcher)
+            //App Launcher version's
+            if (settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.Launcher || settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.StockReplace)
                 return (MouseOverAppLauncherBtn && !settings.DisableHover) ||
-                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition));
+                    (windowMain.Visible && windowMain.WindowRect.Contains(Event.current.mousePosition)) || 
+                    (windowSettings.Visible && windowSettings.WindowRect.Contains(Event.current.mousePosition));
 
             //are we painting?
             Boolean blnRet = Event.current.type == EventType.Repaint;
@@ -427,6 +430,9 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         internal override void RepeatingWorker()
         {
+            if (StockAppToBeHidden)
+                ReplaceStockAppButton();
+
             Vessel active = FlightGlobals.ActiveVessel;
             LastStage = GetLastStage(active.parts);
 
