@@ -33,7 +33,7 @@ Version 2.5.0.0        -    KSP Version: 0.24.2
 - Changed default button behaviour for new installs - now App Launcher button (Issue#39)
 - Added App Launcher Button Exclusivity as an option (Issue #41)
 - Added Window Movement Detection code and saving position after moves (Issue #42)
-- Updated and added icons for a nubmer of packs (Issue #27 and Issue #22)
+- Updated and added icons for a number of packs (Issue #27 and Issue #22)
 - Added option for replacing Stock Resources App (Issue #8)
 
 Note: Changing the button type when the AppLauncher is involved may require a scene change for everything to settle to the right state. There is a note in game when this is the case
