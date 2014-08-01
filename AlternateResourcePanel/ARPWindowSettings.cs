@@ -35,7 +35,7 @@ namespace KSPAlternateResourcePanel
         {
             [Description("Basic button")]                       Basic,
             [Description("Common Toolbar (by Blizzy78)")]       Toolbar,
-            [Description("KSP Launcher App")]                   Launcher,
+            [Description("KSP App Launcher Button")]            Launcher,
             [Description("Replace Stock Resources App")]        StockReplace,
         }
 

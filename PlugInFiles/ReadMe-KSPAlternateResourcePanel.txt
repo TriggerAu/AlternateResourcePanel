@@ -28,13 +28,21 @@ LICENSE
 Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.5.0.0        -    KSP Version: 0.24.2
+- Fixed issue where basic button position triggers hover (Issue #40)
+- Changed default button behaviour for new installs - now App Launcher button (Issue#39)
+- Added App Launcher Button Exclusivity as an option (Issue #41)
+- Added Window Movement Detection code and saving position after moves (Issue #42)
+- Updated and added icons for a nubmer of packs (Issue #27 and Issue #22)
+- Added option for replacing Stock Resources App (Issue #8)
+
 Version 2.4.3.0        -    KSP Version: 0.24.2
 - Compiled against 0.24 binaries
-- Mad Resource Display Mutually exclusive to other apps (Fixes #37)
+- Mad Resource Display Mutually exclusive to other apps (Issue #37)
 
 Version 2.4.2.0        -    KSP Version: 0.24.0
-- Fixed issue caused by overzealous commenting syndrome in previous release (Fixes #36)
-- Changed AppLauncher Icon to be more visible (Fixes #35)
+- Fixed issue caused by overzealous commenting syndrome in previous release (Issue #36)
+- Changed AppLauncher Icon to be more visible (Issue #35)
 
 Version 2.4.1.0        -    KSP Version: 0.24.0
 - Fixed issue with AppLauncher button not displaying in MapView (Issue #32)
