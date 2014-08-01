@@ -36,6 +36,8 @@ Version 2.5.0.0        -    KSP Version: 0.24.2
 - Updated and added icons for a nubmer of packs (Issue #27 and Issue #22)
 - Added option for replacing Stock Resources App (Issue #8)
 
+Note: Changing the button type when the AppLauncher is involved may require a scene change for everything to settle to the right state. There is a note in game when this is the case
+
 Version 2.4.3.0        -    KSP Version: 0.24.2
 - Compiled against 0.24 binaries
 - Mad Resource Display Mutually exclusive to other apps (Issue #37)
