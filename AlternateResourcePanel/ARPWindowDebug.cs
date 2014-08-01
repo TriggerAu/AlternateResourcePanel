@@ -34,6 +34,8 @@ namespace KSPAlternateResourcePanel
         public Int32 intTest4 = 60;
         public Int32 intTest5 = 50;
 
+
+        ApplicationLauncherButton origResButton=null;
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
@@ -76,15 +78,40 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
 
-            //if(GUILayout.Button("Remove"))
+            //if (GUILayout.Button("SetTrue"))
             //{
-            //    ResourceDisplay.Instance.appLauncherButton.VisibleInScenes = ApplicationLauncher.AppScenes.NEVER;
-            //    mbARP.btnAppLauncher2 = mbARP.InitAppLauncherButton2();
+            //    mbARP.btnAppLauncher.toggleButton.onTrue();
             //}
-            //if (GUILayout.Button("Add"))
+            //if (GUILayout.Button("SetFalse"))
             //{
-            //    ResourceDisplay.Instance.appLauncherButton.VisibleInScenes = ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW;
-            //    mbARP.btnAppLauncher2.VisibleInScenes = ApplicationLauncher.AppScenes.NEVER;
+            //    mbARP.btnAppLauncher.toggleButton.onFalse();
+            //    //if (origResButton==null)
+            //}
+
+
+            //if(GUILayout.Button("Replace"))
+            //{
+            //    //if (origResButton==null)
+            //    //    origResButton = (ApplicationLauncherButton)Instantiate(ResourceDisplay.Instance.appLauncherButton);
+
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable();
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onHover = mbARP.btnAppLauncher.toggleButton.onHover;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onHoverOut = mbARP.btnAppLauncher.toggleButton.onHoverOut;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onTrue = mbARP.btnAppLauncher.toggleButton.onTrue;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onFalse = mbARP.btnAppLauncher.toggleButton.onFalse;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onEnable = mbARP.btnAppLauncher.toggleButton.onEnable;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable = mbARP.btnAppLauncher.toggleButton.onDisable;
+            //    ResourceDisplay.Instance.appLauncherButton.SetTexture(Resources.texAppLaunchIcon);
+
+            //}
+            //if (GUILayout.Button("Revert"))
+            //{
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onHover = origResButton.toggleButton.onHover;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onHoverOut = origResButton.toggleButton.onHoverOut;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onTrue = origResButton.toggleButton.onTrue;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onFalse = origResButton.toggleButton.onFalse;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onEnable = origResButton.toggleButton.onEnable;
+            //    ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable = origResButton.toggleButton.onDisable;
             //}
             //ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
             //if (lstButtons!=null){

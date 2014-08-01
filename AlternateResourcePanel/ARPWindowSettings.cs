@@ -35,7 +35,8 @@ namespace KSPAlternateResourcePanel
         {
             [Description("Basic button")]                       Basic,
             [Description("Common Toolbar (by Blizzy78)")]       Toolbar,
-            [Description("KSP Launcher")]                       Launcher,
+            [Description("KSP App Launcher Button")]            Launcher,
+            [Description("Replace Stock Resources App")]        StockReplace,
         }
 
         private DropDownList ddlSettingsButtonStyle;
@@ -127,9 +128,14 @@ namespace KSPAlternateResourcePanel
                 case ButtonStyleEnum.Launcher:
                     mbARP.DestroyAppLauncherButton();
                     break;
+                case ButtonStyleEnum.StockReplace:
+                    mbARP.windowMain.DragEnabled = !settings.LockLocation;
+                    mbARP.windowMain.WindowRect = settings.WindowPosition;
+                    mbARP.SceneChangeRequiredToRestoreResourcesApp = true;
+                    break;
             }
 
-            //CReate New ones
+            //Create New ones
             switch ((ButtonStyleEnum)NewIndex)
 	        {
                 case ButtonStyleEnum.Toolbar:
@@ -137,6 +143,13 @@ namespace KSPAlternateResourcePanel
                     break;
                 case ButtonStyleEnum.Launcher:
                     mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
+                    break;
+                case ButtonStyleEnum.StockReplace:
+                    mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
+                    mbARP.ReplaceStockAppButton();
+                    mbARP.windowMain.DragEnabled=false;
+                    mbARP.windowMain.WindowRect = new Rect(mbARP.windowMainResetPos);
+                    mbARP.SceneChangeRequiredToRestoreResourcesApp = false;
                     break;
             }
         }
@@ -178,7 +191,7 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_General();
                     break;
                 case SettingsTabs.Styling:
-                    WindowHeight = 281 + intBlizzyToolbarMissingHeight;// 281; //241; //174;
+                    WindowHeight = 284 + intStylingWindowHeightAdjustments;// 281; //241; //174;
                     DrawWindow_Styling();
                     break;
                 case SettingsTabs.Alarms:
@@ -294,6 +307,7 @@ namespace KSPAlternateResourcePanel
 
         }
 
+        Int32 intStylingWindowHeightAdjustments=0;
         private void DrawWindow_Styling()
         {
             //Styling
@@ -330,7 +344,36 @@ namespace KSPAlternateResourcePanel
                 //    }
                 //    settings.Save();
                 //}
-            } 
+            }
+            if (settings.ButtonStyleToDisplay == ButtonStyleEnum.Launcher)
+            {
+                if (DrawToggle(ref settings.AppLauncherMutuallyExclusive, new GUIContent("Hide when other Apps show", "Hide the ARP when other stock Apps display (like the stock Resource App)"), Styles.styleToggle))
+                {
+                    mbARP.AppLauncherButtonMutuallyExclusive(settings.AppLauncherMutuallyExclusive);
+
+                    //mbARP.btnAppLauncher.SetTrue();
+                    //Something needed here so the change sticks immediately - currently need to toggle the buttons once for it all to be in sync
+                    //if (settings.AppLauncherMutuallyExclusive)
+                    //{
+                    //    //set other apps hidden
+                    //    ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+                    //    foreach (ApplicationLauncherButton item in lstButtons)
+                    //    {
+                    //        if (item!=mbARP.btnAppLauncher)
+                    //                item.SetFalse();
+                    //    }
+                    //}
+                    settings.Save();
+                }
+                GUILayout.Space(4);
+            }
+            if (mbARP.SceneChangeRequiredToRestoreResourcesApp)
+            {
+                GUILayout.Space(-4);
+                GUILayout.Label("Stock App restored on scene change", Styles.styleTextYellowBold);
+                GUILayout.Space(4);
+            }
+
             //else
             //{
             //    if (GUILayout.Button(new GUIContent("Click for Common Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
@@ -389,34 +432,53 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
-            
 
-            //Visuals
-            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Visuals:", Styles.styleStageTextHead);
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            if (DrawToggle(ref settings.DisableHover, "Disable Show on Button Hover", Styles.styleToggle)) {
-                settings.Save();
-            }
 
-            //if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle)) {
-            if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle))
+            if (settings.ButtonStyleChosen != ButtonStyleEnum.StockReplace)
             {
-                mbARP.windowMain.DragEnabled = !settings.LockLocation;
-                settings.Save();
+                //Visuals
+                GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
+                GUILayout.BeginVertical(GUILayout.Width(60));
+                GUILayout.Label("Visuals:", Styles.styleStageTextHead);
+                GUILayout.EndVertical();
+                GUILayout.BeginVertical();
+                if (DrawToggle(ref settings.DisableHover, "Disable Show on Button Hover", Styles.styleToggle)) {
+                    settings.Save();
+                }
+
+                //if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle)) {
+                if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle))
+                {
+                    mbARP.windowMain.DragEnabled = !settings.LockLocation;
+                    settings.Save();
+                }
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Save Position"))
+                {
+                    settings.WindowPosition = mbARP.windowMain.WindowRect;
+                    settings.Save();
+                }
+                if (GUILayout.Button("Reset Position"))
+                    mbARP.blnResetWindow = true;
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
             }
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save Position")) {
-                settings.WindowPosition = mbARP.windowMain.WindowRect;
-                settings.Save();
+
+            //Work out window height
+            intStylingWindowHeightAdjustments = intBlizzyToolbarMissingHeight;
+            if (settings.ButtonStyleToDisplay == ButtonStyleEnum.Launcher)
+                intStylingWindowHeightAdjustments += 19;
+            else if (settings.ButtonStyleToDisplay == ButtonStyleEnum.StockReplace)
+                intStylingWindowHeightAdjustments -= 68;
+
+            if (mbARP.SceneChangeRequiredToRestoreResourcesApp)
+            {
+                if (settings.ButtonStyleToDisplay == ButtonStyleEnum.Launcher || settings.ButtonStyleToDisplay == ButtonStyleEnum.StockReplace)
+                    intStylingWindowHeightAdjustments += 25;
+                else
+                    intStylingWindowHeightAdjustments += 16;
             }
-            if (GUILayout.Button("Reset Position"))
-                mbARP.blnResetWindow = true;
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-            GUILayout.EndHorizontal();
 
         }
 
