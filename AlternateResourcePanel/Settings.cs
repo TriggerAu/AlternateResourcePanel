@@ -24,8 +24,7 @@ namespace KSPAlternateResourcePanel
         [Persistent]
         internal Vector3 vectButtonPos = new Vector3(Screen.width - 405, 0,0 );
 
-        //[Persistent]
-        internal Boolean ToggleOn = false;
+        [Persistent] internal Boolean ToggleOn = false;
         [Persistent] internal Boolean DisableHover = false;
         [Persistent] internal Boolean LockLocation= true;
         internal Rect WindowPosition = new Rect(Screen.width - 298, 40, 299, 20);
