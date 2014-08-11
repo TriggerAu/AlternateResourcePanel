@@ -299,8 +299,8 @@ namespace KSPAlternateResourcePanel
                     rectResMoveY = lstResPositions[lstResPositions.Count - 1].resourceRect.y + lstResPositions[lstResPositions.Count - 1].resourceRect.height;
                 Rect rectResMove = new Rect(4,
                     rectResMoveY + 49 - ScrollPosition.y,
-                    378,9);
-                GUI.Box(rectResMove, new GUIContent(Resources.texResourceMove),new GUIStyle());
+                    380,9);
+                GUI.Box(rectResMove, "",Styles.styleDragInsert );
             }
 
             //Do the mouse checks
