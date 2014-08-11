@@ -239,9 +239,9 @@ namespace KSPAlternateResourcePanel
             
             Double Hour;
             if (GameSettings.KERBIN_TIME)
-                Hour = HourRaw % 6;
+                Hour = Math.Truncate(HourRaw % 6);
             else
-                Hour = HourRaw % 24;
+                Hour = Math.Truncate(HourRaw % 24);
 
             Double Day;
             if (GameSettings.KERBIN_TIME)
