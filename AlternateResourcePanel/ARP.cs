@@ -179,6 +179,7 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
             GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
             DestroyAppLauncherButton();
 
             DestroyToolbarButton(btnToolbar);
