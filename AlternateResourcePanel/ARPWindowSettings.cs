@@ -680,7 +680,7 @@ namespace KSPAlternateResourcePanel
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(80);
                 if(GUILayout.Button("Updated Version Available", Styles.styleTextYellowBold))
-                    Application.OpenURL("http://kerbalspaceport.com/kspalternateresourcepanel/"); 
+                    Application.OpenURL("https://github.com/TriggerAu/AlternateResourcePanel/releases"); 
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
@@ -692,7 +692,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
             //GUILayout.Label("Written by:", Styles.styleStageTextHead);
             GUILayout.Label("Documentation and Links:", Styles.styleStageTextHead);
-            GUILayout.Label("GitHub Page:", Styles.styleStageTextHead);
+            GUILayout.Label("Source Code / Downloads:", Styles.styleStageTextHead);
             GUILayout.Label("Forum Page:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 

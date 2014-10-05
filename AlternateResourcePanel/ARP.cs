@@ -187,7 +187,7 @@ namespace KSPAlternateResourcePanel
             APIDestroy();
         }
 
-        //use this to trigger a clean up of sound at the end of teh repeating worker loop
+        //use this to trigger a clean up of sound at the end of the repeating worker loop
         Boolean StageCheckAlarmAudio = false;
         void OnStageActivate(Int32 StageNum)
         {
