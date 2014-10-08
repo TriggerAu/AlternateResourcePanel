@@ -390,6 +390,8 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean SplitLastStage = true;
         [Persistent] internal Boolean ShowReserveLevels = false;
 
+        [Persistent] internal DisplayUnitsEnum DisplayValueAs = DisplayUnitsEnum.Units;
+
         internal enum VisibilityTypes
         {
             AlwaysOn,
@@ -400,6 +402,14 @@ namespace KSPAlternateResourcePanel
         {
             [Description("Monitor for High Values")]    High,
             [Description("Monitor for Low Values")]     Low
+        }
+        
+        internal enum DisplayUnitsEnum
+        {
+            [Description("Default KSP Units")]          Units,
+            [Description("Display as Tonnes")]          Tonnes,
+            [Description("Display as Kilograms")]       Kilograms,
+            [Description("Display as Liters")]          Liters
         }
 
     }

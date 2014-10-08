@@ -28,11 +28,11 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 281;
-        public Int32 intTest2=54;
-        public Int32 intTest3=80;
-        public Int32 intTest4 = 60;
-        public Int32 intTest5 = 50;
+        public Int32 intTest1 = 8;
+        public Int32 intTest2=56;
+        public Int32 intTest3=8;
+        public Int32 intTest4 = 56;
+        public Int32 intTest5 = 0;
 
 
         ApplicationLauncherButton origResButton=null;
@@ -48,6 +48,8 @@ namespace KSPAlternateResourcePanel
             DrawTextBox(ref intTest4);
             DrawTextBox(ref intTest5);
 
+            //mbARP.windowResourceConfig.vectMonTypeOffset = new Vector2(intTest1,intTest2); //Vector2(8, 56);
+            //mbARP.windowResourceConfig.vectDisplayAsOffset = new Vector2(intTest3,intTest4);
 
             
             //if (DrawButton("KSP")) SkinsLibrary.SetCurrent( SkinsLibrary.DefSkinType.KSP);
@@ -91,12 +93,12 @@ namespace KSPAlternateResourcePanel
             //Stuff for TAC Life Support
             foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
             {
-                //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted,r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormattedTonnes, r.MaxAmountFormattedTonnes), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
-                if (r.Rate!=0)
-                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
-                //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-                //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    if (r.Rate!=0)
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
             }
 
 
