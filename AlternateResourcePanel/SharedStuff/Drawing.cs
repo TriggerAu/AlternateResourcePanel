@@ -132,24 +132,14 @@ namespace KSPAlternateResourcePanel
 
             if (ShowRates && !IgnoreInstants && (rectStart.width < 180)) rectTemp.width = (rectTemp.width * 2 / 3);
 
-            String strUsageString = "";
+            String strUsageString = String.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted);;
             switch (Res.ResourceConfig.DisplayValueAs)
             {
-                case ResourceSettings.DisplayUnitsEnum.Units:
-                    strUsageString = String.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted);
-                    break;
-                case ResourceSettings.DisplayUnitsEnum.Tonnes:
-                    strUsageString = String.Format("{0} / {1} T", Res.AmountFormattedTonnes, Res.MaxAmountFormattedTonnes);
-                    break;
-                case ResourceSettings.DisplayUnitsEnum.Kilograms:
-                    strUsageString = String.Format("{0} / {1} Kg", Res.AmountFormatted, Res.MaxAmountFormatted);
-                    break;
-                case ResourceSettings.DisplayUnitsEnum.Liters:
-                    strUsageString = String.Format("{0} / {1} L", Res.AmountFormatted, Res.MaxAmountFormatted);
-                    break;
-                default:
-                    strUsageString = String.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted);
-                    break;
+                case ResourceSettings.DisplayUnitsEnum.Units:                                       break;
+                case ResourceSettings.DisplayUnitsEnum.Tonnes:      strUsageString += " T";         break;
+                case ResourceSettings.DisplayUnitsEnum.Kilograms:   strUsageString += " Kg";        break;
+                case ResourceSettings.DisplayUnitsEnum.Liters:      strUsageString += " L";         break;
+                default:                                                                            break;
             }
             GUI.Label(rectTemp, strUsageString, Styles.styleBarText);
         }

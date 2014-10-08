@@ -175,10 +175,8 @@ namespace KSPAlternateResourcePanel
         internal Double MaxAmount{get; set;}
         public Double AmountValue { get { return Amount; } }
         public String AmountFormatted { get { return DisplayValue(this.Amount); } }
-        public String AmountFormattedTonnes { get { return DisplayValue(this.Amount/1000,true); } }
         public Double MaxAmountValue { get { return MaxAmount; } }
         public String MaxAmountFormatted { get { return DisplayValue(this.MaxAmount); } }
-        public String MaxAmountFormattedTonnes { get { return DisplayValue(this.MaxAmount/1000,true); } }
 
         internal DateTime EmptyAt { get; set; }
         internal DateTime FullAt = new DateTime();// { get; set; }
@@ -319,15 +317,23 @@ namespace KSPAlternateResourcePanel
             }
         }
 
-        internal static String DisplayValue(Double Amount, Boolean HighPrecisionBelowOne=false)
+        internal String DisplayValue(Double AmountToDisplay)
         {
+            Double Amount = AmountToDisplay;
+            if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes)
+                Amount = AmountToDisplay / 1000;
+            
             //Format string - Default
             String strFormat = "{0:0}";
-            if (HighPrecisionBelowOne && Math.Abs(Amount) < 1)
+            if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes && Math.Abs(Amount) < 1)
                 strFormat = "{0:0.000}";
             else if (Math.Abs(Amount) < 100)
             {
                 strFormat = "{0:0.00}";
+            }
+            else if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes && Math.Abs(Amount) < 1000)
+            {
+                strFormat = "{0:0.0}";
             }
 
             //handle the miniature negative value that gets rounded to 0 by string format
@@ -343,10 +349,10 @@ namespace KSPAlternateResourcePanel
                 return String.Format("{0:0.0}M", Amount / 1000000);
 
         }
-        internal static String DisplayRateValue(Double Amount, Boolean HighPrecisionBelowOne=false)
+        internal String DisplayRateValue(Double Amount, Boolean HighPrecisionBelowOne=false)
         {
             if (Amount == 0) return "-";
-            return DisplayValue(Amount, HighPrecisionBelowOne);
+            return DisplayValue(Amount);
         }
 
 

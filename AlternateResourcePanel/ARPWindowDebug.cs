@@ -93,7 +93,7 @@ namespace KSPAlternateResourcePanel
             //Stuff for TAC Life Support
             foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
             {
-                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormattedTonnes, r.MaxAmountFormattedTonnes), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
             //    if (r.Rate!=0)
             //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
