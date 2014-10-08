@@ -148,6 +148,9 @@ namespace KSPAlternateResourcePanel
 
         
         #region Version Checks
+        private String VersionCheckURL = "http://triggerau.github.io/AlternateResourcePanel/versioncheck.txt";
+        //Could use this one to see usage, but need to be very aware of data connectivity if its ever used "http://bit.ly/TWPVersion";
+
         private String ConvertVersionCheckDateToString(DateTime Date)
         {
             if (Date < DateTime.Now.AddYears(-10))
@@ -256,9 +259,10 @@ namespace KSPAlternateResourcePanel
 
             //now do the download
             MonoBehaviourExtended.LogFormatted("Reading version from Web");
-            wwwVersionCheck = new WWW("https://sites.google.com/site/kspalternateresourcepanel/latestversion");
+            wwwVersionCheck = new WWW(VersionCheckURL);
             while (!wwwVersionCheck.isDone) { }
             MonoBehaviourExtended.LogFormatted("Download complete:{0}", wwwVersionCheck.text.Length);
+            MonoBehaviourExtended.LogFormatted_DebugOnly("Content:{0}", wwwVersionCheck.text);
             VersionCheckRunning = false;
         }
 
