@@ -203,7 +203,7 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_Staging();
                     break;
                 case SettingsTabs.About:
-                    WindowHeight = 246 + (settings.VersionAvailable?mbARP.windowDebug.intTest1:0);
+                    WindowHeight = 246 + (settings.VersionAvailable?24:0);
                     DrawWindow_About();
                     break;
             }
