@@ -145,7 +145,7 @@ namespace KSPAlternateResourcePanel
                         )
                     {
                         //full width bar
-                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset_Left, 245, 15);
+                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset_Left, 275, 15);  //was 245
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             //MonoBehaviourExtended.LogFormatted_DebugOnly("Clicked");
                             SelectedResources.TogglePartResourceVisible(ResourceID);
@@ -156,7 +156,7 @@ namespace KSPAlternateResourcePanel
                         Int32 StageBarOffset = settings.StageBarOnRight ? Icon2BarOffset_Right : Icon2BarOffset_Left;
 
                         //need full Vessel and current stage bars
-                        rectBar = Drawing.CalcBarRect(rectIcon, FullVesselBarOffset, 120, 15);
+                        rectBar = Drawing.CalcBarRect(rectIcon, FullVesselBarOffset, 135, 15);  //was 120
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             SelectedResources.TogglePartResourceVisible(ResourceID);
 
@@ -164,7 +164,7 @@ namespace KSPAlternateResourcePanel
                         if (lstResourcesLastStage.ContainsKey(ResourceID))
                         {
                             Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].LastStageVisible;
-                            rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, 120, 15);
+                            rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, 135, 15);  //was 120
                             if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                                 SelectedResources.TogglePartResourceVisible(ResourceID, true);
                         }
@@ -206,7 +206,8 @@ namespace KSPAlternateResourcePanel
                             Staging.ActivateNextStage();
                     }
                     //GUILayout.Space(48 + IconAlarmOffset);
-                    GUILayout.Space(21 + IconAlarmOffset);
+                    //GUILayout.Space(21 + IconAlarmOffset);
+                    GUILayout.Space(51 + IconAlarmOffset);
                 }
                 else
                 {
@@ -237,13 +238,15 @@ namespace KSPAlternateResourcePanel
                     GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
                     StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
                     //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147 + IconAlarmOffset));
-                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
+                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
                 }
             }
             else
             {
                 //GUILayout.Space(234 + IconAlarmOffset);
-                GUILayout.Space(207 + IconAlarmOffset);
+                //GUILayout.Space(207 + IconAlarmOffset);
+                GUILayout.Space(237 + IconAlarmOffset);
             }
 
             // ShowAll Button
