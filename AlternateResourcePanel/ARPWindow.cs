@@ -66,7 +66,7 @@ namespace KSPAlternateResourcePanel
         //public Rect rectIcon;
         internal Int32 IconAlarmOffset = 12;
         internal Int32 Icon2BarOffset_Left = 40;
-        internal Int32 Icon2BarOffset_Right = 40 + 125;
+        internal Int32 Icon2BarOffset_Right = 40 + 140;
 
         internal override void DrawWindow(Int32 id)
         {

@@ -43,7 +43,7 @@ namespace KSPAlternateResourcePanel
         
         internal Single WindowHeight;
         Int32 MinWindowHeight = 136;
-        Int32 SettingsAreaWidth = 284;
+        Int32 SettingsAreaWidth = 314; //284;
 
         internal override void Awake()
         {
@@ -179,7 +179,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.Space(4);
             GUILayout.EndHorizontal();
 
-            SettingsAreaWidth = 284;
+            SettingsAreaWidth = 314; //284;
             if (settings.AlarmsEnabled)
                 SettingsAreaWidth += mbARP.windowMain.IconAlarmOffset;
             //GUILayout.Box("", Styles.styleSeparatorH, GUILayout.Height(2));
