@@ -25,9 +25,20 @@ The plugin records troubleshooting data in the "<KSP_OS>\KSP_Data\output_log.txt
 If there are errors in loading the config you can delete the "<KSP_OS>\GameData\TriggerTech\PluginData\KSPAlternateResourcePanel\config.xml" and restart the game
 
 LICENSE
-Licensed under Creative Commons Attribution-NonCommercial-Sharealike 3.0 Unported License. Visit the documentation site for more details and Attribution
+This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.6.0.0        -    KSP Version: 0.25
+- Recompiled with 0.25 binaries
+- Widened ARP Window by 30 pix to fit wider numbers
+- Adjusted Hydrogen gas Icon (Issue #51)
+- Removed remaining spaceport reference (Issue #50)
+- Added option to display values in Tonnes, Kg or Liters (Issue #48)
+- tweaked Drag and Drop Textures (Issue #47)
+- Fixed remaining time calc issues (Issue #46)
+- Change VersionCheck.txt location to be github pages
+- Added TriggerTech Flags
+
 Version 2.5.1.0        -    KSP Version: 0.24.2
 - Fixed issue with toggle state of panel not sticking on scene change (Issue #43)
 - Merged pull request with smaller PNGs (Issue #44)
