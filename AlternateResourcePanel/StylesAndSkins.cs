@@ -79,6 +79,8 @@ namespace KSPAlternateResourcePanel
         internal static GUIStyle styleSeparatorV;
         internal static GUIStyle styleSeparatorH;
 
+        internal static GUIStyle styleDragInsert;
+
         /// <summary>
         /// This one sets up the styles we use
         /// </summary>
@@ -279,6 +281,12 @@ namespace KSPAlternateResourcePanel
             styleSeparatorH.normal.background = Resources.texSeparatorH;
             styleSeparatorH.border = new RectOffset(6, 6, 0, 0);
             styleSeparatorH.fixedHeight = 2;
+
+            //the border determins which bit doesnt repeat
+            styleDragInsert = new GUIStyle();
+            styleDragInsert.normal.background = Resources.texResourceMove;
+            styleDragInsert.border = new RectOffset(8, 8, 3, 3);
+            
             #endregion
         }
         #endregion

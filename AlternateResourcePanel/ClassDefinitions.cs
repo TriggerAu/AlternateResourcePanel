@@ -317,17 +317,28 @@ namespace KSPAlternateResourcePanel
             }
         }
 
-        internal static String DisplayValue(Double Amount)
+        internal String DisplayValue(Double AmountToDisplay)
         {
+            Double Amount = AmountToDisplay;
+            if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes)
+                Amount = AmountToDisplay / 1000;
+            
             //Format string - Default
             String strFormat = "{0:0}";
-            if (Amount < 100){
+            if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes && Math.Abs(Amount) < 1)
+                strFormat = "{0:0.000}";
+            else if (Math.Abs(Amount) < 100)
+            {
                 strFormat = "{0:0.00}";
-
-                //handle the miniature negative value that gets rounded to 0 by string format
-                if (String.Format(strFormat,Amount) == "0.00" && Amount < 0)
-                    strFormat = "-" + strFormat;
             }
+            else if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes && Math.Abs(Amount) < 1000)
+            {
+                strFormat = "{0:0.0}";
+            }
+
+            //handle the miniature negative value that gets rounded to 0 by string format
+            if ((String.Format(strFormat, Amount) == "0.00" || String.Format(strFormat, Amount) == "0.000") && Amount < 0)
+                strFormat = "-" + strFormat;
 
             //Handle large values
             if (Amount<10000)
@@ -338,7 +349,7 @@ namespace KSPAlternateResourcePanel
                 return String.Format("{0:0.0}M", Amount / 1000000);
 
         }
-        internal static String DisplayRateValue(Double Amount)
+        internal String DisplayRateValue(Double Amount, Boolean HighPrecisionBelowOne=false)
         {
             if (Amount == 0) return "-";
             return DisplayValue(Amount);

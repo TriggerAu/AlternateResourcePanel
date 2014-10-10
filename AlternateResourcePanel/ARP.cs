@@ -179,6 +179,7 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
             GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
             DestroyAppLauncherButton();
 
             DestroyToolbarButton(btnToolbar);
@@ -186,7 +187,7 @@ namespace KSPAlternateResourcePanel
             APIDestroy();
         }
 
-        //use this to trigger a clean up of sound at the end of teh repeating worker loop
+        //use this to trigger a clean up of sound at the end of the repeating worker loop
         Boolean StageCheckAlarmAudio = false;
         void OnStageActivate(Int32 StageNum)
         {
@@ -611,9 +612,9 @@ namespace KSPAlternateResourcePanel
             if (!settings.AlarmsEnabled)
                 windowMain.IconAlarmOffset = 0;
 
-            windowMain.WindowRect.width = 299 + windowMain.IconAlarmOffset;
-            windowMain.Icon2BarOffset_Left = 40+ windowMain.IconAlarmOffset ;
-            windowMain.Icon2BarOffset_Right = 40 + 125 + windowMain.IconAlarmOffset ;
+            windowMain.WindowRect.width = 329 + windowMain.IconAlarmOffset; //was 299 - adding 30
+            windowMain.Icon2BarOffset_Left = 40 + windowMain.IconAlarmOffset ;
+            windowMain.Icon2BarOffset_Right = 40 + 140 + windowMain.IconAlarmOffset ;
 
             if (lstResourcesToDisplay.Count == 0)
                 windowMain.WindowRect.height = (2 * windowMain.intLineHeight) + 16;

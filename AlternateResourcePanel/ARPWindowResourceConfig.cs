@@ -15,16 +15,18 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        Int32 WindowHeight = 400;
+        Int32 WindowHeight = 480;
         Int32 ScrollAreaWidth = 395;
 
         internal Vector2 ScrollPosition = new Vector2();
-        internal Vector2 vectMonTypeOffset = new Vector2(8, 56);
+        internal Vector2 vectMonTypeOffset = new Vector2(8, 56); //Vector2(8, 56);
+        internal Vector2 vectDisplayAsOffset = new Vector2(8, 56);
         Int32 ResourceToShowAlarm;
         Int32 ResourceToShowAlarmChanger = 0;
         Boolean ResourceToShowAlarmChangeNeeded = false;
 
         DropDownList ddlMonType;
+        DropDownList ddlDisplayValueAs;
 
         internal override void Awake()
         {
@@ -33,14 +35,20 @@ namespace KSPAlternateResourcePanel
 
             ddlMonType = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
             ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
-
             ddlMonType.OnSelectionChanged += ddlMonType_OnSelectionChanged;
+
+            ddlDisplayValueAs = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.DisplayUnitsEnum>(), this);
+            ddlDisplayValueAs.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
+            ddlDisplayValueAs.OnSelectionChanged += ddlDisplayValueAs_OnSelectionChanged;
+
             ddlManager.AddDDL(ddlMonType);
+            ddlManager.AddDDL(ddlDisplayValueAs);
         }
 
         internal override void OnDestroy()
         {
             ddlMonType.OnSelectionChanged -= ddlMonType_OnSelectionChanged;
+            ddlDisplayValueAs.OnSelectionChanged -= ddlDisplayValueAs_OnSelectionChanged;
         }
 
         void ddlMonType_OnSelectionChanged(MonoBehaviourWindowPlus.DropDownList sender, int OldIndex, int NewIndex)
@@ -48,6 +56,11 @@ namespace KSPAlternateResourcePanel
             settings.Resources[ResourceToShowAlarm].MonitorDirection = (ResourceSettings.MonitorDirections)NewIndex;
 
         }
+        void ddlDisplayValueAs_OnSelectionChanged(MonoBehaviourWindowPlus.DropDownList sender, int OldIndex, int NewIndex)
+        {
+            settings.Resources[ResourceToShowAlarm].DisplayValueAs = (ResourceSettings.DisplayUnitsEnum)NewIndex;
+        }
+
 
 
         internal override void OnGUIOnceOnly()
@@ -123,6 +136,7 @@ namespace KSPAlternateResourcePanel
                         {
                             ResourceToShowAlarmChanger = item.id;
                             ddlMonType.SelectedIndex = (Int32)settings.Resources[ResourceToShowAlarmChanger].MonitorDirection;
+                            ddlDisplayValueAs.SelectedIndex = (Int32)settings.Resources[ResourceToShowAlarmChanger].DisplayValueAs;
                         }
                         ResourceToShowAlarmChangeNeeded = true;
                     }
@@ -175,6 +189,7 @@ namespace KSPAlternateResourcePanel
                         {
                             ResourceToShowAlarmChanger = item.id;
                             ddlMonType.SelectedIndex = (Int32)settings.Resources[ResourceToShowAlarmChanger].MonitorDirection;
+                            ddlDisplayValueAs.SelectedIndex = (Int32)settings.Resources[ResourceToShowAlarmChanger].DisplayValueAs;
                         }
                         ResourceToShowAlarmChangeNeeded = true;
                     }
@@ -193,7 +208,16 @@ namespace KSPAlternateResourcePanel
                 if (ResourceToShowAlarm==item.id)
                 {
                     GUILayout.BeginVertical(GUILayout.Height(40),GUILayout.Width(ScrollAreaWidth-20));
+                    GUILayout.Space(8);//4
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Display As:", Styles.styleStageTextHead, GUILayout.Width(151));
+                    //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
+                    ddlDisplayValueAs.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
+                    ddlDisplayValueAs.DrawButton();
                     GUILayout.Space(4);
+                    GUILayout.EndHorizontal();
+
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Monitoring Levels:",Styles.styleStageTextHead, GUILayout.Width(151));
                     //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
@@ -299,8 +323,8 @@ namespace KSPAlternateResourcePanel
                     rectResMoveY = lstResPositions[lstResPositions.Count - 1].resourceRect.y + lstResPositions[lstResPositions.Count - 1].resourceRect.height;
                 Rect rectResMove = new Rect(4,
                     rectResMoveY + 49 - ScrollPosition.y,
-                    378,9);
-                GUI.Box(rectResMove, new GUIContent(Resources.texResourceMove),new GUIStyle());
+                    380,9);
+                GUI.Box(rectResMove, "",Styles.styleDragInsert );
             }
 
             //Do the mouse checks

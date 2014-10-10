@@ -132,7 +132,16 @@ namespace KSPAlternateResourcePanel
 
             if (ShowRates && !IgnoreInstants && (rectStart.width < 180)) rectTemp.width = (rectTemp.width * 2 / 3);
 
-            GUI.Label(rectTemp, string.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted), Styles.styleBarText);
+            String strUsageString = String.Format("{0} / {1}", Res.AmountFormatted, Res.MaxAmountFormatted);;
+            switch (Res.ResourceConfig.DisplayValueAs)
+            {
+                case ResourceSettings.DisplayUnitsEnum.Units:                                       break;
+                case ResourceSettings.DisplayUnitsEnum.Tonnes:      strUsageString += " T";         break;
+                case ResourceSettings.DisplayUnitsEnum.Kilograms:   strUsageString += " Kg";        break;
+                case ResourceSettings.DisplayUnitsEnum.Liters:      strUsageString += " L";         break;
+                default:                                                                            break;
+            }
+            GUI.Label(rectTemp, strUsageString, Styles.styleBarText);
         }
 
         //internal static Double RatePercent;
@@ -239,9 +248,9 @@ namespace KSPAlternateResourcePanel
             
             Double Hour;
             if (GameSettings.KERBIN_TIME)
-                Hour = HourRaw % 6;
+                Hour = Math.Truncate(HourRaw % 6);
             else
-                Hour = HourRaw % 24;
+                Hour = Math.Truncate(HourRaw % 24);
 
             Double Day;
             if (GameSettings.KERBIN_TIME)

@@ -43,7 +43,7 @@ namespace KSPAlternateResourcePanel
         
         internal Single WindowHeight;
         Int32 MinWindowHeight = 136;
-        Int32 SettingsAreaWidth = 284;
+        Int32 SettingsAreaWidth = 314; //284;
 
         internal override void Awake()
         {
@@ -179,7 +179,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.Space(4);
             GUILayout.EndHorizontal();
 
-            SettingsAreaWidth = 284;
+            SettingsAreaWidth = 314; //284;
             if (settings.AlarmsEnabled)
                 SettingsAreaWidth += mbARP.windowMain.IconAlarmOffset;
             //GUILayout.Box("", Styles.styleSeparatorH, GUILayout.Height(2));
@@ -203,7 +203,7 @@ namespace KSPAlternateResourcePanel
                     DrawWindow_Staging();
                     break;
                 case SettingsTabs.About:
-                    WindowHeight = 246;
+                    WindowHeight = 246 + (settings.VersionAvailable?24:0);
                     DrawWindow_About();
                     break;
             }
@@ -680,7 +680,7 @@ namespace KSPAlternateResourcePanel
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(80);
                 if(GUILayout.Button("Updated Version Available", Styles.styleTextYellowBold))
-                    Application.OpenURL("http://kerbalspaceport.com/kspalternateresourcepanel/"); 
+                    Application.OpenURL("https://github.com/TriggerAu/AlternateResourcePanel/releases"); 
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
@@ -692,7 +692,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
             //GUILayout.Label("Written by:", Styles.styleStageTextHead);
             GUILayout.Label("Documentation and Links:", Styles.styleStageTextHead);
-            GUILayout.Label("GitHub Page:", Styles.styleStageTextHead);
+            GUILayout.Label("Source Code / Downloads:", Styles.styleStageTextHead);
             GUILayout.Label("Forum Page:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
 

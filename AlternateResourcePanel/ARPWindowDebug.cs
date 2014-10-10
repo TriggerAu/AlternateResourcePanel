@@ -28,11 +28,11 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 281;
-        public Int32 intTest2=54;
-        public Int32 intTest3=80;
-        public Int32 intTest4 = 60;
-        public Int32 intTest5 = 50;
+        public Int32 intTest1 = 8;
+        public Int32 intTest2=56;
+        public Int32 intTest3=8;
+        public Int32 intTest4 = 56;
+        public Int32 intTest5 = 0;
 
 
         ApplicationLauncherButton origResButton=null;
@@ -48,6 +48,8 @@ namespace KSPAlternateResourcePanel
             DrawTextBox(ref intTest4);
             DrawTextBox(ref intTest5);
 
+            //mbARP.windowResourceConfig.vectMonTypeOffset = new Vector2(intTest1,intTest2); //Vector2(8, 56);
+            //mbARP.windowResourceConfig.vectDisplayAsOffset = new Vector2(intTest3,intTest4);
 
             
             //if (DrawButton("KSP")) SkinsLibrary.SetCurrent( SkinsLibrary.DefSkinType.KSP);
@@ -76,6 +78,28 @@ namespace KSPAlternateResourcePanel
 
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
+
+
+
+            //Stuff for extra staging
+            //foreach (Part item in FlightGlobals.ActiveVessel.Parts)
+            //{
+            //    GUILayout.Label(String.Format("{0}-{1}", item.partInfo.name, item.partInfo.typeDescription));
+            //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+            //}
+
+
+
+            //Stuff for TAC Life Support
+            foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
+            {
+                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+
+            //    if (r.Rate!=0)
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+            }
 
 
             //if (GUILayout.Button("SetTrue"))
@@ -138,16 +162,16 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(String.Format("{0}",mbARP.windowResourceConfig.MousePosition));
             //GUILayout.Label(String.Format("{0}", mbARP.windowResourceConfig.MousePosition + new Vector2(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2)));
 
-            GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
-            GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
-            if (mbARP.windowResourceConfig.resourceDrag != null)
-            {
-                GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
-                GUILayout.Label(String.Format("Reorder:{0}", mbARP.windowResourceConfig.DropWillReorderList));
-                GUILayout.Label(String.Format("resourceOverUpper:{0}", mbARP.windowResourceConfig.resourceOverUpper));
-                GUILayout.Label(String.Format("resourceInsertIndex:{0}", mbARP.windowResourceConfig.resourceInsertIndex));
+            //GUILayout.Label(String.Format("Over:{0}", mbARP.windowResourceConfig.resourceOver == null ? "None" : mbARP.windowResourceConfig.resourceOver.name));
+            //GUILayout.Label(String.Format("OverIcon:{0}", mbARP.windowResourceConfig.iconOver == null ? "None" : mbARP.windowResourceConfig.iconOver.name));
+            //if (mbARP.windowResourceConfig.resourceDrag != null)
+            //{
+            //    GUILayout.Label(String.Format("ResDrag:{0}", mbARP.windowResourceConfig.resourceDrag.name));
+            //    GUILayout.Label(String.Format("Reorder:{0}", mbARP.windowResourceConfig.DropWillReorderList));
+            //    GUILayout.Label(String.Format("resourceOverUpper:{0}", mbARP.windowResourceConfig.resourceOverUpper));
+            //    GUILayout.Label(String.Format("resourceInsertIndex:{0}", mbARP.windowResourceConfig.resourceInsertIndex));
                 
-            }
+            //}
 
             //GUILayout.Label(String.Format("Scroll-up/down:{0}/{1}", mbARP.windowResourceConfig.blnScrollUp, mbARP.windowResourceConfig.blnScrollDown));
             //GUILayout.Label(String.Format("ScrollPos:{0}", mbARP.windowResourceConfig.ScrollPosition));
@@ -183,9 +207,10 @@ namespace KSPAlternateResourcePanel
             //        InputLockManager.SetControlLock(ControlTypes.STAGING, "manualStageLock");
             //}
 
-            //foreach (ModuleEngines item in mbARP.lstLastStageEngineModules)
+            //foreach (Part item in FlightGlobals.ActiveVessel.Parts)
             //{
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+            //    GUILayout.Label(String.Format("{0}-{1}", item.partInfo.name,item.partInfo.typeDescription));
+            //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
             //}
 
             //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
@@ -374,7 +399,7 @@ namespace KSPAlternateResourcePanel
             //foreach (ARPResource r in mbARP.lstResourcesLastStage.Values)
             //{
             //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.AmountLastFormatted));  //, r.RateFormatted2, r.RateSamples.Count));
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name,settings.ResourcesToSplitFlowDisabled.Contains(r.ResourceDef.name), r.AmountFormatted, mbARP.lstResourcesLastStage[r.ResourceDef.id].AmountFormatted,r.ResourceDef.resourceFlowMode));  //, r.RateFormatted2, r.RateSamples.Count));
+            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}", r.ResourceDef.name,settings.ResourcesToSplitFlowDisabled.Contains(r.ResourceDef.name), r.AmountFormatted, mbARP.lstResourcesLastStage[r.ResourceDef.id].AmountFormatted,r.ResourceDef.resourceFlowMode));  //, r.RateFormatted2, r.RateSamples.Count));
             //    GUILayout.Label(String.Format("{0}-{1}", r.ResourceDef.name,r.Amount));
             //}
 
