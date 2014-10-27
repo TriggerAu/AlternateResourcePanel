@@ -99,6 +99,8 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal ARPWindowSettings.ButtonStyleEnum ButtonStyleChosen = ARPWindowSettings.ButtonStyleEnum.Launcher;
         [Persistent] internal Boolean AppLauncherMutuallyExclusive = true;
 
+        [Persistent] internal Int32 ReplaceStockAppTimeOut = 20;
+
         //Version Stuff
         [Persistent] internal Boolean DailyVersionCheck = true;
         internal Boolean VersionAttentionFlag = false;

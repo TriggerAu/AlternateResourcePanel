@@ -42,6 +42,8 @@ namespace KSPAlternateResourcePanel
         {
             ApplicationLauncherButton retButton = null;
 
+            ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+            LogFormatted("AppLauncher: Creating Button-BEFORE", lstButtons.Length);
             try
             {
                 retButton = ApplicationLauncher.Instance.AddModApplication(
@@ -63,9 +65,12 @@ namespace KSPAlternateResourcePanel
             }
             catch (Exception ex)
             {
-                MonoBehaviourExtended.LogFormatted("Failed to set up App Launcher Button\r\n{0}",ex.Message);
+                MonoBehaviourExtended.LogFormatted("AppLauncher: Failed to set up App Launcher Button\r\n{0}",ex.Message);
                 retButton = null;
             }
+            lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+            LogFormatted("AppLauncher: Creating Button-AFTER", lstButtons.Length);
+
             return retButton;
         }
 
@@ -74,12 +79,12 @@ namespace KSPAlternateResourcePanel
             if (btnAppLauncher == null) return;
             if (Enable)
             {
-                MonoBehaviourExtended.LogFormatted("Setting Mutually Exclusive");
+                MonoBehaviourExtended.LogFormatted("AppLauncher: Setting Mutually Exclusive");
                 ApplicationLauncher.Instance.EnableMutuallyExclusive(btnAppLauncher);
             }
             else
             {
-                MonoBehaviourExtended.LogFormatted("Clearing Mutually Exclusive");
+                MonoBehaviourExtended.LogFormatted("AppLauncher: Clearing Mutually Exclusive");
                 ApplicationLauncher.Instance.DisableMutuallyExclusive(btnAppLauncher);
             }
         }
@@ -123,10 +128,17 @@ namespace KSPAlternateResourcePanel
 
         internal void DestroyAppLauncherButton()
         {
+
+            //LogFormatted_DebugOnly("Destroying AppLauncher Button. Count:{0}", lstButtons.Length);
+            LogFormatted("AppLauncher: Destroying Button-BEFORE NULL CHECK");
             if (btnAppLauncher != null)
             {
+                ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+                LogFormatted("AppLauncher: Destroying Button-Button Count:{0}", lstButtons.Length);
                 ApplicationLauncher.Instance.RemoveModApplication(btnAppLauncher);
+                btnAppLauncher = null;
             }
+            LogFormatted("AppLauncher: Destroying Button-AFTER NULL CHECK");
         }
 
         internal Boolean StockAppToBeHidden = false;
@@ -139,14 +151,15 @@ namespace KSPAlternateResourcePanel
                     StockAppToBeHiddenAttemptDate = DateTime.Now;
                 StockAppToBeHidden = true;
 
-                if (StockAppToBeHiddenAttemptDate.AddSeconds(5) < DateTime.Now)
+                if (StockAppToBeHiddenAttemptDate.AddSeconds(settings.ReplaceStockAppTimeOut) < DateTime.Now)
                 {
                     StockAppToBeHidden = false;
-                    LogFormatted("Unable to Swap the ARP App for the Stock Resource App - tried for 5 secs");
+                    LogFormatted("AppLauncher: Unable to Swap the ARP App for the Stock Resource App - tried for {0} secs", settings.ReplaceStockAppTimeOut);
                 }
             }
             else
             {
+                LogFormatted("AppLauncher: Swapping the ARP App for the Stock Resource App - after {0} secs", (DateTime.Now - StockAppToBeHiddenAttemptDate).TotalSeconds);
                 StockAppToBeHidden = false;
                 ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable();
 
@@ -161,10 +174,11 @@ namespace KSPAlternateResourcePanel
                 try
                 {
                     ApplicationLauncher.Instance.RemoveModApplication(btnAppLauncher);
+                    btnAppLauncher = null;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    LogFormatted("AppLauncher: Error killing ARP button after replacing the Stock Resource App - {0}\r\n{1}", ex.Message,ex.StackTrace);
                 }
                 windowMain.DragEnabled = false;
                 windowMain.WindowRect = new Rect(windowMainResetPos);
