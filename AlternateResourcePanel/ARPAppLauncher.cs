@@ -123,10 +123,16 @@ namespace KSPAlternateResourcePanel
 
         internal void DestroyAppLauncherButton()
         {
+            ApplicationLauncherButton[] lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+
+            LogFormatted_DebugOnly("Destroying AppLauncher Button. Count:{0}", lstButtons.Length);
             if (btnAppLauncher != null)
             {
+                LogFormatted_DebugOnly("Destroying AppLauncher Button-TRYING. Count:{0}", lstButtons.Length);
                 ApplicationLauncher.Instance.RemoveModApplication(btnAppLauncher);
             }
+            lstButtons = KSPAlternateResourcePanel.FindObjectsOfType<ApplicationLauncherButton>();
+            LogFormatted_DebugOnly("Destroying AppLauncher Button-AFTER. Count:{0}", lstButtons.Length);
         }
 
         internal Boolean StockAppToBeHidden = false;

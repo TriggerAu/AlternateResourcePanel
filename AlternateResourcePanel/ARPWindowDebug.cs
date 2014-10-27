@@ -88,7 +88,7 @@ namespace KSPAlternateResourcePanel
             //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
             //}
 
-
+            GUILayout.Label(String.Format("IntakeAir Requested:{0}",mbARP.IntakeAirRequested));
 
             //Stuff for TAC Life Support
             foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
