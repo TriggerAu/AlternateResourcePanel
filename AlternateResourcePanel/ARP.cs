@@ -36,7 +36,7 @@ namespace KSPAlternateResourcePanel
         internal List<ModuleEngines> lstLastStageEngineModules;
         internal List<ModuleEnginesFX> lstLastStageEngineFXModules;
 
-        internal Double IntakeAirRequested;
+        //internal Double IntakeAirRequested;
 
         /// <summary>
         /// ResourceIDs of ones to show in window
@@ -515,18 +515,18 @@ namespace KSPAlternateResourcePanel
                     lstPartsLastStageEngines.Add(p);
                 }
 
-                IntakeAirRequested = 0;
+                //IntakeAirRequested = 0;
 
-                foreach (ModuleEngines pe in p.Modules.OfType<ModuleEngines>()) {
-                    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                        IntakeAirRequested += pep.currentRequirement;
-                    }
-                }
-                foreach (ModuleEnginesFX pe in p.Modules.OfType<ModuleEnginesFX>()) {
-                    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                        IntakeAirRequested += pep.currentRequirement;
-                    }
-                }
+                //foreach (ModuleEngines pe in p.Modules.OfType<ModuleEngines>()) {
+                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
+                //        IntakeAirRequested += pep.currentRequirement;
+                //    }
+                //}
+                //foreach (ModuleEnginesFX pe in p.Modules.OfType<ModuleEnginesFX>()) {
+                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
+                //        IntakeAirRequested += pep.currentRequirement;
+                //    }
+                //}
             }
 
             //Destroy the windows that have no resources selected to display

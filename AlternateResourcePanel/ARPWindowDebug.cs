@@ -88,18 +88,35 @@ namespace KSPAlternateResourcePanel
             //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
             //}
 
-            GUILayout.Label(String.Format("IntakeAir Requested:{0}",mbARP.IntakeAirRequested));
+            //GUILayout.Label(String.Format("IntakeAir Requested:{0}",mbARP.IntakeAirRequested));
 
+            //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            //{
+            //    foreach (ModuleEngines pe in p.Modules.OfType<ModuleEngines>())
+            //    {
+            //        foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir"))
+            //        {
+            //            GUILayout.Label(String.Format("{0}-{1}:{2}",p.partInfo.name,pep.name,pep.currentRequirement));
+            //        }
+            //    }
+            //    foreach (ModuleEnginesFX pe in p.Modules.OfType<ModuleEnginesFX>())
+            //    {
+            //        foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir"))
+            //        {
+            //            GUILayout.Label(String.Format("FX:{0}-{1}:{2}", p.partInfo.name, pep.name, pep.currentRequirement));
+            //        }
+            //    }
+            //}
             //Stuff for TAC Life Support
-            foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
-            {
-                GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+            //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
+            //{
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
-            //    if (r.Rate!=0)
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
-            //    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-            //    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
-            }
+            ////    if (r.Rate!=0)
+            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
+            ////    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            ////    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+            //}
 
 
             //if (GUILayout.Button("SetTrue"))
