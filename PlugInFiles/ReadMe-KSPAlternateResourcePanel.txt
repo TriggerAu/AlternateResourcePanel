@@ -31,6 +31,7 @@ VERSION HISTORY
 Version 2.6.1.0        -    KSP Version: 0.25
 - Reattached References for 0.25
 - Added extra logging and null checks re AppLauncher
+- Added configurable setting for ReplaceStockAppTimeOut (default 20 secs) in case the stock app is taking too long to load
 
 Version 2.6.0.0        -    KSP Version: 0.25
 - Recompiled with 0.25 binaries
