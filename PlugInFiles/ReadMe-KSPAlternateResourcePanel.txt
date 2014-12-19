@@ -28,6 +28,9 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.6.2.0        -    KSP Version: 0.90
+- Recomiled for 0.90 and fixed code changes
+
 Version 2.6.1.0        -    KSP Version: 0.25
 - Reattached References for 0.25
 - Added extra logging and null checks re AppLauncher
