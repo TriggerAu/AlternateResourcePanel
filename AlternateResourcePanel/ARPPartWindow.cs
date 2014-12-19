@@ -161,7 +161,7 @@ namespace KSPAlternateResourcePanel
             //linePart2Window.material.SetColor("_EmissiveColor", colorLineHighlight);
             colorLineCurrent = colorLineHighlight;
             PartRef.SetHighlightColor(colorHighlight);
-            PartRef.SetHighlight(true);
+            PartRef.SetHighlight(true,false);
             
         }
         void ARPPartWindow_OnMouseLeave()
