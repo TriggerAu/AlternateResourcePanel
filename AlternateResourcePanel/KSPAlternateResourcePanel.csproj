@@ -69,7 +69,7 @@
     <Compile Include="Framework\MonoBehaviourExtended.cs" />
     <Compile Include="Framework\MonoBehaviourWindow.cs" />
     <Compile Include="Framework\SkinsLibrary.cs" />
-    <Compile Include="Framework\ToolbarWrapper.cs" />
+    <Compile Include="SharedStuff\ToolbarWrapper.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="FrameworkExt\ClassDefinitions.cs" />
     <Compile Include="SharedStuff\Drawing.cs" />
