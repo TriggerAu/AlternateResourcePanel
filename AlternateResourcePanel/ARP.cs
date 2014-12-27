@@ -528,18 +528,6 @@ namespace KSPAlternateResourcePanel
                     lstPartsLastStageEngines.Add(p);
                 }
 
-                //IntakeAirRequested = 0;
-
-                //foreach (ModuleEngines pe in p.Modules.OfType<ModuleEngines>()) {
-                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                //        IntakeAirRequested += pep.currentRequirement;
-                //    }
-                //}
-                //foreach (ModuleEnginesFX pe in p.Modules.OfType<ModuleEnginesFX>()) {
-                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                //        IntakeAirRequested += pep.currentRequirement;
-                //    }
-                //}
             }
 
             //Destroy the windows that have no resources selected to display
