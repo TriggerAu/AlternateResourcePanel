@@ -107,7 +107,15 @@ if not $(ConfigurationName)==Debug goto DEBUGREBUILDCONFIG
 :DEBUGCONFIG
 rem Copy DLL and run KSP
 copy "$(TargetPath)" "%25DestPath%25"
-rem and then run the game
+if exist "$(ProjectDir)..\..\StartX.exe" goto STARTX
+echo Running Directly
+"%25Binary%25"
+goto END
+
+:STARTX
+echo STARTX running
+"$(ProjectDir)..\..\StartX.exe" "%25Binary%25"
+goto END
 "%25Binary%25"
 
 goto END

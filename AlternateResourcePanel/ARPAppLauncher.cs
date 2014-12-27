@@ -30,9 +30,9 @@ namespace KSPAlternateResourcePanel
             else { MonoBehaviourExtended.LogFormatted("App Launcher-Not Actually Ready"); }
         }
 
-        void OnGameSceneLoadRequestedForAppLauncher(GameScenes SceneToLoad)
+        void OnGUIAppLauncherUnreadifying(GameScenes SceneToLoad)
         {
-            LogFormatted_DebugOnly("GameSceneLoadRequest");
+            LogFormatted_DebugOnly("Unreadifying the Launcher");
             DestroyAppLauncherButton();
         }
         internal ApplicationLauncherButton btnAppLauncher = null;
