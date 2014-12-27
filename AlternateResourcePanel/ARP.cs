@@ -189,6 +189,16 @@ namespace KSPAlternateResourcePanel
             APIDestroy();
         }
 
+
+        internal override void Start()
+        {
+            if (settings.ToggleOn)
+            {
+                AppLauncherToBeSetTrue = true;
+                AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+            }
+        }
+
         //use this to trigger a clean up of sound at the end of the repeating worker loop
         Boolean StageCheckAlarmAudio = false;
         void OnStageActivate(Int32 StageNum)
@@ -435,6 +445,9 @@ namespace KSPAlternateResourcePanel
         {
             if (StockAppToBeHidden)
                 ReplaceStockAppButton();
+
+            if (AppLauncherToBeSetTrue)
+                SetAppButtonToTrue();
 
             Vessel active = FlightGlobals.ActiveVessel;
             LastStage = GetLastStage(active.parts);

@@ -119,16 +119,20 @@ namespace KSPAlternateResourcePanel
             //}
 
 
-            //if (GUILayout.Button("SetTrue"))
-            //{
-            //    mbARP.btnAppLauncher.toggleButton.onTrue();
-            //}
-            //if (GUILayout.Button("SetFalse"))
-            //{
-            //    mbARP.btnAppLauncher.toggleButton.onFalse();
-            //    //if (origResButton==null)
-            //}
+            if (GUILayout.Button("SetTrue"))
+            {
+                //mbARP.btnAppLauncher.toggleButton.onTrue();
+                mbARP.btnAppLauncher.SetTrue(true);
+            }
+            if (GUILayout.Button("SetFalse"))
+            {
+                //mbARP.btnAppLauncher.toggleButton.onFalse();
+                mbARP.btnAppLauncher.SetFalse(true);
+                //if (origResButton==null)
+            }
 
+
+            //GUILayout.Label(mbARP.btnAppLauncher.State.ToString());
 
             //if(GUILayout.Button("Replace"))
             //{

@@ -100,7 +100,8 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean AppLauncherMutuallyExclusive = true;
 
         [Persistent] internal Int32 ReplaceStockAppTimeOut = 20;
-
+        [Persistent] internal Int32 AppLauncherSetTrueTimeOut= 6;
+        
         //Version Stuff
         [Persistent] internal Boolean DailyVersionCheck = true;
         internal Boolean VersionAttentionFlag = false;

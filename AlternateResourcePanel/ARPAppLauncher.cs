@@ -185,6 +185,46 @@ namespace KSPAlternateResourcePanel
             }
         }
 
+        internal Boolean AppLauncherToBeSetTrue = false;
+        internal DateTime AppLauncherToBeSetTrueAttemptDate;
+        internal void SetAppButtonToTrue()
+        {
+            if (!ApplicationLauncher.Ready)
+            {
+                LogFormatted_DebugOnly("not ready yet");
+                AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+                return;
+            }
+            ApplicationLauncherButton ButtonToToggle = btnAppLauncher;
+            if (settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.StockReplace)
+                ButtonToToggle = ResourceDisplay.Instance.appLauncherButton;
+
+            if (ButtonToToggle == null)
+            {
+                LogFormatted_DebugOnly("Button Is Null");
+                AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+                return;
+            }
+
+
+            if (ButtonToToggle.State != RUIToggleButton.ButtonState.TRUE)
+            {
+                if (AppLauncherToBeSetTrueAttemptDate.AddSeconds(settings.AppLauncherSetTrueTimeOut) <DateTime.Now){
+                    AppLauncherToBeSetTrue = false;
+                    LogFormatted("AppLauncher: Unable to set the AppButton to true - tried for {0} secs", settings.AppLauncherSetTrueTimeOut);
+                }
+                else
+                {
+                    LogFormatted("setting true");
+                    ButtonToToggle.SetTrue(true);
+                }
+            }
+            else
+            {
+                AppLauncherToBeSetTrue = false;
+            }
+        }
+
         void onAppLaunchToggleOn() {
             MonoBehaviourExtended.LogFormatted_DebugOnly("TOn");
             KSPAlternateResourcePanel.settings.ToggleOn = true; 
