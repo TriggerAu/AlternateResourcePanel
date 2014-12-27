@@ -1,5 +1,5 @@
 $PluginName = (get-item $PSScriptRoot).Parent.Name
-$UploadDir = "$($PSScriptRoot)\..\..\_Uploads\$($PluginName)"
+$UploadDir = "$($PSScriptRoot)\..\..\_Uploads\KSPAlternateResourcePanel"
 
 #Get newest version
 $Version =  (Get-ChildItem $UploadDir -Filter "v*.*.*.*"|sort -Descending)[0].name.replace("v","")

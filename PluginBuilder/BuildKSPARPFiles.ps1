@@ -87,7 +87,7 @@ if($ChoiceRtn -eq 0)
 
     #Build the Version File
     "Building Version file..."
-    $VersionTemplate = Get-Content "$($PSScriptRoot)\$($PluginName).version"
+    $VersionTemplate = Get-Content "$($PSScriptRoot)\$($GitHubName).version"
     $VersionTemplate = $VersionTemplate.Replace("%PLUGIN_MAJOR%",$VersionString.Split(".")[0])
     $VersionTemplate = $VersionTemplate.Replace("%PLUGIN_MINOR%",$VersionString.Split(".")[1])
     $VersionTemplate = $VersionTemplate.Replace("%PLUGIN_PATCH%",$VersionString.Split(".")[2])
