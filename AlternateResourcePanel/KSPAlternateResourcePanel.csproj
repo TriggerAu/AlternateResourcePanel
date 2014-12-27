@@ -64,6 +64,7 @@
     <Compile Include="ARPWindowSettings.cs" />
     <Compile Include="FrameworkExt\AudioController.cs" />
     <Compile Include="ClassDefinitions.cs" />
+    <Compile Include="FrameworkExt\Extensions.cs" />
     <Compile Include="Framework\ConfigNodeStorage.cs" />
     <Compile Include="Framework\ExtensionsUnity.cs" />
     <Compile Include="Framework\MonoBehaviourExtended.cs" />

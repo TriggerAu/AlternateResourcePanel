@@ -19,11 +19,12 @@ namespace KSPPluginFramework
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     sealed class WindowInitialsAttribute : Attribute
     {
+        public String Caption { get; set; }
         public Boolean Visible { get; set; }
         public Boolean DragEnabled { get; set; }
-        public Boolean ClampToScreen { get; set; }
         public Boolean TooltipsEnabled { get; set; }
-        public String Caption { get; set; }
+        public Boolean ClampToScreen { get; set; }
+        public Boolean WindowMoveEventsEnabled { get; set; }
     }
 
     /// <summary>
@@ -45,11 +46,12 @@ namespace KSPPluginFramework
             WindowInitialsAttribute[] attrs = (WindowInitialsAttribute[])Attribute.GetCustomAttributes(this.GetType(), typeof(WindowInitialsAttribute));
             foreach (WindowInitialsAttribute attr in attrs)
             {
+                WindowCaption = attr.Caption;
                 Visible = attr.Visible;
                 DragEnabled = attr.DragEnabled;
-                ClampToScreen = attr.ClampToScreen;
                 TooltipsEnabled = attr.TooltipsEnabled;
-                WindowCaption = attr.Caption;
+                ClampToScreen = attr.ClampToScreen;
+                WindowMoveEventsEnabled = attr.WindowMoveEventsEnabled;
             }
         }
         ///CANT USE THE ONES BELOW HERE AS WE NEED TO INSTANTIATE THE WINDOW USING AddComponent()
@@ -185,9 +187,19 @@ namespace KSPPluginFramework
                         LogFormatted_DebugOnly("Removing Window from PostDrawQueue", WindowID);
                         RenderingManager.RemoveFromPostDrawQueue(5, this.DrawGUI);
                     }
+
+                    //raise event if theres one registered
+                    if (onWindowVisibleChanged != null)
+                        onWindowVisibleChanged(this, value);
                 }
                 _Visible = value;
+                
             }
+        }
+
+        internal void ClampToScreenNow()
+        {
+            WindowRect = WindowRect.ClampToScreen(ClampToScreenOffset);
         }
 
         /// <summary>
@@ -223,14 +235,14 @@ namespace KSPPluginFramework
                         //LogFormatted_DebugOnly("{0}-{1}", WindowRect, WindowPosLast);
                         WindowMoveStarted = true;
                         if (onWindowMoveStarted != null)
-                            onWindowMoveStarted();
+                            onWindowMoveStarted(this);
                     }
                     WindowMoveDetectedAt = DateTime.Now;
                 }
                 if(WindowMoveStarted && WindowMoveDetectedAt.AddSeconds(WindowMoveCompleteAfter)<DateTime.Now)
                 {
                     if (onWindowMoveComplete != null)
-                        onWindowMoveComplete();
+                        onWindowMoveComplete(this);
                     WindowMoveStarted = false;
                 }
                 WindowPosLast = new Vector2(WindowRect.x, WindowRect.y);
@@ -242,8 +254,10 @@ namespace KSPPluginFramework
 
         public event WindowMoveHandler onWindowMoveStarted;
         public event WindowMoveHandler onWindowMoveComplete;
-        public delegate void WindowMoveHandler();
+        public delegate void WindowMoveHandler(MonoBehaviourWindow sender);
 
+        public event WindowVisibleHandler onWindowVisibleChanged;
+        public delegate void WindowVisibleHandler(MonoBehaviourWindow sender,Boolean NewVisibleState);
 
         /// <summary>
         /// Time that the last iteration of RepeatingWorkerFunction ran for. Can use this value to see how much impact your code is having
@@ -266,6 +280,8 @@ namespace KSPPluginFramework
 
             DrawWindowPost(id);
 
+            _MouseOver = WindowRect.Contains(Event.current.mousePosition);
+
             //Set the Tooltip variable based on whats in this window
             if (TooltipsEnabled)
                 SetTooltipText();
@@ -280,6 +296,9 @@ namespace KSPPluginFramework
             //Now calc the duration
             DrawWindowInternalDuration = (DateTime.Now - Duration);
         }
+
+        private Boolean _MouseOver=false;
+        internal Boolean IsMouseOver { get { return _MouseOver; } }
 
         /// <summary>
         /// This is the optionally overridden function that runs before DrawWindow

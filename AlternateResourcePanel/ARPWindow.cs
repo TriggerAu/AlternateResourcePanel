@@ -48,7 +48,7 @@ namespace KSPAlternateResourcePanel
             onWindowMoveComplete -= ARPWindow_onWindowMoveComplete;
         }
 
-        void ARPWindow_onWindowMoveComplete()
+        void ARPWindow_onWindowMoveComplete(MonoBehaviourWindow sender)
         {
             settings.WindowPosition = WindowRect;
             settings.Save();
