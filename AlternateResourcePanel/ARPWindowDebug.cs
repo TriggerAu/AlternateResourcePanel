@@ -35,7 +35,7 @@ namespace KSPAlternateResourcePanel
         public Int32 intTest5 = 0;
 
 
-        ApplicationLauncherButton origResButton=null;
+        //ApplicationLauncherButton origResButton=null;
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
@@ -108,27 +108,34 @@ namespace KSPAlternateResourcePanel
             //    }
             //}
             //Stuff for TAC Life Support
-            //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
+            //foreach (ARPResource Res in mbARP.lstResourcesVessel.Values)
             //{
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    GUILayout.Label(String.Format("{2}:{0:0}|{1}", Math.Abs(Res.Amount / Res.Rate), Drawing.FormatTime(Math.Abs(Res.Amount / Res.Rate)),Res.ResourceDef.name.Substring(0,3)));
 
-            ////    if (r.Rate!=0)
-            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
-            ////    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-            ////    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+
+            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", r.ResourceDef.name, String.Format("{0} / {1} T", r.AmountFormatted, r.MaxAmountFormatted), r.AmountFormatted, r.Rate, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+
+            //////    if (r.Rate!=0)
+            //////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Rate, Math.Abs(r.Amount / r.Rate),Drawing.FormatTime(Math.Abs(r.Amount / r.Rate))));  //, r.RateFormatted2, r.RateSamples.Count));
+            //////    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            //////    //GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
             //}
 
 
             //if (GUILayout.Button("SetTrue"))
             //{
-            //    mbARP.btnAppLauncher.toggleButton.onTrue();
+            //    //mbARP.btnAppLauncher.toggleButton.onTrue();
+            //    mbARP.btnAppLauncher.SetTrue(true);
             //}
             //if (GUILayout.Button("SetFalse"))
             //{
-            //    mbARP.btnAppLauncher.toggleButton.onFalse();
+            //    //mbARP.btnAppLauncher.toggleButton.onFalse();
+            //    mbARP.btnAppLauncher.SetFalse(true);
             //    //if (origResButton==null)
             //}
 
+
+                        //GUILayout.Label(mbARP.btnAppLauncher.State.ToString());
 
             //if(GUILayout.Button("Replace"))
             //{

@@ -10,6 +10,7 @@ using KSPPluginFramework;
 
 namespace KSPAlternateResourcePanel
 {
+    [WindowInitials(TooltipsEnabled=true)]
     class ARPWindowResourceConfig : MonoBehaviourWindowPlus
     {
         internal KSPAlternateResourcePanel mbARP;
@@ -153,6 +154,7 @@ namespace KSPAlternateResourcePanel
                         lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
                     }
                 }
+
                 if (GUILayout.Button(new GUIContent("S","Add Separator"), GUILayout.Width(21)))
                 {
                     AddSeparatorAtEnd();

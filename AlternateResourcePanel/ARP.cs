@@ -153,7 +153,7 @@ namespace KSPAlternateResourcePanel
 
             //Hook the App Launcher
             GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
-            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequestedForAppLauncher);
+            GameEvents.onGUIApplicationLauncherUnreadifying.Add(OnGUIAppLauncherUnreadifying);
 
             //do the daily version check if required
             if (settings.DailyVersionCheck)
@@ -181,12 +181,22 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
             GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
-            GameEvents.onGameSceneLoadRequested.Remove(OnGameSceneLoadRequestedForAppLauncher);
+            GameEvents.onGUIApplicationLauncherUnreadifying.Remove(OnGUIAppLauncherUnreadifying);
             DestroyAppLauncherButton();
 
             DestroyToolbarButton(btnToolbar);
 
             APIDestroy();
+        }
+
+
+        internal override void Start()
+        {
+            if (settings.ToggleOn)
+            {
+                AppLauncherToBeSetTrue = true;
+                AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+            }
         }
 
         //use this to trigger a clean up of sound at the end of the repeating worker loop
@@ -436,6 +446,9 @@ namespace KSPAlternateResourcePanel
             if (StockAppToBeHidden)
                 ReplaceStockAppButton();
 
+            if (AppLauncherToBeSetTrue)
+                SetAppButtonToTrue();
+
             Vessel active = FlightGlobals.ActiveVessel;
             LastStage = GetLastStage(active.parts);
 
@@ -515,18 +528,6 @@ namespace KSPAlternateResourcePanel
                     lstPartsLastStageEngines.Add(p);
                 }
 
-                //IntakeAirRequested = 0;
-
-                //foreach (ModuleEngines pe in p.Modules.OfType<ModuleEngines>()) {
-                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                //        IntakeAirRequested += pep.currentRequirement;
-                //    }
-                //}
-                //foreach (ModuleEnginesFX pe in p.Modules.OfType<ModuleEnginesFX>()) {
-                //    foreach (Propellant pep in pe.propellants.Where(prop => prop.name == "IntakeAir")) {
-                //        IntakeAirRequested += pep.currentRequirement;
-                //    }
-                //}
             }
 
             //Destroy the windows that have no resources selected to display
