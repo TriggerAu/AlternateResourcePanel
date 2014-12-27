@@ -258,8 +258,16 @@ namespace KSPAlternateResourcePanel
             else
                 Day = Math.Truncate((HourRaw % (365 * 24)) / 24);
 
-            if (Day > 0)
-                strReturn = String.Format("{0:00}.{1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
+            Double Year;
+            if (GameSettings.KERBIN_TIME)
+                Year = Math.Truncate((HourRaw / (426 * 6)));
+            else
+                Year = Math.Truncate((HourRaw / (365 * 24)));
+
+            if (Year > 0)
+                strReturn = String.Format("{0:0}y {1:0}d {2:00}:{3:00}:{4:00}", Year, Day, Hour, Minute, Second);
+            else if (Day > 0)
+                strReturn = String.Format("{0:0}d {1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
             else if (Hour > 0)
                 strReturn = String.Format("{1:0}:{2:00}:{3:00}", Day, Hour, Minute, Second);
             else 
