@@ -36,8 +36,9 @@ namespace KSPAlternateResourcePanel
         internal List<ModuleEngines> lstLastStageEngineModules;
         internal List<ModuleEnginesFX> lstLastStageEngineFXModules;
 
-        //internal Double IntakeAirRequested;
+        public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
+        
         /// <summary>
         /// ResourceIDs of ones to show in window
         /// </summary>
@@ -124,6 +125,8 @@ namespace KSPAlternateResourcePanel
             lstPartWindows = new ARPPartWindowList();
             lstResourcesVessel = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues, settings.Resources);
             lstResourcesLastStage = new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues, settings.Resources);
+
+            lstResourcesVesselPerStage = new Dictionary<Int32, ARPResourceList>();
 
             lstPartsLastStageEngines = new ARPPartList();
 
@@ -459,9 +462,20 @@ namespace KSPAlternateResourcePanel
             lstResourcesVessel.StartUpdatingList(settings.ShowRates, RatePeriod);
             lstResourcesLastStage.StartUpdatingList(settings.ShowRates, RatePeriod);
 
+            //sort out the per stage list
+            for (int i = 0; i <= Staging.StageCount; i++)
+            {
+                if (!lstResourcesVesselPerStage.ContainsKey(i))
+                {
+                    lstResourcesVesselPerStage.Add(i, new ARPResourceList(ARPResourceList.ResourceUpdate.AddValues, settings.Resources));
+                }
+
+                lstResourcesVesselPerStage[i].StartUpdatingList(settings.ShowRates, RatePeriod);
+            }
+
             //flush the temporary lists
             lstPartsLastStageEngines= new ARPPartList();
-            List<Int32> ActiveResources = new List<Int32>();
+            List<Int32> lstVesselResourceIDs = new List<Int32>();
             //Now loop through and update em
             foreach (Part p in active.parts)
             {
@@ -471,7 +485,7 @@ namespace KSPAlternateResourcePanel
                 foreach (PartResource pr in p.Resources)
                 {
                     //store a list of all resources in vessel so we can nuke resources from the other lists later
-                    if (!ActiveResources.Contains(pr.info.id)) ActiveResources.Add(pr.info.id);
+                    if (!lstVesselResourceIDs.Contains(pr.info.id)) lstVesselResourceIDs.Add(pr.info.id);
 
                     //Is this resource set to split on disabled parts instead of staging
                     if ((PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
@@ -505,6 +519,9 @@ namespace KSPAlternateResourcePanel
                         }
                     }
 
+                    //Update the whole vessel list
+                    lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1,Staging.StageCount)].UpdateResource(pr);
+
                     //is the resource in the selected list
                     if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
                         lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
@@ -534,12 +551,43 @@ namespace KSPAlternateResourcePanel
             lstPartWindows.CleanWindows();
             
             //Remove Resources that no longer exist in vessel
-            lstResourcesVessel.CleanResources(ActiveResources);
-            lstResourcesLastStage.CleanResources(ActiveResources);
-            
+            lstResourcesVessel.CleanResources(lstVesselResourceIDs);
+            lstResourcesLastStage.CleanResources(lstVesselResourceIDs);
+
             //Finalise the list updates - calc rates and set alarm flags
             lstResourcesVessel.EndUpdatingList(settings.ShowRates);
             lstResourcesLastStage.EndUpdatingList(settings.ShowRates);
+
+            foreach (ARPResourceList lstStage in lstResourcesVesselPerStage.Values)
+            {
+                lstStage.CleanResources(lstVesselResourceIDs);
+                lstStage.EndUpdatingList(settings.ShowRates);
+            }
+
+            //List<Int32> StagesToDelete = lstResourcesVesselPerStage.Select(x => x.Key).Where(x => x > Staging.StageCount).ToList();
+            //foreach (Int32 stageID in StagesToDelete) {
+            //    LogFormatted_DebugOnly("Removing Stage {0}", stageID);
+            //    lstResourcesVesselPerStage.Remove(stageID);
+            //}
+
+#if DEBUG
+            String File = "";
+            File += String.Format("Stage,Name,Amount\r\n");
+            for (int i = 0; i < lstResourcesVesselPerStage.Count; i++)
+            {
+                ARPResourceList tmp = lstResourcesVesselPerStage.OrderBy(x => x.Key).ToList()[i].Value;
+                foreach (ARPResource item in tmp.Values)
+                {
+                    String strline = "";
+
+                    strline += String.Format("{0},{1},{2:0}", i, item.ResourceDef.name, item.Amount);
+
+                    File += strline + "\r\n";
+                }
+            }
+
+            System.IO.File.WriteAllText(String.Format("{0}/AllStages.csv", Resources.PathPlugin), File);
+#endif 
 
             //Set the alarm flags
             foreach (ARPResource r in lstResourcesVessel.Values)

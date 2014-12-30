@@ -80,13 +80,32 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
 
+            GUILayout.Label(String.Format("{0}", Staging.StageCount));
+
+            for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
+			{
+			    GUILayout.Label(String.Format("{0}-{1}",i,mbARP.lstResourcesVesselPerStage[i].Values.Count));
+			}
 
             //Stuff for extra staging
-            //foreach (Part item in FlightGlobals.ActiveVessel.Parts)
-            //{
-            //    GUILayout.Label(String.Format("{0}-{1}", item.partInfo.name, item.partInfo.typeDescription));
-            //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
-            //}
+
+            if (GUILayout.Button("Save Parts")){
+                System.IO.File.Delete(String.Format("{0}/AllStages2.csv", Resources.PathPlugin));
+                System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
+                            String.Format("StageOffset,StageBefore,StageAfter,DecoupledAt,Resource,Amount\r\n"),
+                            Encoding.ASCII);
+                foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+                {
+                    foreach (PartResource pr in p.Resources)
+                    {
+                        System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
+                            String.Format("{0},{1},{2},{3},{4},{5}\r\n",p.stageOffset,p.stageBefore,p.stageAfter,p.DecoupledAt(),pr.info.name,pr.amount),
+                            Encoding.ASCII);
+                    }
+                    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+                }
+
+            }
 
             //GUILayout.Label(String.Format("IntakeAir Requested:{0}",mbARP.IntakeAirRequested));
 
