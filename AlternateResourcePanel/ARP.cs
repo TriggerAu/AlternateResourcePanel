@@ -449,7 +449,10 @@ namespace KSPAlternateResourcePanel
             if (StockAppToBeHidden)
                 ReplaceStockAppButton();
 
-            if (AppLauncherToBeSetTrue)
+            if (AppLauncherToBeSetTrue && 
+                    (settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.Launcher ||
+                    settings.ButtonStyleToDisplay==ARPWindowSettings.ButtonStyleEnum.StockReplace)
+                )
                 SetAppButtonToTrue();
 
             Vessel active = FlightGlobals.ActiveVessel;

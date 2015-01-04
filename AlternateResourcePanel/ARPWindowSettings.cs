@@ -143,6 +143,8 @@ namespace KSPAlternateResourcePanel
                     break;
                 case ButtonStyleEnum.Launcher:
                     mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
+                    mbARP.AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+                    mbARP.AppLauncherToBeSetTrue = true;
                     break;
                 case ButtonStyleEnum.StockReplace:
                     mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
@@ -150,6 +152,8 @@ namespace KSPAlternateResourcePanel
                     mbARP.windowMain.DragEnabled=false;
                     mbARP.windowMain.WindowRect = new Rect(mbARP.windowMainResetPos);
                     mbARP.SceneChangeRequiredToRestoreResourcesApp = false;
+                    mbARP.AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
+                    mbARP.AppLauncherToBeSetTrue = true;
                     break;
             }
         }

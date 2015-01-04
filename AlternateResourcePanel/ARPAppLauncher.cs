@@ -215,7 +215,7 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    LogFormatted("setting true");
+                    LogFormatted("Setting App Button True");
                     ButtonToToggle.SetTrue(true);
                 }
             }
