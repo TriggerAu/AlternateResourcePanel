@@ -1,6 +1,6 @@
 {
   "NAME": "Alternate Resource Panel",
-  "URL": "https://raw.githubusercontent.com/TriggerAu/AlternateResourcePanel/master/AlternateResourcePanel/AlternateResourcePanel.version",
+  "URL": "https://raw.githubusercontent.com/TriggerAu/AlternateResourcePanel/master/AlternateResourcePanel/KSPAlternateResourcePanel.version",
   "DOWNLOAD" : "https://github.com/TriggerAu/AlternateResourcePanel/releases",
   "VERSION": {
     "MAJOR": 2,
