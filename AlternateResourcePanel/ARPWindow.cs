@@ -72,7 +72,9 @@ namespace KSPAlternateResourcePanel
         {
             SetLocalVariables();
 
-            GUILayout.BeginVertical();
+            try { GUILayout.BeginVertical(); }
+            catch (Exception) { LogFormatted("DrawWindow: GUILayout not ready yet"); return; }
+
             if (mbARP.lstResourcesToDisplay.Count == 0)
             {
                 GUILayout.Label("No current resources configured to display");
