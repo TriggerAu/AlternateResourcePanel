@@ -155,7 +155,8 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Add(OnFlightReady);
 
             //Hook the App Launcher
-            GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            OnGUIAppLauncherReady();
+            //GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
             GameEvents.onGUIApplicationLauncherUnreadifying.Add(OnGUIAppLauncherUnreadifying);
 
             //do the daily version check if required
@@ -183,7 +184,7 @@ namespace KSPAlternateResourcePanel
             GameEvents.onStageActivate.Remove(OnStageActivate);
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
-            GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            //GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
             GameEvents.onGUIApplicationLauncherUnreadifying.Remove(OnGUIAppLauncherUnreadifying);
             DestroyAppLauncherButton();
 
