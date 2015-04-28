@@ -1,16 +1,16 @@
 {
   "NAME": "Alternate Resource Panel",
-  "URL": "https://raw.githubusercontent.com/TriggerAu/AlternateResourcePanel/master/AlternateResourcePanel/AlternateResourcePanel.version",
+  "URL": "https://raw.githubusercontent.com/TriggerAu/AlternateResourcePanel/master/AlternateResourcePanel/KSPAlternateResourcePanel.version",
   "DOWNLOAD" : "https://github.com/TriggerAu/AlternateResourcePanel/releases",
   "VERSION": {
     "MAJOR": 2,
-    "MINOR": 6,
-    "PATCH": 3,
+    "MINOR": 7,
+    "PATCH": 0,
 	"BUILD": 0
   },
   "KSP_VERSION": {
-    "MAJOR": 0,
-    "MINOR": 90,
+    "MAJOR": 1,
+    "MINOR": 0,
     "PATCH": 0
   }
 }

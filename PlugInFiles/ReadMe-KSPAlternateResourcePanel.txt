@@ -28,6 +28,12 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.7.0.0        -    KSP Version: 1.0
+- Recompiled for 1.0
+- Fixes for AppLauncher Changes
+- Updated .version file for correct path (Issue #62)
+- Updated Toolbar Icon code (Issue #60)
+
 Version 2.6.3.0        -    KSP Version: 0.90
 - Adjusted time remaining so it displays years correctly (Issue #56)
 - Reworked AppLauncher button to reduce chances of duplicate icons (Issue #54)

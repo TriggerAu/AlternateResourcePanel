@@ -11,6 +11,9 @@ namespace KSPAlternateResourcePanel
 {
     public partial class KSPAlternateResourcePanel
     {
+        /// <summary>
+        /// Sets up the App Button - no longer called by the event as that only happens on StartMenu->SpaceCenter now
+        /// </summary>
         void OnGUIAppLauncherReady()
         {
             MonoBehaviourExtended.LogFormatted_DebugOnly("AppLauncherReady");
@@ -215,7 +218,7 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    LogFormatted("setting true");
+                    LogFormatted("Setting App Button True");
                     ButtonToToggle.SetTrue(true);
                 }
             }
