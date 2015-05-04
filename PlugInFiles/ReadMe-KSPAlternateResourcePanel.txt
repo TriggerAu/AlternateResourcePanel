@@ -28,6 +28,14 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.7.1.0        -    KSP Version: 1.0.2
+- Added 1.0.2 version
+- Added Ablator resource
+- Added new resources to default layout
+- changed version file to handle patches for CKAN
+- Fixed issue with resource config not allownig window drag for last 4 rows (Issue #68)
+- 
+
 Version 2.7.0.0        -    KSP Version: 1.0
 - Recompiled for 1.0
 - Fixes for AppLauncher Changes
