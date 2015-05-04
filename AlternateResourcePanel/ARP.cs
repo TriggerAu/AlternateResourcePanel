@@ -941,6 +941,7 @@ namespace KSPAlternateResourcePanel
             //if (settings.ToggleOn) 
                 //btnReturn.TexturePath = "TriggerTech/KSPAlternateResourcePanel/ToolbarIcons/KSPARPa_On";
             //else
+                //btnReturn.TexturePath = "TriggerTech/KSPAlternateResourcePanel/ToolbarIcons/KSPARPa";
             String strToolbarIcon = Resources.PathPluginToolbarIcons.Substring(Resources.PathPluginToolbarIcons.ToLower().IndexOf("/gamedata/") + 10) + "/KSPARPa";
             btnReturn.TexturePath = strToolbarIcon;// "TriggerTech/TransferWindowPlanner/ToolbarIcons/TWPIcon";
         }
