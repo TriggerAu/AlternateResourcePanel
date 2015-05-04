@@ -17,7 +17,7 @@ namespace KSPAlternateResourcePanel
         internal static String PathApp = KSPUtil.ApplicationRootPath.Replace("\\", "/");
         internal static String PathTriggerTech = string.Format("{0}GameData/TriggerTech", PathApp);
         //internal static String PathPlugin = string.Format("{0}/{1}", PathTriggerTech, KSPAlternateResourcePanel._AssemblyName);
-        internal static String PathPlugin = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        internal static String PathPlugin = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Replace("\\", "/");
         internal static String PathPluginToolbarIcons = string.Format("{0}/ToolbarIcons", PathPlugin);
         internal static String PathPluginTextures = string.Format("{0}/Textures", PathPlugin);
         //internal static String PathPluginData = string.Format("{0}/Data", PathPlugin);
