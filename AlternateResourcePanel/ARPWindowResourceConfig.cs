@@ -360,7 +360,7 @@ namespace KSPAlternateResourcePanel
             MousePosition = Event.current.mousePosition;
 
             //If the Mouse is inside the scroll window
-            if (MousePosition.y > 54 && MousePosition.y < 374)
+            if (MousePosition.y > 54 && MousePosition.y < (WindowHeight-26) )
             {
                 //check what we are over
                 resourceOver = lstResPositions.FirstOrDefault(x => x.resourceRect.Contains(MousePosition + ScrollPosition - new Vector2(8, 54)));
