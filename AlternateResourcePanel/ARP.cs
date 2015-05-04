@@ -257,12 +257,15 @@ namespace KSPAlternateResourcePanel
                 settings.Resources.Add(1576437329, new ResourceSettings(1576437329, "ElectricCharge"));
                 settings.Resources.Add(2001413032, new ResourceSettings(2001413032, "MonoPropellant"));
                 settings.Resources.Add(-792463147, new ResourceSettings(-792463147, "EVA Propellant"));
+                settings.Resources.Add(34, new ResourceSettings(34, "") { IsSeparator = true });
+                settings.Resources.Add(466598945, new ResourceSettings(466598945, "Ablator"));
                 settings.Resources.Add(35, new ResourceSettings(35, "") { IsSeparator = true });
                 settings.Resources.Add(374119730, new ResourceSettings(374119730, "LiquidFuel"));
                 settings.Resources.Add(-1823983486, new ResourceSettings(-1823983486, "Oxidizer"));
                 settings.Resources.Add(650317537, new ResourceSettings(650317537, "SolidFuel"));
                 settings.Resources.Add(36, new ResourceSettings(36, "") { IsSeparator = true });
                 settings.Resources.Add(-1909417378, new ResourceSettings(-1909417378, "IntakeAir"));
+                settings.Resources.Add(79554, new ResourceSettings(79554, "Ore"));
                 settings.Resources.Add(1447111193, new ResourceSettings(1447111193, "XenonGas"));
             }
 
