@@ -218,14 +218,19 @@ namespace KSPAlternateResourcePanel
                     Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin,
                     settings.ShowRatesForParts, TransferActive, Highlight))
                 {
-                    //toggle the transfer line
-                    if (TransferExists)
+                    if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE)
                     {
-                        mbARP.lstTransfers.RemoveItem(this.PartID, key);
-                        TransferExists = false;
-                    }
-                    else {
-                        mbARP.lstTransfers.AddItem(this.PartRef, this.ResourceList[key].ResourceDef, TransferStateEnum.None);
+
+                        //toggle the transfer line
+                        if (TransferExists)
+                        {
+                            mbARP.lstTransfers.RemoveItem(this.PartID, key);
+                            TransferExists = false;
+                        }
+                        else
+                        {
+                            mbARP.lstTransfers.AddItem(this.PartRef, this.ResourceList[key].ResourceDef, TransferStateEnum.None);
+                        }
                     }
                 }
                 GUILayout.EndHorizontal();
@@ -246,6 +251,7 @@ namespace KSPAlternateResourcePanel
 
                     GUILayout.Space(21);
 
+
                     GUIStyle styleTransferButton = new GUIStyle(SkinsLibrary.CurrentSkin.button);
                     styleTransferButton.fixedHeight = 19;
                     styleTransferButton.fixedWidth = 40;
@@ -262,7 +268,7 @@ namespace KSPAlternateResourcePanel
                     if (blnTempOut && (tmpTransfer.transferState != TransferStateEnum.Out))
                     {
                         //if there are any transfers in place for this resource then turn off the In
-                        if (mbARP.lstTransfers.Any(x=>x.ResourceID==key && x.Active))
+                        if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
                             mbARP.lstTransfers.SetStateNone(key);
                         else
                             mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
@@ -282,7 +288,6 @@ namespace KSPAlternateResourcePanel
                     }
                     else if (!blnTempIn && !blnTempOut && (tmpTransfer.transferState != TransferStateEnum.None))
                         tmpTransfer.transferState = TransferStateEnum.None;
-
 
                     //if (tmpTransfer.Active)
                     //{
