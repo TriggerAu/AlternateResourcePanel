@@ -218,7 +218,13 @@ namespace KSPAlternateResourcePanel
                     Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin,
                     settings.ShowRatesForParts, TransferActive, Highlight))
                 {
-                    if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE)
+                    //if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE)
+                    if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE &&
+                            (
+                            HighLogic.CurrentGame.Mode != Game.Modes.CAREER ||
+                            GameVariables.Instance.UnlockedFuelTransfer(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment))
+                            )
+                        )
                     {
 
                         //toggle the transfer line
