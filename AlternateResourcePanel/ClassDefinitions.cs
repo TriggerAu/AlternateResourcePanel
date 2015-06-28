@@ -360,7 +360,9 @@ namespace KSPAlternateResourcePanel
         {
             Double Amount = AmountToDisplay;
             if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Tonnes)
-                Amount = AmountToDisplay / 1000;
+                Amount = AmountToDisplay * this.ResourceDef.density;
+            else if (ResourceConfig.DisplayValueAs == ResourceSettings.DisplayUnitsEnum.Kilograms)
+                Amount = AmountToDisplay * this.ResourceDef.density * 1000;
             
             //Format string - Default
             String strFormat = "{0:0}";
