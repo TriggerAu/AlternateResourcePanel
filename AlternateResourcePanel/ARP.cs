@@ -36,6 +36,8 @@ namespace KSPAlternateResourcePanel
         internal List<ModuleEngines> lstLastStageEngineModules;
         internal List<ModuleEnginesFX> lstLastStageEngineFXModules;
 
+        internal ARPPartDefList lstParts;
+
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
         
@@ -208,6 +210,10 @@ namespace KSPAlternateResourcePanel
         void OnStageActivate(Int32 StageNum)
         {
             StageCheckAlarmAudio = true;
+
+            //trigger the autostage
+            if (AutoStagingArmed && !AutoStagingRunning)
+                AutoStagingRunning=true;
         }
 
         void OnFlightReady()
@@ -481,7 +487,8 @@ namespace KSPAlternateResourcePanel
             }
 
             //flush the temporary lists
-            lstPartsLastStageEngines= new ARPPartList();
+            lstPartsLastStageEngines = new ARPPartList();
+            lstParts = new ARPPartDefList();
             List<Int32> lstVesselResourceIDs = new List<Int32>();
             //Now loop through and update em
             foreach (Part p in active.parts)
@@ -722,11 +729,17 @@ namespace KSPAlternateResourcePanel
                         AutoStagingStatus = "Running";
 
                         //are all the engines that are active flamed out in the last stage
-                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.Where(x => x.staged).All(x => x.getFlameoutState)) && (lstLastStageEngineFXModules.Where(x => x.staged).All(x => x.getFlameoutState)))
+                        if (AutoStagingTriggeredAt == 0 && lstPartsLastStageEngines.Count > 0 && 
+                            (lstLastStageEngineModules.Where(x => x.staged).All(x => x.getFlameoutState)) &&
+                            (lstLastStageEngineFXModules.Where(x => x.staged).All(x => x.getFlameoutState)))
                         {
+                            LogFormatted_DebugOnly("Engine Flameouts Detected");
                             AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
-                        }
-                        else if (AutoStagingTriggeredAt != 0){
+                        } else if(AutoStagingTriggeredAt == 0 && lstResourcesLastStage.Sum(r=>r.Value.Amount)<=0 & lstPartsLastStageEngines.Count==0) {
+                            //or is the last stage just emoty tanks?
+                            LogFormatted_DebugOnly("Empty Resource Stage Detected");
+                            AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
+                        } else if (AutoStagingTriggeredAt != 0){
                             if (Planetarium.GetUniversalTime() - AutoStagingTriggeredAt > ((Double)settings.AutoStagingDelayInTenths / 10))
                             {
                                 //if (!settings.StagingIgnoreLock || Staging.stackLocked || FlightInputHandler.fetch.stageLock)

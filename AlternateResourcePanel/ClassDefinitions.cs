@@ -44,7 +44,46 @@ namespace KSPAlternateResourcePanel
     //    //    }
     //    //}
     //}
-    
+
+    internal class ARPPartDef
+    {
+        internal ARPPartDef(Part p) { part = p; DecoupledAt = p.DecoupledAt(); }
+        internal Part part;
+        internal Int32 DecoupledAt;
+    }
+    internal class ARPPartDefList : List<ARPPartDef> {
+
+        internal Boolean LastStageIsResourceOnlyAndEmpty()
+        {
+            Int32 LastStage = GetLastStage();
+
+            //check each part in the stage
+            foreach (ARPPartDef p in this.Where(pa=>pa.DecoupledAt==LastStage)) {
+
+                //if theres an engine then ignore this case
+                if (p.part.Modules.OfType<ModuleEngines>().Any() || p.part.Modules.OfType<ModuleEnginesFX>().Any()){
+                    return false;
+                }
+                //if theres any resource then ignore this case
+                foreach (PartResource r in p.part.Resources)
+            	{
+                    if (r.amount>0)
+                        return false;
+	            }
+            }
+            return true;
+            //return !HasEngine && !HasFuel;
+        }
+
+
+        internal Int32 GetLastStage()
+        {
+            if (this.Count > 0)
+                return this.Max(x => x.DecoupledAt);
+            else return -1;
+        }
+    }
+
     internal class ARPPartList: List<Part>
     {
         //internal Int32 LastStage { get { return this.Max(x => x.DecoupledAt()); } }
