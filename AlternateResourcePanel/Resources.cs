@@ -67,6 +67,11 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D btnPlay = new Texture2D(10, 10, TextureFormat.ARGB32, false);
         internal static Texture2D btnStop = new Texture2D(10, 10, TextureFormat.ARGB32, false);
 
+        internal static Texture2D btnPlayGreen = new Texture2D(10, 9, TextureFormat.ARGB32, false);
+        internal static Texture2D btnBan = new Texture2D(10, 9, TextureFormat.ARGB32, false);
+
+        internal static GUIContent guiFlowEnabled, guiFlowDisabled;
+
         internal static Texture2D texResourceMove = new Texture2D(378, 9, TextureFormat.ARGB32, false);
 
         internal static Texture2D texBox = new Texture2D(9, 9, TextureFormat.ARGB32, false);
@@ -172,6 +177,12 @@ namespace KSPAlternateResourcePanel
             LoadImageFromFile(ref btnDropDown, "img_DropDown.png");
             LoadImageFromFile(ref btnPlay, "img_Play.png");
             LoadImageFromFile(ref btnStop, "img_Stop.png");
+
+            LoadImageFromFile(ref btnPlayGreen, "img_PlayGreen.png");
+            LoadImageFromFile(ref btnBan, "img_BanRed.png");
+
+            guiFlowEnabled = new GUIContent(btnPlayGreen, "Click to disable");
+            guiFlowDisabled = new GUIContent(btnBan, "Click to enable");
             //LoadImageFromFile(ref btnDropDownSep, "img_DropDownSep.png");
 
             //LoadImageFromFile(ref texDropDownListBox, "tex_DropDownListBox.png");

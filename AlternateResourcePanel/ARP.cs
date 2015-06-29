@@ -584,24 +584,24 @@ namespace KSPAlternateResourcePanel
             //    lstResourcesVesselPerStage.Remove(stageID);
             //}
 
-#if DEBUG
-            String File = "";
-            File += String.Format("Stage,Name,Amount\r\n");
-            for (int i = 0; i < lstResourcesVesselPerStage.Count; i++)
-            {
-                ARPResourceList tmp = lstResourcesVesselPerStage.OrderBy(x => x.Key).ToList()[i].Value;
-                foreach (ARPResource item in tmp.Values)
-                {
-                    String strline = "";
+//#if DEBUG
+//            String File = "";
+//            File += String.Format("Stage,Name,Amount\r\n");
+//            for (int i = 0; i < lstResourcesVesselPerStage.Count; i++)
+//            {
+//                ARPResourceList tmp = lstResourcesVesselPerStage.OrderBy(x => x.Key).ToList()[i].Value;
+//                foreach (ARPResource item in tmp.Values)
+//                {
+//                    String strline = "";
 
-                    strline += String.Format("{0},{1},{2:0}", i, item.ResourceDef.name, item.Amount);
+//                    strline += String.Format("{0},{1},{2:0}", i, item.ResourceDef.name, item.Amount);
 
-                    File += strline + "\r\n";
-                }
-            }
+//                    File += strline + "\r\n";
+//                }
+//            }
 
-            System.IO.File.WriteAllText(String.Format("{0}/AllStages.csv", Resources.PathPlugin), File);
-#endif 
+//            System.IO.File.WriteAllText(String.Format("{0}/AllStages.csv", Resources.PathPlugin), File);
+//#endif 
 
             //Set the alarm flags
             foreach (ARPResource r in lstResourcesVessel.Values)
@@ -859,7 +859,7 @@ namespace KSPAlternateResourcePanel
                 List<ARPPartWindow> LeftWindows = lstPartWindows.Values.Where(x => x.LeftSide).OrderByDescending(x => x.PartScreenPos.y).ToList();
                 if (LeftWindows.Count > 0)
                 {
-                    Double LeftPos = lstPartWindows.Values.Where(x => x.LeftSide).Min(x => x.PartScreenPos.x) - ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidth / 2);
+                    Double LeftPos = lstPartWindows.Values.Where(x => x.LeftSide).Min(x => x.PartScreenPos.x) - ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidthForBars / 2);
                     foreach (ARPPartWindow pwTemp in LeftWindows)
                     {
                         pwTemp.WindowRect.y = Screen.height - (float)pwTemp.PartScreenPos.y - (pwTemp.WindowRect.height / 2);   //this sets an initial y used for sorting later
@@ -870,7 +870,7 @@ namespace KSPAlternateResourcePanel
                 List<ARPPartWindow> RightWindows = lstPartWindows.Values.Where(x => !x.LeftSide).OrderByDescending(x => x.PartScreenPos.y).ToList();
                 if (RightWindows.Count > 0)
                 {
-                    Double RightPos = (float)lstPartWindows.Values.Where(x => !x.LeftSide).Max(x => x.PartScreenPos.x) + ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidth / 2);
+                    Double RightPos = (float)lstPartWindows.Values.Where(x => !x.LeftSide).Max(x => x.PartScreenPos.x) + ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidthForBars / 2);
                     foreach (ARPPartWindow pwTemp in RightWindows)
                     {
                         pwTemp.WindowRect.y = Screen.height - (float)pwTemp.PartScreenPos.y - (pwTemp.WindowRect.height / 2); //this sets an initial y used for sorting later

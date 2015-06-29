@@ -57,7 +57,8 @@ namespace KSPAlternateResourcePanel
         internal static Single SideThreshold = 8;
         internal static Single WindowOffset = 200;
         internal static Single WindowSpaceOffset = 5;
-        internal static Single WindowWidth = 169;
+        internal static Single WindowWidthForBars = 169;
+        internal static Single WindowWidthForFlowControl = 20;
 
         internal static Int32 Icon2BarOffset = 36;
 
@@ -78,8 +79,10 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         private void UpdateWindowSizeAndVariables()
         {
+            WindowWidthForFlowControl = mbARP.windowDebug.intTest1;
+
             Rect NewPosition = new Rect(WindowRect);
-            NewPosition.width = WindowWidth;
+            NewPosition.width = WindowWidthForBars + WindowWidthForFlowControl;
             NewPosition.height = ((this.ResourceList.Count + 1 + this.TransfersCount ) * mbARP.windowMain.intLineHeight) + 1;
 
             //where to position the window
@@ -183,11 +186,11 @@ namespace KSPAlternateResourcePanel
             TransfersCount = 0;
             if (SkinsLibrary.CurrentSkin.name=="Unity")
             {
-                GUI.Box(new Rect(0, 0, WindowWidth - 1,WindowRect.height- 1), "", SkinsLibrary.CurrentSkin.window);
+                GUI.Box(new Rect(0, 0, WindowWidthForBars - 1,WindowRect.height- 1), "", SkinsLibrary.CurrentSkin.window);
             }
 
             GUILayout.BeginVertical();
-            GUI.Label(new Rect(0,0,WindowWidth-1,18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
+            GUI.Label(new Rect(0,0,WindowWidthForBars+WindowWidthForFlowControl-1,18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
             GUILayout.Space(18);
             int i = 0;
             foreach (int key in this.ResourceList.Keys)
@@ -239,6 +242,13 @@ namespace KSPAlternateResourcePanel
                         }
                     }
                 }
+
+                if (this.ResourceList[key].ResourceDef.resourceFlowMode != ResourceFlowMode.NO_FLOW)
+                {
+                    if (Drawing.DrawFlowControlButton(rectBar, this.PartRef.Resources.Get(key).flowState))
+                        this.PartRef.Resources.Get(key).flowState = !this.PartRef.Resources.Get(key).flowState;
+                }
+                
                 GUILayout.EndHorizontal();
 
                 if (TransferExists)

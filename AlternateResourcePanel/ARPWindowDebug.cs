@@ -28,7 +28,7 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 8;
+        public Int32 intTest1 = 16;
         public Int32 intTest2=56;
         public Int32 intTest3=8;
         public Int32 intTest4 = 56;
