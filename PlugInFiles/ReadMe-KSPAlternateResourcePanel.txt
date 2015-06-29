@@ -28,6 +28,16 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.7.2.0        -    KSP Version: 1.0.4
+- Adjusted AutoStaging to cater to Stages with no Engines in them (Issue #73)
+- Adjusted AutoStaging to Better detect initial staging event (Issue #64)
+- Adjusted Resource transfer to cater to career limitations (Issue #72)
+- Fixed issues with resource Density and display values (Issue #71 and #66)
+- Added Flow State buttons in part windows, same as stock (Issue #65)
+- Added Icons for USI Resources  (Issue #70)
+- Adjusted AutoStaging to cater to Stages with no Engines in them (Issue #73)
+- Fixed NRE on Load for winodw draw (Issue #61)
+
 Version 2.7.1.0        -    KSP Version: 1.0.2
 - Added 1.0.2 version
 - Added Ablator resource
