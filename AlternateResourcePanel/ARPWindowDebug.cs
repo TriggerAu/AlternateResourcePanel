@@ -28,7 +28,7 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 8;
+        public Int32 intTest1 = 16;
         public Int32 intTest2=56;
         public Int32 intTest3=8;
         public Int32 intTest4 = 56;
@@ -80,32 +80,49 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
 
-            GUILayout.Label(String.Format("{0}", Staging.StageCount));
+            //GUILayout.Label(String.Format("{0}", Staging.StageCount));
 
-            for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
-			{
-			    GUILayout.Label(String.Format("{0}-{1}",i,mbARP.lstResourcesVesselPerStage[i].Values.Count));
-			}
+
+            foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            {
+                //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
+                GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
+            }
+
+            //for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
+            //{
+            //    GUILayout.Label(String.Format("{0}-{1}",i,mbARP.lstResourcesVesselPerStage[i].Values.Count));
+            //}
+
+            //GUILayout.Label(String.Format("AutostaginTermAt: {0}", mbARP.AutoStagingTerminateAt));
+            //GUILayout.Label(String.Format("lstLastStageEngineModules: {0}", mbARP.lstLastStageEngineModules.Count));
+            //GUILayout.Label(String.Format("lstLastStageEngineFXModules: {0}", mbARP.lstLastStageEngineFXModules.Count));
+
+            //GUILayout.Label(String.Format("AutostaginTriggeredAt: {0}", mbARP.AutoStagingTerminateAt));
+            //GUILayout.Label(String.Format("lstStage Engine count: {0}", mbARP.lstPartsLastStageEngines.Count));
+            //GUILayout.Label(String.Format("LastStage Resource Sum: {0}", mbARP.lstResourcesLastStage.Sum(r => r.Value.Amount)));
+            
+            
 
             //Stuff for extra staging
 
-            if (GUILayout.Button("Save Parts")){
-                System.IO.File.Delete(String.Format("{0}/AllStages2.csv", Resources.PathPlugin));
-                System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
-                            String.Format("StageOffset,StageBefore,StageAfter,DecoupledAt,Resource,Amount\r\n"),
-                            Encoding.ASCII);
-                foreach (Part p in FlightGlobals.ActiveVessel.Parts)
-                {
-                    foreach (PartResource pr in p.Resources)
-                    {
-                        System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
-                            String.Format("{0},{1},{2},{3},{4},{5}\r\n",p.stageOffset,p.stageBefore,p.stageAfter,p.DecoupledAt(),pr.info.name,pr.amount),
-                            Encoding.ASCII);
-                    }
-                    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
-                }
+            //if (GUILayout.Button("Save Parts")){
+            //    System.IO.File.Delete(String.Format("{0}/AllStages2.csv", Resources.PathPlugin));
+            //    System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
+            //                String.Format("StageOffset,StageBefore,StageAfter,DecoupledAt,Resource,Amount\r\n"),
+            //                Encoding.ASCII);
+            //    foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            //    {
+            //        foreach (PartResource pr in p.Resources)
+            //        {
+            //            System.IO.File.AppendAllText(String.Format("{0}/AllStages2.csv", Resources.PathPlugin),
+            //                String.Format("{0},{1},{2},{3},{4},{5}\r\n",p.stageOffset,p.stageBefore,p.stageAfter,p.DecoupledAt(),pr.info.name,pr.amount),
+            //                Encoding.ASCII);
+            //        }
+            //        //GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}", item.getFlameoutState, item.getIgnitionState, item.EngineIgnited, item.isOperational, item.staged, item.status));
+            //    }
 
-            }
+            //}
 
             //GUILayout.Label(String.Format("IntakeAir Requested:{0}",mbARP.IntakeAirRequested));
 

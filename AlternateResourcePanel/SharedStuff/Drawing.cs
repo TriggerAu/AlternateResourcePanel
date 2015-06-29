@@ -49,6 +49,33 @@ namespace KSPAlternateResourcePanel
             return contLabel;
         }
 
+
+        internal static Boolean DrawFlowControlButton(Rect rectBar, Boolean FlowState)
+        {
+            Boolean blnReturn = false;
+
+            rectBar.x += rectBar.width + 5;
+            rectBar.y -= 2;
+            rectBar.width = 16;
+            rectBar.height = 10;
+
+            //Set Texture here based on flowstate
+
+            GUIContent btnFlow ;
+            if (FlowState)
+                btnFlow = Resources.guiFlowEnabled;
+            else
+                btnFlow = Resources.guiFlowDisabled;
+
+            GUIStyle g = new GUIStyle(SkinsLibrary.CurrentSkin.button);
+            g.padding = new RectOffset(-2,-3,-2,-2);
+
+            if (GUI.Button(rectBar, btnFlow,g))
+                blnReturn = true;
+
+            return blnReturn;
+        }
+
         internal static Boolean DrawResourceBar(Rect rectBar, ARPResource Res, GUIStyle styleBack, GUIStyle styleFront, GUIStyle styleFrontThin, Boolean ShowRates, Boolean Highlight, GUIStyle HighlightStyle)
         {
             Boolean blnReturn = false;

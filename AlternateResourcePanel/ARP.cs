@@ -36,6 +36,8 @@ namespace KSPAlternateResourcePanel
         internal List<ModuleEngines> lstLastStageEngineModules;
         internal List<ModuleEnginesFX> lstLastStageEngineFXModules;
 
+        internal ARPPartDefList lstParts;
+
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
         
@@ -208,6 +210,10 @@ namespace KSPAlternateResourcePanel
         void OnStageActivate(Int32 StageNum)
         {
             StageCheckAlarmAudio = true;
+
+            //trigger the autostage
+            if (AutoStagingArmed && !AutoStagingRunning)
+                AutoStagingRunning=true;
         }
 
         void OnFlightReady()
@@ -481,7 +487,8 @@ namespace KSPAlternateResourcePanel
             }
 
             //flush the temporary lists
-            lstPartsLastStageEngines= new ARPPartList();
+            lstPartsLastStageEngines = new ARPPartList();
+            lstParts = new ARPPartDefList();
             List<Int32> lstVesselResourceIDs = new List<Int32>();
             //Now loop through and update em
             foreach (Part p in active.parts)
@@ -577,24 +584,24 @@ namespace KSPAlternateResourcePanel
             //    lstResourcesVesselPerStage.Remove(stageID);
             //}
 
-#if DEBUG
-            String File = "";
-            File += String.Format("Stage,Name,Amount\r\n");
-            for (int i = 0; i < lstResourcesVesselPerStage.Count; i++)
-            {
-                ARPResourceList tmp = lstResourcesVesselPerStage.OrderBy(x => x.Key).ToList()[i].Value;
-                foreach (ARPResource item in tmp.Values)
-                {
-                    String strline = "";
+//#if DEBUG
+//            String File = "";
+//            File += String.Format("Stage,Name,Amount\r\n");
+//            for (int i = 0; i < lstResourcesVesselPerStage.Count; i++)
+//            {
+//                ARPResourceList tmp = lstResourcesVesselPerStage.OrderBy(x => x.Key).ToList()[i].Value;
+//                foreach (ARPResource item in tmp.Values)
+//                {
+//                    String strline = "";
 
-                    strline += String.Format("{0},{1},{2:0}", i, item.ResourceDef.name, item.Amount);
+//                    strline += String.Format("{0},{1},{2:0}", i, item.ResourceDef.name, item.Amount);
 
-                    File += strline + "\r\n";
-                }
-            }
+//                    File += strline + "\r\n";
+//                }
+//            }
 
-            System.IO.File.WriteAllText(String.Format("{0}/AllStages.csv", Resources.PathPlugin), File);
-#endif 
+//            System.IO.File.WriteAllText(String.Format("{0}/AllStages.csv", Resources.PathPlugin), File);
+//#endif 
 
             //Set the alarm flags
             foreach (ARPResource r in lstResourcesVessel.Values)
@@ -722,11 +729,17 @@ namespace KSPAlternateResourcePanel
                         AutoStagingStatus = "Running";
 
                         //are all the engines that are active flamed out in the last stage
-                        if (AutoStagingTriggeredAt == 0 && (lstLastStageEngineModules.Where(x => x.staged).All(x => x.getFlameoutState)) && (lstLastStageEngineFXModules.Where(x => x.staged).All(x => x.getFlameoutState)))
+                        if (AutoStagingTriggeredAt == 0 && lstPartsLastStageEngines.Count > 0 && 
+                            (lstLastStageEngineModules.Where(x => x.staged).All(x => x.getFlameoutState)) &&
+                            (lstLastStageEngineFXModules.Where(x => x.staged).All(x => x.getFlameoutState)))
                         {
+                            LogFormatted_DebugOnly("Engine Flameouts Detected");
                             AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
-                        }
-                        else if (AutoStagingTriggeredAt != 0){
+                        } else if(AutoStagingTriggeredAt == 0 && lstResourcesLastStage.Sum(r=>r.Value.Amount)<=0 & lstPartsLastStageEngines.Count==0) {
+                            //or is the last stage just emoty tanks?
+                            LogFormatted_DebugOnly("Empty Resource Stage Detected");
+                            AutoStagingTriggeredAt = Planetarium.GetUniversalTime();
+                        } else if (AutoStagingTriggeredAt != 0){
                             if (Planetarium.GetUniversalTime() - AutoStagingTriggeredAt > ((Double)settings.AutoStagingDelayInTenths / 10))
                             {
                                 //if (!settings.StagingIgnoreLock || Staging.stackLocked || FlightInputHandler.fetch.stageLock)
@@ -846,7 +859,7 @@ namespace KSPAlternateResourcePanel
                 List<ARPPartWindow> LeftWindows = lstPartWindows.Values.Where(x => x.LeftSide).OrderByDescending(x => x.PartScreenPos.y).ToList();
                 if (LeftWindows.Count > 0)
                 {
-                    Double LeftPos = lstPartWindows.Values.Where(x => x.LeftSide).Min(x => x.PartScreenPos.x) - ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidth / 2);
+                    Double LeftPos = lstPartWindows.Values.Where(x => x.LeftSide).Min(x => x.PartScreenPos.x) - ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidthForBars / 2);
                     foreach (ARPPartWindow pwTemp in LeftWindows)
                     {
                         pwTemp.WindowRect.y = Screen.height - (float)pwTemp.PartScreenPos.y - (pwTemp.WindowRect.height / 2);   //this sets an initial y used for sorting later
@@ -857,7 +870,7 @@ namespace KSPAlternateResourcePanel
                 List<ARPPartWindow> RightWindows = lstPartWindows.Values.Where(x => !x.LeftSide).OrderByDescending(x => x.PartScreenPos.y).ToList();
                 if (RightWindows.Count > 0)
                 {
-                    Double RightPos = (float)lstPartWindows.Values.Where(x => !x.LeftSide).Max(x => x.PartScreenPos.x) + ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidth / 2);
+                    Double RightPos = (float)lstPartWindows.Values.Where(x => !x.LeftSide).Max(x => x.PartScreenPos.x) + ARPPartWindow.WindowOffset - (ARPPartWindow.WindowWidthForBars / 2);
                     foreach (ARPPartWindow pwTemp in RightWindows)
                     {
                         pwTemp.WindowRect.y = Screen.height - (float)pwTemp.PartScreenPos.y - (pwTemp.WindowRect.height / 2); //this sets an initial y used for sorting later

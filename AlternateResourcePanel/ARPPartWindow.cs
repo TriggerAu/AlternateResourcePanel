@@ -57,7 +57,8 @@ namespace KSPAlternateResourcePanel
         internal static Single SideThreshold = 8;
         internal static Single WindowOffset = 200;
         internal static Single WindowSpaceOffset = 5;
-        internal static Single WindowWidth = 169;
+        internal static Single WindowWidthForBars = 169;
+        internal static Single WindowWidthForFlowControl = 16;
 
         internal static Int32 Icon2BarOffset = 36;
 
@@ -79,7 +80,7 @@ namespace KSPAlternateResourcePanel
         private void UpdateWindowSizeAndVariables()
         {
             Rect NewPosition = new Rect(WindowRect);
-            NewPosition.width = WindowWidth;
+            NewPosition.width = WindowWidthForBars + WindowWidthForFlowControl;
             NewPosition.height = ((this.ResourceList.Count + 1 + this.TransfersCount ) * mbARP.windowMain.intLineHeight) + 1;
 
             //where to position the window
@@ -183,11 +184,11 @@ namespace KSPAlternateResourcePanel
             TransfersCount = 0;
             if (SkinsLibrary.CurrentSkin.name=="Unity")
             {
-                GUI.Box(new Rect(0, 0, WindowWidth - 1,WindowRect.height- 1), "", SkinsLibrary.CurrentSkin.window);
+                GUI.Box(new Rect(0, 0, WindowWidthForBars - 1,WindowRect.height- 1), "", SkinsLibrary.CurrentSkin.window);
             }
 
             GUILayout.BeginVertical();
-            GUI.Label(new Rect(0,0,WindowWidth-1,18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
+            GUI.Label(new Rect(0,0,WindowWidthForBars+WindowWidthForFlowControl-1,18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
             GUILayout.Space(18);
             int i = 0;
             foreach (int key in this.ResourceList.Keys)
@@ -218,16 +219,34 @@ namespace KSPAlternateResourcePanel
                     Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin,
                     settings.ShowRatesForParts, TransferActive, Highlight))
                 {
-                    //toggle the transfer line
-                    if (TransferExists)
+                    //if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE)
+                    if (this.ResourceList[key].ResourceDef.resourceTransferMode != ResourceTransferMode.NONE &&
+                            (
+                            HighLogic.CurrentGame.Mode != Game.Modes.CAREER ||
+                            GameVariables.Instance.UnlockedFuelTransfer(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment))
+                            )
+                        )
                     {
-                        mbARP.lstTransfers.RemoveItem(this.PartID, key);
-                        TransferExists = false;
-                    }
-                    else {
-                        mbARP.lstTransfers.AddItem(this.PartRef, this.ResourceList[key].ResourceDef, TransferStateEnum.None);
+
+                        //toggle the transfer line
+                        if (TransferExists)
+                        {
+                            mbARP.lstTransfers.RemoveItem(this.PartID, key);
+                            TransferExists = false;
+                        }
+                        else
+                        {
+                            mbARP.lstTransfers.AddItem(this.PartRef, this.ResourceList[key].ResourceDef, TransferStateEnum.None);
+                        }
                     }
                 }
+
+                if (this.ResourceList[key].ResourceDef.resourceFlowMode != ResourceFlowMode.NO_FLOW)
+                {
+                    if (Drawing.DrawFlowControlButton(rectBar, this.PartRef.Resources.Get(key).flowState))
+                        this.PartRef.Resources.Get(key).flowState = !this.PartRef.Resources.Get(key).flowState;
+                }
+                
                 GUILayout.EndHorizontal();
 
                 if (TransferExists)
@@ -246,6 +265,7 @@ namespace KSPAlternateResourcePanel
 
                     GUILayout.Space(21);
 
+
                     GUIStyle styleTransferButton = new GUIStyle(SkinsLibrary.CurrentSkin.button);
                     styleTransferButton.fixedHeight = 19;
                     styleTransferButton.fixedWidth = 40;
@@ -262,7 +282,7 @@ namespace KSPAlternateResourcePanel
                     if (blnTempOut && (tmpTransfer.transferState != TransferStateEnum.Out))
                     {
                         //if there are any transfers in place for this resource then turn off the In
-                        if (mbARP.lstTransfers.Any(x=>x.ResourceID==key && x.Active))
+                        if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
                             mbARP.lstTransfers.SetStateNone(key);
                         else
                             mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
@@ -282,7 +302,6 @@ namespace KSPAlternateResourcePanel
                     }
                     else if (!blnTempIn && !blnTempOut && (tmpTransfer.transferState != TransferStateEnum.None))
                         tmpTransfer.transferState = TransferStateEnum.None;
-
 
                     //if (tmpTransfer.Active)
                     //{
