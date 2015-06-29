@@ -58,7 +58,7 @@ namespace KSPAlternateResourcePanel
         internal static Single WindowOffset = 200;
         internal static Single WindowSpaceOffset = 5;
         internal static Single WindowWidthForBars = 169;
-        internal static Single WindowWidthForFlowControl = 20;
+        internal static Single WindowWidthForFlowControl = 16;
 
         internal static Int32 Icon2BarOffset = 36;
 
@@ -79,8 +79,6 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         private void UpdateWindowSizeAndVariables()
         {
-            WindowWidthForFlowControl = mbARP.windowDebug.intTest1;
-
             Rect NewPosition = new Rect(WindowRect);
             NewPosition.width = WindowWidthForBars + WindowWidthForFlowControl;
             NewPosition.height = ((this.ResourceList.Count + 1 + this.TransfersCount ) * mbARP.windowMain.intLineHeight) + 1;
