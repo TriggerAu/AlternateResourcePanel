@@ -204,6 +204,7 @@ namespace KSPAlternateResourcePanel
 
                     if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
                     {
+                        
                         if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
                             Staging.ActivateNextStage();
                     }
