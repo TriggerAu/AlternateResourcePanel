@@ -92,6 +92,7 @@ namespace KSPAlternateResourcePanel
                 }
             }
             GUILayout.Label(String.Format("CommandState:{0}", blnControl));
+            GUILayout.Label(String.Format("vesseliscontrollable:{0}", mbARP.blnVesselIsControllable));
 
 
             foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)

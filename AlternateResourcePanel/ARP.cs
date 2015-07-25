@@ -38,6 +38,8 @@ namespace KSPAlternateResourcePanel
 
         internal ARPPartDefList lstParts;
 
+        internal Boolean blnVesselIsControllable;
+
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
         
@@ -490,9 +492,20 @@ namespace KSPAlternateResourcePanel
             lstPartsLastStageEngines = new ARPPartList();
             lstParts = new ARPPartDefList();
             List<Int32> lstVesselResourceIDs = new List<Int32>();
+
+            //set the controllable flag
+            blnVesselIsControllable = false;
+
             //Now loop through and update em
             foreach (Part p in active.parts)
             {
+                //Check each part for a control module to see if its status is Good
+                foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
+                {
+                    if (mc.State == ModuleCommand.ControlSourceState.Good)
+                        blnVesselIsControllable = true;
+                }
+
                 //is the part decoupled in the last stage
                 Boolean DecoupledInLastStage = (p.DecoupledAt()==LastStage);
 
