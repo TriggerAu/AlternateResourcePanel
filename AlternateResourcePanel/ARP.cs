@@ -828,8 +828,8 @@ namespace KSPAlternateResourcePanel
 
         internal override void Update()
         {
-            //Activate Stage via Space Bar in MapView
-            if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && Input.GetKey(KeyCode.Space))
+            //Activate Stage via Space Bar in MapView if enabled and possible
+            if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && blnVesselIsControllable && Input.GetKey(KeyCode.Space))
                 Staging.ActivateNextStage();
         }
 
