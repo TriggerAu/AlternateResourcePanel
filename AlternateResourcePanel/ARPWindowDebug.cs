@@ -91,15 +91,15 @@ namespace KSPAlternateResourcePanel
                         blnControl = true;
                 }
             }
-            GUILayout.Label(String.Format("CommandState:{0}", blnControl));
+            //GUILayout.Label(String.Format("CommandState:{0}", blnControl));
             GUILayout.Label(String.Format("vesseliscontrollable:{0}", mbARP.blnVesselIsControllable));
 
 
-            foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
-            {
-                //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
-                GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
-            }
+            //foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            //{
+            //    //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
+            //    GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
+            //}
 
             //for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
             //{
@@ -303,11 +303,11 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
             //GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
 
-            //GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
-            //foreach (ARPTransfer item in mbARP.lstTransfers)
-            //{
-            //    GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
-            //}
+            GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
+            foreach (ARPTransfer item in mbARP.lstTransfers)
+            {
+                GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
+            }
             //if (GUILayout.Button("AAA"))
             //{
             //    LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
@@ -322,11 +322,11 @@ namespace KSPAlternateResourcePanel
             //}
             //GUILayout.Label(mbARP.TestTrans);
             
-            //foreach (String item in mbARP.lstString)
-            //{
-            //    GUILayout.Label(item);
+            foreach (String item in mbARP.lstString)
+            {
+                GUILayout.Label(item);
                 
-            //}
+            }
             //#region Auto Staging
             //GUILayout.Label(FlightGlobals.ActiveVessel.ctrlState.mainThrottle.ToString());
 

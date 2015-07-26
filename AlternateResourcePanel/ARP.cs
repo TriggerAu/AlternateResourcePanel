@@ -794,36 +794,41 @@ namespace KSPAlternateResourcePanel
             }
 
             //Transfers??
-            lstString = new List<string>();
+            //lstString = new List<string>();
             if (lstTransfers.Count>1)
             {
                 //look for matches
                 foreach (IGrouping<Int32,ARPTransfer> item in lstTransfers.GroupBy(x=>x.ResourceID))
 	            {
-                    String strTemp = item.First().resource.name;
+                    //for each resource
+                    //String strTemp = item.First().resource.name;
+
+                    //if there is an in and an out
                     if (item.Any(x => x.transferState == TransferStateEnum.In) &&
                         item.Any(x => x.transferState == TransferStateEnum.Out))
                     {
+                        //set the transfer state for those parts to be active - and set the rate of this part
                         foreach (ARPTransfer t in item.Where(x=>x.transferState!= TransferStateEnum.None))
                         {
                             t.Active = true;
                             t.RatePerSec = (Single)lstPartWindows[t.partID].ResourceList[t.ResourceID].MaxAmount / 20;
                         }
-                        strTemp += "Transfer";
+                        //strTemp += "Transfer";
                     }
                     else
                     {
+                        //otherwise set the transfers to be inactive for all parts
                         foreach (ARPTransfer t in item)
                         {
                             t.Active = false;
                         }
-                        strTemp += "Waiting";
+                        //strTemp += "Waiting";
                     }
-                    lstString.Add(strTemp);
+                    //lstString.Add(strTemp);
 	            }
             }
         }
-        internal List<String> lstString;
+        //internal List<String> lstString;
         internal Double AutoStagingTriggeredAt = 0;
 
         internal override void Update()
@@ -1017,8 +1022,12 @@ namespace KSPAlternateResourcePanel
                 HighLogic.SaveFolder = "default";
                 Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
 
+                
+
                 if (game != null && game.flightState != null && game.compatible)
                 {
+                    HighLogic.CurrentGame = game;
+
                     Int32 FirstVessel;
                     Boolean blnFoundVessel=false;
                     for (FirstVessel = 0; FirstVessel < game.flightState.protoVessels.Count; FirstVessel++)
@@ -1031,8 +1040,9 @@ namespace KSPAlternateResourcePanel
                         }
                     }
                     if (!blnFoundVessel)
-                        FirstVessel = 0;
-                    FlightDriver.StartAndFocusVessel(game, FirstVessel);
+                        HighLogic.LoadScene(GameScenes.SPACECENTER);
+                    else 
+                        FlightDriver.StartAndFocusVessel(game, FirstVessel);
                 }
 
                 //CheatOptions.InfiniteFuel = true;
