@@ -670,6 +670,8 @@ namespace KSPAlternateResourcePanel
 
     internal class ARPTransferList : List<ARPTransfer>
     {
+        internal Single RatePerSecMax{get{ return this.Max(t => t.RatePerSec); }}
+
         internal void AddItem(Part p,PartResourceDefinition RD,TransferStateEnum State)
         {
             this.Add(new ARPTransfer(p, RD, State));

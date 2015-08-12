@@ -322,11 +322,11 @@ namespace KSPAlternateResourcePanel
             //}
             //GUILayout.Label(mbARP.TestTrans);
             
-            foreach (String item in mbARP.lstString)
-            {
-                GUILayout.Label(item);
+            //foreach (String item in mbARP.lstString)
+            //{
+            //    GUILayout.Label(item);
                 
-            }
+            //}
             //#region Auto Staging
             //GUILayout.Label(FlightGlobals.ActiveVessel.ctrlState.mainThrottle.ToString());
 
