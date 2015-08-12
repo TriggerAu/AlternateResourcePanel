@@ -842,25 +842,19 @@ namespace KSPAlternateResourcePanel
         internal override void FixedUpdate()
         {
             //Do the transfers
-            foreach (IGrouping<Int32, ARPTransfer> t in lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
+            foreach (IGrouping<Int32, ARPTransfer> tGroup in lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
             {
 
                 //If there is not at least one out and one in then try the next resource
-                if (t.FirstOrDefault(x => x.transferState == TransferStateEnum.Out) ==null ||
-                    t.FirstOrDefault(x => x.transferState == TransferStateEnum.In) == null) continue;
-                LogFormatted("AAAA");
+                if (tGroup.FirstOrDefault(x => x.transferState == TransferStateEnum.Out) ==null ||
+                    tGroup.FirstOrDefault(x => x.transferState == TransferStateEnum.In) == null) continue;
 
                 ////Now get the Outs and Ins - ///NEED THIS TO be a LIST OF TRANSFERS
-                ARPTransferList OutTrans = (ARPTransferList)t.Where(x => x.transferState == TransferStateEnum.Out).ToList();
-                LogFormatted("AAAAB");
-                ARPTransferList InTrans = (ARPTransferList)t.Where(x => x.transferState == TransferStateEnum.Out).ToList();
-
-                LogFormatted("AAA");
-
-                LogFormatted("A");
+                List<ARPTransfer> OutTrans = tGroup.Where(x => x.transferState == TransferStateEnum.Out).ToList();
+                List<ARPTransfer> InTrans = tGroup.Where(x => x.transferState == TransferStateEnum.Out).ToList();
 
                 //Transfer Rate
-                Double TransferRate = Math.Max(InTrans.RatePerSecMax, OutTrans.RatePerSecMax);
+                Double TransferRate = Math.Max(InTrans.Max(t => t.RatePerSec), OutTrans.Max(t => t.RatePerSec));
                 //Max transfer we can do at that rate
                 Double RequestAmount = TransferRate * Time.deltaTime * Mathf.Min(InTrans.Count,OutTrans.Count);
                 Double RequestAmountPerPart = RequestAmount / Mathf.Min(InTrans.Count, OutTrans.Count);
@@ -868,18 +862,16 @@ namespace KSPAlternateResourcePanel
                 //Loop through the out tanks to see how much in total we can get out at that rate
                 Double AmountOutPossible = 0;
                 foreach (ARPTransfer trans in OutTrans) {
-                    AmountOutPossible += Math.Min(trans.part.Resources.Get(t.Key).amount,
+                    AmountOutPossible += Math.Min(trans.part.Resources.Get(tGroup.Key).amount,
                                             RequestAmountPerPart);
                 }
                 //Loop through the out tanks to see how much in total we can get in at that rate
                 Double AmountInPossible = 0;
                 foreach (ARPTransfer trans in OutTrans)
                 {
-                    AmountInPossible += Math.Min(trans.part.Resources.Get(t.Key).maxAmount - trans.part.Resources.Get(t.Key).amount, 
+                    AmountInPossible += Math.Min(trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount, 
                                             RequestAmountPerPart);
                 }
-
-                LogFormatted("AA");
 
                 //Whats the Actual transfer amount
                 Double AmountPossible = Math.Min(AmountOutPossible, AmountInPossible);
@@ -891,28 +883,37 @@ namespace KSPAlternateResourcePanel
                 //Loop Through the Source Parts to put an Amount on "the bus"
                 foreach (ARPTransfer trans in OutTrans)
                 {
-                    Double AmountOut = Math.Min(trans.part.Resources.Get(t.Key).amount,
+                    Double AmountOut = Math.Min(trans.part.Resources.Get(tGroup.Key).amount,
                                             AmountToTransferOutPerPart);
-                    trans.part.Resources.Get(t.Key).amount -= AmountOut;
+                    LogFormatted("A{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount,ResourceBus);
+                    //now access to actual part
+                    //tGroup.First(t=>t.partID==trans.partID).part.Resources.Get(tGroup.Key).amount -= AmountOut;
+                    trans.part.Resources.Get(tGroup.Key).amount -= AmountOut;
                     ResourceBus += AmountOut;
+                    LogFormatted("B{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
                 }
 
                 //Loop through the Target Parts and Deliver from the bus
                 for (int i = 0; i < InTrans.Count; i++)
                 {
                     //get the transfer at i when ordered by remaining capacity
-                    ARPTransfer trans = InTrans.OrderBy(tr=>tr.part.Resources.Get(t.Key).maxAmount - tr.part.Resources.Get(t.Key).amount).ElementAt(i);
+                    ARPTransfer trans = InTrans.OrderBy(tr=>tr.part.Resources.Get(tGroup.Key).maxAmount - tr.part.Resources.Get(tGroup.Key).amount).ElementAt(i);
                     //Check how much we can jam in the current target part
-                    Double Capacity = trans.part.Resources.Get(t.Key).maxAmount - trans.part.Resources.Get(t.Key).amount;
+                    Double Capacity = trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount;
 
                     //if there is space then jam it in
                     if (Capacity >= AmountToTransferInPerPart) {
+                        LogFormatted("C{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
                         ResourceBus -= AmountToTransferInPerPart;
-                        trans.part.Resources.Get(t.Key).amount += AmountToTransferInPerPart;
-                    } else {
+                        //tGroup.First(t => t.partID == trans.partID).part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                        //trans.part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                        LogFormatted("D{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
+                    }
+                    else {
                         //if not then fill the tank and then recalc the amount per part figure
                         ResourceBus -= Capacity;
-                        trans.part.Resources.Get(t.Key).amount += trans.part.Resources.Get(t.Key).maxAmount;
+                        //tGroup.First(t => t.partID == trans.partID).part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                        //trans.part.Resources.Get(tGroup.Key).amount += trans.part.Resources.Get(tGroup.Key).maxAmount;
                         AmountToTransferInPerPart = ResourceBus / InTrans.Count-i-1;
                     }
                 }
