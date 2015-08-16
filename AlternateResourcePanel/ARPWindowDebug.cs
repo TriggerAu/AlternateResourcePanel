@@ -308,6 +308,7 @@ namespace KSPAlternateResourcePanel
             {
                 GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
             }
+                        
             //if (GUILayout.Button("AAA"))
             //{
             //    LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
