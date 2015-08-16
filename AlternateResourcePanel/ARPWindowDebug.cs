@@ -80,14 +80,26 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
 
+
             //GUILayout.Label(String.Format("{0}", Staging.StageCount));
-
-
-            foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            Boolean blnControl = false;
+            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             {
-                //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
-                GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
+                foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
+                {
+                    if (mc.State == ModuleCommand.ControlSourceState.Good)
+                        blnControl = true;
+                }
             }
+            //GUILayout.Label(String.Format("CommandState:{0}", blnControl));
+            GUILayout.Label(String.Format("vesseliscontrollable:{0}", mbARP.blnVesselIsControllable));
+
+
+            //foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            //{
+            //    //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
+            //    GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
+            //}
 
             //for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
             //{
@@ -291,11 +303,12 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(KSPAlternateResourcePanel.HoverOn.ToString());
             //GUILayout.Label(KSPAlternateResourcePanel.ShowAll.ToString());
 
-            //GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
-            //foreach (ARPTransfer item in mbARP.lstTransfers)
-            //{
-            //    GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
-            //}
+            GUILayout.Label(String.Format("Transfers: {0}", mbARP.lstTransfers.Count));
+            foreach (ARPTransfer item in mbARP.lstTransfers)
+            {
+                GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
+            }
+                        
             //if (GUILayout.Button("AAA"))
             //{
             //    LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));

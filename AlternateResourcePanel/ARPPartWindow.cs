@@ -281,22 +281,21 @@ namespace KSPAlternateResourcePanel
 
                     if (blnTempOut && (tmpTransfer.transferState != TransferStateEnum.Out))
                     {
-                        //if there are any transfers in place for this resource then turn off the In
-                        if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
-                            mbARP.lstTransfers.SetStateNone(key);
-                        else
-                            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
+                        //if there are any transfers in place for this resource then turn off the Out
+                        //if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
+                        //    mbARP.lstTransfers.SetStateNone(key);
+                        //else
+                        //    mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.Out);
 
                         tmpTransfer.transferState = TransferStateEnum.Out;
                     }
-
                     else if (blnTempIn && (tmpTransfer.transferState != TransferStateEnum.In))
                     {
                         //if there are any transfers in place for this resource then turn off the In
-                        if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
-                            mbARP.lstTransfers.SetStateNone(key);
-                        else
-                            mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.In);
+                        //if (mbARP.lstTransfers.Any(x => x.ResourceID == key && x.Active))
+                        //    mbARP.lstTransfers.SetStateNone(key);
+                        //else
+                        //    mbARP.lstTransfers.SetStateNone(key, TransferStateEnum.In);
 
                         tmpTransfer.transferState = TransferStateEnum.In;
                     }

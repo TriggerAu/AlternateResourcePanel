@@ -28,6 +28,12 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.7.3.0        -    KSP Version: 1.0.4
+- Adjusted Resource transfer code to allow multi out/in transfers - not just one to one (Issue #79)
+- Fixed oversight that allowed staging to work when it should have been locked out (Issue #77)
+- Added ability for Modders to predefine a displayas setting for new installs (Issue #75)
+- Fixed selection issue for dropdown lists and multi pages
+
 Version 2.7.2.0        -    KSP Version: 1.0.4
 - Adjusted AutoStaging to cater to Stages with no Engines in them (Issue #73)
 - Adjusted AutoStaging to Better detect initial staging event (Issue #64)

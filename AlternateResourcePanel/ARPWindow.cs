@@ -204,12 +204,18 @@ namespace KSPAlternateResourcePanel
 
                     if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
                     {
-                        if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
-                            Staging.ActivateNextStage();
+                        if (mbARP.blnVesselIsControllable) {
+                            if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
+                                Staging.ActivateNextStage();
+                            GUILayout.Space(51 + IconAlarmOffset);
+                        }
+                        else {
+                            GUILayout.Label("No Vessel Control", GUILayout.Width(120));
+                            GUILayout.Space(31 + IconAlarmOffset);
+                        }
                     }
                     //GUILayout.Space(48 + IconAlarmOffset);
                     //GUILayout.Space(21 + IconAlarmOffset);
-                    GUILayout.Space(51 + IconAlarmOffset);
                 }
                 else
                 {

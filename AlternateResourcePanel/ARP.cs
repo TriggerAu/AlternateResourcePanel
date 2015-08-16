@@ -38,6 +38,8 @@ namespace KSPAlternateResourcePanel
 
         internal ARPPartDefList lstParts;
 
+        internal Boolean blnVesselIsControllable;
+
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
         
@@ -281,11 +283,47 @@ namespace KSPAlternateResourcePanel
                 {
                     LogFormatted_DebugOnly("Adding Resource to Settings - {0}", item.name);
                     AddedResources = true;
-                    settings.Resources.Add(item.id, new ResourceSettings() { id = item.id, name = item.name });
+
+                    //see if the modder provided a default displayasvalue
+                    ResourceSettings.DisplayUnitsEnum dispAs = GetResourceDisplayvaluefromDef(item.name);
+                    settings.Resources.Add(item.id, new ResourceSettings() { id = item.id, name = item.name, DisplayValueAs = dispAs });
                 }
             }
             if (AddedResources) settings.Save();
         }
+
+        /// <summary>
+        /// get the displayvalue from the resourcedef if there is one
+        /// </summary>
+        /// <returns></returns>
+        private static ResourceSettings.DisplayUnitsEnum GetResourceDisplayvaluefromDef(String ResourceName)
+        {
+            ResourceSettings.DisplayUnitsEnum ret = ResourceSettings.DisplayUnitsEnum.Units;
+            //Find All the RESOURCE_DEFINITION Nodes
+            ConfigNode[] cns = GameDatabase.Instance.GetConfigNodes("RESOURCE_DEFINITION");
+            foreach (ConfigNode cn in cns)
+            {
+                if (cn.HasValue("name") && cn.GetValue("name") == ResourceName)
+                {
+                    if (cn.HasValue("ksparpdisplayvalueas"))
+                    {
+                        //If it has a name and a ksparpicon
+                        try
+                        {
+                            String DisplayAs = cn.GetValue("ksparpdisplayvalueas");
+
+                            ret = (ResourceSettings.DisplayUnitsEnum)Enum.Parse(typeof(ResourceSettings.DisplayUnitsEnum), DisplayAs);
+                        }
+                        catch (Exception)
+                        {
+                            MonoBehaviourExtended.LogFormatted("Unable to interpret ksparpdisplayvalueas {0}-{1}", cn.GetValue("name"), cn.GetValue("ksparpdisplayvalueas"));
+                        }
+                    }
+                }
+            }
+            return ret;
+        }
+
 
         private void InitAudio()
         {
@@ -490,9 +528,20 @@ namespace KSPAlternateResourcePanel
             lstPartsLastStageEngines = new ARPPartList();
             lstParts = new ARPPartDefList();
             List<Int32> lstVesselResourceIDs = new List<Int32>();
+
+            //set the controllable flag
+            blnVesselIsControllable = false;
+
             //Now loop through and update em
             foreach (Part p in active.parts)
             {
+                //Check each part for a control module to see if its status is Good
+                foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
+                {
+                    if (mc.State == ModuleCommand.ControlSourceState.Good)
+                        blnVesselIsControllable = true;
+                }
+
                 //is the part decoupled in the last stage
                 Boolean DecoupledInLastStage = (p.DecoupledAt()==LastStage);
 
@@ -781,69 +830,175 @@ namespace KSPAlternateResourcePanel
             }
 
             //Transfers??
-            lstString = new List<string>();
+            //lstString = new List<string>();
             if (lstTransfers.Count>1)
             {
                 //look for matches
                 foreach (IGrouping<Int32,ARPTransfer> item in lstTransfers.GroupBy(x=>x.ResourceID))
 	            {
-                    String strTemp = item.First().resource.name;
+                    //for each resource
+                    //String strTemp = item.First().resource.name;
+
+                    //if there is an in and an out
                     if (item.Any(x => x.transferState == TransferStateEnum.In) &&
                         item.Any(x => x.transferState == TransferStateEnum.Out))
                     {
+                        //set the transfer state for those parts to be active - and set the rate of this part
                         foreach (ARPTransfer t in item.Where(x=>x.transferState!= TransferStateEnum.None))
                         {
                             t.Active = true;
                             t.RatePerSec = (Single)lstPartWindows[t.partID].ResourceList[t.ResourceID].MaxAmount / 20;
                         }
-                        strTemp += "Transfer";
+                        //strTemp += "Transfer";
                     }
                     else
                     {
+                        //otherwise set the transfers to be inactive for all parts
                         foreach (ARPTransfer t in item)
                         {
                             t.Active = false;
                         }
-                        strTemp += "Waiting";
+                        //strTemp += "Waiting";
                     }
-                    lstString.Add(strTemp);
+                    //lstString.Add(strTemp);
 	            }
             }
         }
-        internal List<String> lstString;
+        //internal List<String> lstString;
         internal Double AutoStagingTriggeredAt = 0;
 
         internal override void Update()
         {
-            //Activate Stage via Space Bar in MapView
-            if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && Input.GetKey(KeyCode.Space))
+            //Activate Stage via Space Bar in MapView if enabled and possible
+            if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && blnVesselIsControllable && Input.GetKey(KeyCode.Space))
                 Staging.ActivateNextStage();
         }
 
-        internal String TestTrans;
+        //internal String TestTrans;
         internal override void FixedUpdate()
         {
-            foreach (IGrouping<Int32, ARPTransfer> t in lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
+            //Do the transfers
+            foreach (IGrouping<Int32, ARPTransfer> tGroup in lstTransfers.Where(x => x.Active).GroupBy(x => x.ResourceID))
             {
-                if (t.FirstOrDefault(x => x.transferState == TransferStateEnum.Out) ==null ||
-                    t.FirstOrDefault(x => x.transferState == TransferStateEnum.In) == null) continue;
-                ARPTransfer OutTrans = t.First(x => x.transferState == TransferStateEnum.Out);
-                ARPTransfer InTrans = t.First(x => x.transferState == TransferStateEnum.In);
 
-                Single TransferRate = Mathf.Max(InTrans.RatePerSec, OutTrans.RatePerSec);
+                //If there is not at least one out and one in then try the next resource
+                if (tGroup.FirstOrDefault(x => x.transferState == TransferStateEnum.Out) ==null ||
+                    tGroup.FirstOrDefault(x => x.transferState == TransferStateEnum.In) == null) continue;
 
-                Single RequestAmount = TransferRate * Time.deltaTime;
-                Single AmountOutPossible = (Single)OutTrans.part.Resources.Get(t.Key).amount;
-                Single AmountInPossible = (Single)InTrans.part.Resources.Get(t.Key).maxAmount - (Single)InTrans.part.Resources.Get(t.Key).amount;
-                Single AmountPossible = Mathf.Min(AmountOutPossible, AmountInPossible);
+                ////Now get the Outs and Ins for this grouping
+                List<ARPTransfer> OutTrans = tGroup.Where(x => x.transferState == TransferStateEnum.Out).ToList();
+                List<ARPTransfer> InTrans = tGroup.Where(x => x.transferState == TransferStateEnum.In).OrderBy(tr => tr.part.Resources.Get(tGroup.Key).maxAmount - tr.part.Resources.Get(tGroup.Key).amount).ToList();
 
-                Single AmountToTransfer = Mathf.Min(RequestAmount, AmountPossible);
+                //Ensure there is at least one tank to transfer from
+                if (OutTrans.Where(trans => trans.part.Resources.Get(tGroup.Key).amount > 0).Count() < 1) continue;
+                //Ensure there is at least one tank to transfer into
+                if (InTrans.Where(trans => (trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount) > 0).Count() < 1) continue;
 
-                OutTrans.part.Resources.Get(t.Key).amount -= AmountToTransfer;
-                InTrans.part.Resources.Get(t.Key).amount += AmountToTransfer;
+                //Transfer Rate - Max transfer we can do at that rate
+                Double TransferRate = Math.Max(InTrans.Max(t => t.RatePerSec), OutTrans.Max(t => t.RatePerSec));
+                //How much stuff is that
+                Double RequestAmountPerPart = TransferRate * Time.deltaTime ;
+                Double RequestAmount = RequestAmountPerPart * Math.Min(InTrans.Count,OutTrans.Count);
+
+                //And therefore how much out and in per part at the max rate
+                Double RequestAmountOutPerPart = RequestAmount / OutTrans.Where(trans=>trans.part.Resources.Get(tGroup.Key).amount>0).Count();
+                Double RequestAmountInPerPart = RequestAmount / InTrans.Where(trans=>(trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount)>0).Count();
+
+                //LogFormatted("!!-{0}-{1}-{2}-{3}-{4}", TransferRate, RequestAmountPerPart, RequestAmount, RequestAmountOutPerPart,RequestAmountInPerPart );
+
+                //Loop through the out tanks to see how much in total we can get out at that rate (some tanks may not have the amount avail
+                Double AmountOutPossible = 0;
+                foreach (ARPTransfer trans in OutTrans) {
+                    AmountOutPossible += Math.Min(trans.part.Resources.Get(tGroup.Key).amount,
+                                            RequestAmountOutPerPart);
+                }
+                //Loop through the out tanks to see how much in total we can get in at that rate - some tanls may be empty
+                Double AmountInPossible = 0;
+                foreach (ARPTransfer trans in InTrans)
+                {
+                    AmountInPossible += Math.Min(trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount, 
+                                            RequestAmountInPerPart);
+                }
+
+                //Whats the Actual transfer amount
+                Double AmountPossible = Math.Min(AmountOutPossible, AmountInPossible);
+                //Double AmountToTransfer = Math.Min(RequestAmount, AmountPossible);
+                //And how much are we getting out of each tank
+                Double AmountToTransferOutPerPart = AmountPossible / OutTrans.Where(trans => trans.part.Resources.Get(tGroup.Key).amount > 0).Count();
+
+                //LogFormatted("~~-{0}-{1}-{2}-{3}", AmountOutPossible, AmountInPossible, AmountPossible, AmountToTransferOutPerPart);
+
+                Double ResourceBus = 0;
+                //Loop Through the Source Parts to put an Amount on "the bus"
+                foreach (ARPTransfer trans in OutTrans)
+                {
+                    //LogFormatted("A{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
+                    if (trans.part.Resources.Get(tGroup.Key).amount <= AmountToTransferOutPerPart) {
+                        ResourceBus += trans.part.Resources.Get(tGroup.Key).amount;
+                        trans.part.Resources.Get(tGroup.Key).amount = 0;
+                    }
+                    else {
+                        ResourceBus += AmountToTransferOutPerPart;
+                        trans.part.Resources.Get(tGroup.Key).amount -= AmountToTransferOutPerPart;
+                    }
+                    //LogFormatted("B{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
+                }
+
+                Double AmountToTransferInPerPart = ResourceBus / InTrans.Count;
+                //LogFormatted("Bus={0}-{1}", ResourceBus,AmountToTransferInPerPart);
+
+                //Loop through the Target Parts and Deliver from the bus
+                for (int i = 0; i < InTrans.Count; i++)
+                {
+                    //get the transfer at i when ordered by remaining capacity
+                    ARPTransfer trans = InTrans[i];
+                    //Check how much we can jam in the current target part
+                    Double Capacity = trans.part.Resources.Get(tGroup.Key).maxAmount - trans.part.Resources.Get(tGroup.Key).amount;
+
+                    //LogFormatted("C{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
+                    //if there is space then jam it in
+                    if (Capacity > AmountToTransferInPerPart) {
+                        ResourceBus -= AmountToTransferInPerPart;
+                        //tGroup.First(t => t.partID == trans.partID).part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                        trans.part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                    } else {
+                        //if not then fill the tank and then recalc the amount per part figure
+                        ResourceBus -= Capacity;
+                        //tGroup.First(t => t.partID == trans.partID).part.Resources.Get(tGroup.Key).amount += AmountToTransferInPerPart;
+                        trans.part.Resources.Get(tGroup.Key).amount = trans.part.Resources.Get(tGroup.Key).maxAmount;
+
+                        //Recal how much ofr the remaining parts to get off the bus
+                        AmountToTransferInPerPart = ResourceBus / (InTrans.Count-i-1);
+                    }
+                    //LogFormatted("D{0}-{1}", trans.part.Resources.Get(tGroup.Key).amount, ResourceBus);
+                }
+
+                if (ResourceBus > 0) {
+                    LogFormatted("ERROR: The bus didnt get cleared ({0})",ResourceBus);
+                }
+                //LogFormatted("BusEnd={0}", ResourceBus);
+
+
+                //LogFormatted_DebugOnly("ResourceBusRemaining={0}", ResourceBus);
+                //Loop through the Source Parts and Refund any that didnt fit
+
+                //ARPTransfer OutTrans = t.First(x => x.transferState == TransferStateEnum.Out);
+                //ARPTransfer InTrans = t.First(x => x.transferState == TransferStateEnum.In);
+
+                //Single TransferRate = Mathf.Max(InTrans.RatePerSec, OutTrans.RatePerSec);
+
+                //Single RequestAmount = TransferRate * Time.deltaTime;
+                //Single AmountOutPossible = (Single)OutTrans.part.Resources.Get(t.Key).amount;
+                //Single AmountInPossible = (Single)InTrans.part.Resources.Get(t.Key).maxAmount - (Single)InTrans.part.Resources.Get(t.Key).amount;
+                //Single AmountPossible = Mathf.Min(AmountOutPossible, AmountInPossible);
+
+                //Single AmountToTransfer = Mathf.Min(RequestAmount, AmountPossible);
+
+                //OutTrans.part.Resources.Get(t.Key).amount -= AmountToTransfer;
+                //InTrans.part.Resources.Get(t.Key).amount += AmountToTransfer;
                 //OutTrans.part.RequestResource(t.Key, AmountToTransfer);
                 //InTrans.part.RequestResource(t.Key, -AmountToTransfer);
-                TestTrans = String.Format("{0}->{1}", OutTrans.partID, InTrans.partID);
+                //TestTrans = String.Format("{0}->{1}", OutTrans.partID, InTrans.partID);
             }
         }
 
@@ -1004,8 +1159,12 @@ namespace KSPAlternateResourcePanel
                 HighLogic.SaveFolder = "default";
                 Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
 
+                
+
                 if (game != null && game.flightState != null && game.compatible)
                 {
+                    HighLogic.CurrentGame = game;
+
                     Int32 FirstVessel;
                     Boolean blnFoundVessel=false;
                     for (FirstVessel = 0; FirstVessel < game.flightState.protoVessels.Count; FirstVessel++)
@@ -1018,8 +1177,9 @@ namespace KSPAlternateResourcePanel
                         }
                     }
                     if (!blnFoundVessel)
-                        FirstVessel = 0;
-                    FlightDriver.StartAndFocusVessel(game, FirstVessel);
+                        HighLogic.LoadScene(GameScenes.SPACECENTER);
+                    else 
+                        FlightDriver.StartAndFocusVessel(game, FirstVessel);
                 }
 
                 //CheatOptions.InfiniteFuel = true;
