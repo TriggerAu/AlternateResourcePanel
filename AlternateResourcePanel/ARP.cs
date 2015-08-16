@@ -283,11 +283,47 @@ namespace KSPAlternateResourcePanel
                 {
                     LogFormatted_DebugOnly("Adding Resource to Settings - {0}", item.name);
                     AddedResources = true;
-                    settings.Resources.Add(item.id, new ResourceSettings() { id = item.id, name = item.name });
+
+                    //see if the modder provided a default displayasvalue
+                    ResourceSettings.DisplayUnitsEnum dispAs = GetResourceDisplayvaluefromDef(item.name);
+                    settings.Resources.Add(item.id, new ResourceSettings() { id = item.id, name = item.name, DisplayValueAs = dispAs });
                 }
             }
             if (AddedResources) settings.Save();
         }
+
+        /// <summary>
+        /// get the displayvalue from the resourcedef if there is one
+        /// </summary>
+        /// <returns></returns>
+        private static ResourceSettings.DisplayUnitsEnum GetResourceDisplayvaluefromDef(String ResourceName)
+        {
+            ResourceSettings.DisplayUnitsEnum ret = ResourceSettings.DisplayUnitsEnum.Units;
+            //Find All the RESOURCE_DEFINITION Nodes
+            ConfigNode[] cns = GameDatabase.Instance.GetConfigNodes("RESOURCE_DEFINITION");
+            foreach (ConfigNode cn in cns)
+            {
+                if (cn.HasValue("name") && cn.GetValue("name") == ResourceName)
+                {
+                    if (cn.HasValue("ksparpdisplayvalueas"))
+                    {
+                        //If it has a name and a ksparpicon
+                        try
+                        {
+                            String DisplayAs = cn.GetValue("ksparpdisplayvalueas");
+
+                            ret = (ResourceSettings.DisplayUnitsEnum)Enum.Parse(typeof(ResourceSettings.DisplayUnitsEnum), DisplayAs);
+                        }
+                        catch (Exception)
+                        {
+                            MonoBehaviourExtended.LogFormatted("Unable to interpret ksparpdisplayvalueas {0}-{1}", cn.GetValue("name"), cn.GetValue("ksparpdisplayvalueas"));
+                        }
+                    }
+                }
+            }
+            return ret;
+        }
+
 
         private void InitAudio()
         {
