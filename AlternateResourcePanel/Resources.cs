@@ -46,6 +46,7 @@ namespace KSPAlternateResourcePanel
         internal static Texture2D btnViewAll = new Texture2D(16, 16, TextureFormat.ARGB32, false);
         internal static Texture2D btnViewTimes = new Texture2D(16, 16, TextureFormat.ARGB32, false);
         internal static Texture2D btnViewBase = new Texture2D(16, 16, TextureFormat.ARGB32, false);
+        internal static Texture2D btnViewBaseActive = new Texture2D(16, 16, TextureFormat.ARGB32, false);
 
         internal static Texture2D btnSettingsAttention = new Texture2D(17, 16, TextureFormat.ARGB32, false);
 
@@ -158,6 +159,7 @@ namespace KSPAlternateResourcePanel
             LoadImageFromFile(ref btnViewAll, "img_buttonEye.png");
             LoadImageFromFile(ref btnViewTimes, "img_buttonClock.png");
             LoadImageFromFile(ref btnViewBase, "img_buttonBase.png");
+            LoadImageFromFile(ref btnViewBaseActive, "img_buttonBaseActive.png");
 
             LoadImageFromFile(ref btnSettingsAttention, "img_buttonSettingsAttention.png");
 

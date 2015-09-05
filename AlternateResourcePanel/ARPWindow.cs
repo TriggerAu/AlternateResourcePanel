@@ -260,7 +260,7 @@ namespace KSPAlternateResourcePanel
             }
 
             // ShowBase Button
-            if (GUILayout.Button(new GUIContent(Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            if (GUILayout.Button(new GUIContent(settings.ShowBase ? Resources.btnViewBaseActive : Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
             {
                 settings.ShowBase = !settings.ShowBase;
             }
