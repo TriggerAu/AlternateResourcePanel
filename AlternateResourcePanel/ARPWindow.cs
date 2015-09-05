@@ -139,7 +139,7 @@ namespace KSPAlternateResourcePanel
                     Boolean Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].AllVisible;
 
                     //For resources with no stage specifics - or the Resources is set to split display and values are different for all vessel and flow enabled ones
-                    if (!settings.SplitLastStage || !lstResources[ResourceID].ResourceConfig.SplitLastStage ||
+                    if (!settings.SplitLastStage || !lstResources[ResourceID].ResourceConfig.SplitLastStage || settings.ShowBase ||
                         (lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
                             lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
                         (( !settings.Resources[ResourceID].ShowReserveLevels )
@@ -207,11 +207,13 @@ namespace KSPAlternateResourcePanel
                         if (mbARP.blnVesselIsControllable) {
                             if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
                                 Staging.ActivateNextStage();
-                            GUILayout.Space(51 + IconAlarmOffset);
+                            GUILayout.Space(21 + IconAlarmOffset);
+                            //GUILayout.Space(51 + IconAlarmOffset);
                         }
                         else {
                             GUILayout.Label("No Vessel Control", GUILayout.Width(120));
-                            GUILayout.Space(31 + IconAlarmOffset);
+                            GUILayout.Space(1 + IconAlarmOffset);
+                            //GUILayout.Space(31 + IconAlarmOffset);
                         }
                     }
                     //GUILayout.Space(48 + IconAlarmOffset);
@@ -246,18 +248,24 @@ namespace KSPAlternateResourcePanel
                     GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
                     StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
                     //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147 + IconAlarmOffset));
-                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
-                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
+                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
                 }
             }
             else
             {
                 //GUILayout.Space(234 + IconAlarmOffset);
-                //GUILayout.Space(207 + IconAlarmOffset);
-                GUILayout.Space(237 + IconAlarmOffset);
+                GUILayout.Space(207 + IconAlarmOffset);
+                //GUILayout.Space(237 + IconAlarmOffset);
             }
 
-            // ShowAll Button
+            // ShowBase Button
+            if (GUILayout.Button(new GUIContent(Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            {
+                settings.ShowBase = !settings.ShowBase;
+            }
+
+            // ShowTime Button
             if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
             {
                 settings.ShowTimeRem = !settings.ShowTimeRem;

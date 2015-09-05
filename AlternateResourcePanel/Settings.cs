@@ -47,6 +47,7 @@ namespace KSPAlternateResourcePanel
         
         //[Persistent] 
         internal Boolean ShowTimeRem = false;
+        internal Boolean ShowBase = false;
 
         [Persistent] internal Boolean SplitLastStage = true;
         [Persistent] internal Boolean StageBarOnRight = true;
