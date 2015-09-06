@@ -553,7 +553,7 @@ namespace KSPAlternateResourcePanel
                     //Check each part for a control module to see if its status is Good
                     foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
                     {
-                        if (mc.State == ModuleCommand.ControlSourceState.Good)
+                        if (mc.State == ModuleCommand.ControlSourceState.Good && active == FlightGlobals.ActiveVessel)
                             blnVesselIsControllable = true;
                     }
 
