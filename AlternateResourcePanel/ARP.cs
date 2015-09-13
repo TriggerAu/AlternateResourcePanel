@@ -42,6 +42,7 @@ namespace KSPAlternateResourcePanel
 
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
+        private const double baseRange = 2000;
         
         /// <summary>
         /// ResourceIDs of ones to show in window
@@ -506,14 +507,12 @@ namespace KSPAlternateResourcePanel
             List<Vessel> vessels;
             if (settings.ShowBase)
             {
-                var currentVessel = FlightGlobals.ActiveVessel;
-                var currentPosition = currentVessel.GetWorldPos3D();
-                vessels = FlightGlobals.Vessels.Where(v => v.mainBody == currentVessel.mainBody && Vector3d.Distance(currentPosition, v.GetWorldPos3D()) < 2000).ToList();
+                var currentPosition = FlightGlobals.ActiveVessel.GetWorldPos3D();
+                vessels = FlightGlobals.Vessels.Where(v => v.mainBody == FlightGlobals.ActiveVessel.mainBody && Vector3d.Distance(currentPosition, v.GetWorldPos3D()) < baseRange).ToList();
             }
             else
             {
-                vessels = new List<Vessel>();
-                vessels.Add(FlightGlobals.ActiveVessel);
+                vessels = new List<Vessel> { FlightGlobals.ActiveVessel };
             }
 
             Double RatePeriod = RepeatingWorkerUTPeriod;
