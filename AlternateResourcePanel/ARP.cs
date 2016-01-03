@@ -42,6 +42,7 @@ namespace KSPAlternateResourcePanel
 
         public Dictionary<Int32, ARPResourceList> lstResourcesVesselPerStage;
 
+        private const double baseRange = 2000;
         
         /// <summary>
         /// ResourceIDs of ones to show in window
@@ -503,8 +504,16 @@ namespace KSPAlternateResourcePanel
                 )
                 SetAppButtonToTrue();
 
-            Vessel active = FlightGlobals.ActiveVessel;
-            LastStage = GetLastStage(active.parts);
+            List<Vessel> vessels;
+            if (settings.ShowBase)
+            {
+                var currentPosition = FlightGlobals.ActiveVessel.GetWorldPos3D();
+                vessels = FlightGlobals.Vessels.Where(v => v.mainBody == FlightGlobals.ActiveVessel.mainBody && Vector3d.Distance(currentPosition, v.GetWorldPos3D()) < baseRange).ToList();
+            }
+            else
+            {
+                vessels = new List<Vessel> { FlightGlobals.ActiveVessel };
+            }
 
             Double RatePeriod = RepeatingWorkerUTPeriod;
             if (!settings.RatesUseUT) RatePeriod = RepeatingWorkerUTPeriod / TimeWarp.CurrentRate;
@@ -532,80 +541,94 @@ namespace KSPAlternateResourcePanel
             //set the controllable flag
             blnVesselIsControllable = false;
 
-            //Now loop through and update em
-            foreach (Part p in active.parts)
+            //Now loop through the vessels
+            foreach (Vessel active in vessels)
             {
-                //Check each part for a control module to see if its status is Good
-                foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
+                LastStage = GetLastStage(active.parts);
+
+                //Now loop through and update em
+                foreach (Part p in active.parts)
                 {
-                    if (mc.State == ModuleCommand.ControlSourceState.Good)
-                        blnVesselIsControllable = true;
-                }
-
-                //is the part decoupled in the last stage
-                Boolean DecoupledInLastStage = (p.DecoupledAt()==LastStage);
-
-                foreach (PartResource pr in p.Resources)
-                {
-                    //store a list of all resources in vessel so we can nuke resources from the other lists later
-                    if (!lstVesselResourceIDs.Contains(pr.info.id)) lstVesselResourceIDs.Add(pr.info.id);
-
-                    //Is this resource set to split on disabled parts instead of staging
-                    if ((PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
-                        PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
-                        settings.Resources[pr.info.id].ShowReserveLevels)
+                    //Check each part for a control module to see if its status is Good
+                    foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
                     {
-                        if (pr.flowState) {
+                        if (mc.State == ModuleCommand.ControlSourceState.Good && active == FlightGlobals.ActiveVessel)
+                            blnVesselIsControllable = true;
+                    }
+
+                    //is the part decoupled in the last stage
+                    Boolean DecoupledInLastStage = (p.DecoupledAt() == LastStage);
+
+                    foreach (PartResource pr in p.Resources)
+                    {
+                        //store a list of all resources in vessel so we can nuke resources from the other lists later
+                        if (!lstVesselResourceIDs.Contains(pr.info.id)) lstVesselResourceIDs.Add(pr.info.id);
+
+                        //Is this resource set to split on disabled parts instead of staging
+                        if ((PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
+                            PartResourceLibrary.Instance.resourceDefinitions[pr.info.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
+                            settings.Resources[pr.info.id].ShowReserveLevels)
+                        {
+                            if (pr.flowState)
+                            {
+                                //update the resource in the vessel list
+                                lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
+
+                                //if it dont exist in the last stage list - add a 0 value
+                                if (!settings.ShowBase && !lstResourcesLastStage.ContainsKey(pr.info.id))
+                                {
+                                    LogFormatted_DebugOnly("Adding 0 value into last stage");
+                                    PartResource prTemp = new PartResource() { info = pr.info, amount = 0, maxAmount = 0 };
+                                    lstResourcesLastStage.UpdateResource(prTemp);
+                                }
+                            }
+                            else
+                            {
+                                if (!settings.ShowBase)
+                                {
+                                    //and if it needs to go in the last stage list
+                                    lstResourcesLastStage.UpdateResource(pr);
+                                }
+                            }
+                        }
+                        else
+                        {
                             //update the resource in the vessel list
                             lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
-                            
-                            //if it dont exist in the last stage list - add a 0 value
-                            if (!lstResourcesLastStage.ContainsKey(pr.info.id))
-                            {
-                                LogFormatted_DebugOnly("Adding 0 value into last stage");
-                                PartResource prTemp = new PartResource() { info = pr.info, amount = 0, maxAmount = 0 };
-                                lstResourcesLastStage.UpdateResource(prTemp);
-                            }
-                        } else { 
+
                             //and if it needs to go in the last stage list
-                            lstResourcesLastStage.UpdateResource(pr);
+                            if (DecoupledInLastStage && !settings.ShowBase)
+                            {
+                                lstResourcesLastStage.UpdateResource(pr);
+                            }
                         }
-                    }
-                    else { 
-                        //update the resource in the vessel list
-                        lstResourcesVessel.UpdateResource(pr);//,InitialSettings:settings.Resources[pr.info.id]);
 
-                        //and if it needs to go in the last stage list
-                        if (DecoupledInLastStage)
+                        //Update the whole vessel list
+                        lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1, Staging.StageCount)].UpdateResource(pr);
+
+                        //is the resource in the selected list
+                        if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
+                            lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
+                        else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage && !settings.Resources[pr.info.id].ShowReserveLevels)
+                            lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
+                        else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && settings.Resources[pr.info.id].ShowReserveLevels && pr.flowState)
+                            lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
+                        else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && settings.Resources[pr.info.id].ShowReserveLevels && !pr.flowState)
+                            lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
+                        else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
                         {
-                            lstResourcesLastStage.UpdateResource(pr);
+                            //or not,but the window is in the list
+                            if (lstPartWindows[p.GetInstanceID()].ResourceList.ContainsKey(pr.info.id))
+                                lstPartWindows[p.GetInstanceID()].ResourceList.Remove(pr.info.id);
                         }
                     }
 
-                    //Update the whole vessel list
-                    lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1,Staging.StageCount)].UpdateResource(pr);
-
-                    //is the resource in the selected list
-                    if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
-                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && DecoupledInLastStage && !settings.Resources[pr.info.id].ShowReserveLevels)
-                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && settings.Resources[pr.info.id].ShowReserveLevels && pr.flowState)
-                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
-                    else if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].LastStageVisible && settings.Resources[pr.info.id].ShowReserveLevels && !pr.flowState)
-                        lstPartWindows.AddPartWindow(p, pr, this, RatePeriod);
-                    else if (lstPartWindows.ContainsKey(p.GetInstanceID()))
+                    if (!settings.ShowBase && DecoupledInLastStage && (p.Modules.OfType<ModuleEngines>().Any() || p.Modules.OfType<ModuleEnginesFX>().Any()))
                     {
-                        //or not,but the window is in the list
-                        if (lstPartWindows[p.GetInstanceID()].ResourceList.ContainsKey(pr.info.id))
-                            lstPartWindows[p.GetInstanceID()].ResourceList.Remove(pr.info.id);
+                        //Add the part to the engines list for the active stage
+                        lstPartsLastStageEngines.Add(p);
                     }
-                }
 
-                if(DecoupledInLastStage && (p.Modules.OfType<ModuleEngines>().Any() || p.Modules.OfType<ModuleEnginesFX>().Any()))
-                {
-                    //Add the part to the engines list for the active stage
-                    lstPartsLastStageEngines.Add(p);
                 }
 
             }

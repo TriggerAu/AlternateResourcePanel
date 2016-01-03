@@ -17,10 +17,12 @@ namespace KSPAlternateResourcePanel
         internal static GUIStyle styleButton;
         private static GUIStyle styleButtonMain;
         private static GUIStyle styleButtonSettings;
+        private static GUIStyle styleButtonToggle;
 
         private static GUIStyle styleButtonUnity;
         private static GUIStyle styleButtonMainUnity;
         private static GUIStyle styleButtonSettingsUnity;
+        private static GUIStyle styleButtonToggleUnity;
 
         internal static GUIStyle styleDropDownButton;
         internal static GUIStyle styleDropDownButtonUnity;
@@ -126,6 +128,14 @@ namespace KSPAlternateResourcePanel
             styleButtonSettingsUnity = new GUIStyle(styleButtonSettings);
             styleButtonSettingsUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
             styleButtonSettingsUnity.hover.background = SkinsLibrary.DefUnitySkin.button.hover.background;
+
+            styleButtonToggle = new GUIStyle(styleButton);
+            styleButtonToggle.name = "ButtonToggle";
+            styleButtonToggle.onNormal.background = styleButtonToggle.active.background;
+            styleButtonToggleUnity = new GUIStyle(styleButtonToggle);
+            styleButtonToggleUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
+            styleButtonToggleUnity.hover.background = SkinsLibrary.DefUnitySkin.button.hover.background;
+            styleButtonToggleUnity.onNormal.background = SkinsLibrary.DefUnitySkin.button.active.background;
 
             styleTooltipStyle = new GUIStyle();
             styleTooltipStyle.name = "Tooltip";
@@ -313,6 +323,7 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary.AddStyle("Default", styleButton);
             SkinsLibrary.AddStyle("Default", styleButtonMain);
             SkinsLibrary.AddStyle("Default", styleButtonSettings);
+            SkinsLibrary.AddStyle("Default", styleButtonToggle);
             SkinsLibrary.AddStyle("Default", "DropDownButton", styleDropDownButton);
             SkinsLibrary.AddStyle("Default", "DropDownListBox", styleDropDownListBox);
             SkinsLibrary.AddStyle("Default", "DropDownListItem", styleDropDownListItem);
@@ -337,6 +348,7 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary.AddStyle("Unity", styleButtonUnity);
             SkinsLibrary.AddStyle("Unity", styleButtonMainUnity);
             SkinsLibrary.AddStyle("Unity", styleButtonSettingsUnity);
+            SkinsLibrary.AddStyle("Unity", styleButtonToggleUnity);
             SkinsLibrary.AddStyle("Unity", "DropDownButton", styleDropDownButtonUnity);
             SkinsLibrary.AddStyle("Unity", "DropDownListBox", styleDropDownListBoxUnity);
             SkinsLibrary.AddStyle("Unity", "DropDownListItem", styleDropDownListItem);
@@ -356,6 +368,7 @@ namespace KSPAlternateResourcePanel
             SkinsLibrary.AddStyle("UnityWKSPButtons", styleButton);
             SkinsLibrary.AddStyle("UnityWKSPButtons", styleButtonMain);
             SkinsLibrary.AddStyle("UnityWKSPButtons", styleButtonSettings);
+            SkinsLibrary.AddStyle("UnityWKSPButtons", styleButtonToggle);
             SkinsLibrary.AddStyle("UnityWKSPButtons", "DropDownButton", styleDropDownButton);
             SkinsLibrary.AddStyle("UnityWKSPButtons", "DropDownListBox", styleDropDownListBox);
             SkinsLibrary.AddStyle("UnityWKSPButtons", "DropDownListItem", styleDropDownListItem);
