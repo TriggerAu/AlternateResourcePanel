@@ -260,22 +260,36 @@ namespace KSPAlternateResourcePanel
             }
 
             // ShowBase Button
-            if (GUILayout.Button(new GUIContent(settings.ShowBase ? Resources.btnViewBaseActive : Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            Boolean blnShowBase = settings.ShowBase;
+            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? "Back to Vessel Display" : "Show Base Display\r\nAll resource within 2km of active vessel"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
             {
-                settings.ShowBase = !settings.ShowBase;
+                settings.ShowBase = blnShowBase;
             }
+            //if (GUILayout.Button(new GUIContent(settings.ShowBase ? Resources.btnViewBaseActive : Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    settings.ShowBase = !settings.ShowBase;
+            //}
 
             // ShowTime Button
-            if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
-            {
-                settings.ShowTimeRem = !settings.ShowTimeRem;
+            Boolean blnShowTimeRem = settings.ShowTimeRem;
+            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? "Hide time Remianing": "Show Time Remaining"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23))) {
+                settings.ShowTimeRem = blnShowTimeRem;
             }
+            //if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    settings.ShowTimeRem = !settings.ShowTimeRem;
+            //}
 
             // ShowAll Button
-            if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            Boolean blnToggleHidden = KSPAlternateResourcePanel.ShowAll;
+            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
             {
-                KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;
+                KSPAlternateResourcePanel.ShowAll = blnToggleHidden;
             }
+            //if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;
+            //}
 
             //Settings Toggle button
             GUIContent btnMinMax = new GUIContent(Resources.btnChevronDown, "Show Settings...");
