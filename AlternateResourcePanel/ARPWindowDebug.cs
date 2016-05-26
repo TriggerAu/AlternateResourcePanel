@@ -28,10 +28,10 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 16;
-        public Int32 intTest2=56;
-        public Int32 intTest3=8;
-        public Int32 intTest4 = 56;
+        public Int32 intTest1 = 298;
+        public Int32 intTest2=40;
+        public Int32 intTest3=299;
+        public Int32 intTest4 = 20;
         public Int32 intTest5 = 0;
 
 
@@ -39,6 +39,8 @@ namespace KSPAlternateResourcePanel
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
+            mbARP.windowMainResetPos = new Rect(Screen.width - intTest1, intTest2, intTest3, intTest4);
+
             //GUILayout.Label(Drawing.RectTest.ToString());
             //GUILayout.Label(Drawing.RectTest2.ToString());
             //DrawTextBox(ref Drawing.RateYOffset);

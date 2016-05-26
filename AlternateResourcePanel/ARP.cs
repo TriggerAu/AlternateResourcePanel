@@ -24,7 +24,7 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
-        internal Rect windowMainResetPos = new Rect(Screen.width - 298, 40, 299, 20);
+        internal Rect windowMainResetPos = new Rect(Screen.width - 381, 0, 299, 20);
         //variables
         internal PartResourceVisibleList SelectedResources;
 
@@ -152,7 +152,8 @@ namespace KSPAlternateResourcePanel
             InitDebugWindow();
 
             //plug us in to the draw queue and start the worker
-            RenderingManager.AddToPostDrawQueue(1, DrawGUI);
+            //Disabled for Unity5
+            //RenderingManager.AddToPostDrawQueue(1, DrawGUI);
             StartRepeatingWorker(10);
 
             //register for stage separation events - so we can cancel the noise on a sep
@@ -160,8 +161,8 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Add(OnFlightReady);
 
             //Hook the App Launcher
-            OnGUIAppLauncherReady();
-            //GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Add(DestroyAppLauncherButton);
             GameEvents.onGUIApplicationLauncherUnreadifying.Add(OnGUIAppLauncherUnreadifying);
 
             //do the daily version check if required
@@ -184,12 +185,14 @@ namespace KSPAlternateResourcePanel
             lstResourcesVessel.OnMonitorStateChanged -= lstResourcesVessel_OnMonitorStateChanged;
             lstResourcesVessel.OnAlarmStateChanged -= lstResourcesVessel_OnAlarmStateChanged;
 
-            RenderingManager.RemoveFromPostDrawQueue(1, DrawGUI);
+            //Disabled for Unity5
+            //RenderingManager.RemoveFromPostDrawQueue(1, DrawGUI);
 
             GameEvents.onStageActivate.Remove(OnStageActivate);
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
-            //GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Remove(DestroyAppLauncherButton);
             GameEvents.onGUIApplicationLauncherUnreadifying.Remove(OnGUIAppLauncherUnreadifying);
             DestroyAppLauncherButton();
 
@@ -408,8 +411,12 @@ namespace KSPAlternateResourcePanel
         //Hover Status for mouse
         internal static Boolean ShowAll = false;
 
-        void DrawGUI()
+
+        internal override void OnGUIEvery()
         {
+            //base.OnGUIEvery();
+
+
             //Draw the button - if we arent using blizzy's toolbar
             //if (!(settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
             if (settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.Basic)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using KSP;
+using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
 
@@ -17,20 +18,16 @@ namespace KSPAlternateResourcePanel
         void OnGUIAppLauncherReady()
         {
             MonoBehaviourExtended.LogFormatted_DebugOnly("AppLauncherReady");
-            if (ApplicationLauncher.Ready)
+            if (KSPAlternateResourcePanel.settings.ButtonStyleChosen==ARPWindowSettings.ButtonStyleEnum.Launcher || 
+                KSPAlternateResourcePanel.settings.ButtonStyleChosen==ARPWindowSettings.ButtonStyleEnum.StockReplace )
             {
-                if (KSPAlternateResourcePanel.settings.ButtonStyleChosen==ARPWindowSettings.ButtonStyleEnum.Launcher || 
-                    KSPAlternateResourcePanel.settings.ButtonStyleChosen==ARPWindowSettings.ButtonStyleEnum.StockReplace )
-                {
-                    btnAppLauncher = InitAppLauncherButton();
+                btnAppLauncher = InitAppLauncherButton();
 
-                    if (KSPAlternateResourcePanel.settings.ButtonStyleChosen == ARPWindowSettings.ButtonStyleEnum.StockReplace)
-                    {
-                        ReplaceStockAppButton();
-                    }
+                if (KSPAlternateResourcePanel.settings.ButtonStyleChosen == ARPWindowSettings.ButtonStyleEnum.StockReplace)
+                {
+                    ReplaceStockAppButton();
                 }
             }
-            else { MonoBehaviourExtended.LogFormatted("App Launcher-Not Actually Ready"); }
         }
 
         void OnGUIAppLauncherUnreadifying(GameScenes SceneToLoad)
@@ -164,14 +161,14 @@ namespace KSPAlternateResourcePanel
             {
                 LogFormatted("AppLauncher: Swapping the ARP App for the Stock Resource App - after {0} secs", (DateTime.Now - StockAppToBeHiddenAttemptDate).TotalSeconds);
                 StockAppToBeHidden = false;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable();
+                ResourceDisplay.Instance.appLauncherButton.onDisable();
 
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onHover = btnAppLauncher.toggleButton.onHover;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onHoverOut = btnAppLauncher.toggleButton.onHoverOut;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onTrue = btnAppLauncher.toggleButton.onTrue;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onFalse = btnAppLauncher.toggleButton.onFalse;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onEnable = btnAppLauncher.toggleButton.onEnable;
-                ResourceDisplay.Instance.appLauncherButton.toggleButton.onDisable = btnAppLauncher.toggleButton.onDisable;
+                ResourceDisplay.Instance.appLauncherButton.onHover = btnAppLauncher.onHover;
+                ResourceDisplay.Instance.appLauncherButton.onHoverOut = btnAppLauncher.onHoverOut;
+                ResourceDisplay.Instance.appLauncherButton.onTrue = btnAppLauncher.onTrue;
+                ResourceDisplay.Instance.appLauncherButton.onFalse = btnAppLauncher.onFalse;
+                ResourceDisplay.Instance.appLauncherButton.onEnable = btnAppLauncher.onEnable;
+                ResourceDisplay.Instance.appLauncherButton.onDisable = btnAppLauncher.onDisable;
                 ResourceDisplay.Instance.appLauncherButton.SetTexture(Resources.texAppLaunchIcon);
 
                 try
@@ -210,7 +207,7 @@ namespace KSPAlternateResourcePanel
             }
 
 
-            if (ButtonToToggle.State != RUIToggleButton.ButtonState.TRUE)
+            if (ButtonToToggle.toggleButton.CurrentState != KSP.UI.UIRadioButton.State.True)
             {
                 if (AppLauncherToBeSetTrueAttemptDate.AddSeconds(settings.AppLauncherSetTrueTimeOut) <DateTime.Now){
                     AppLauncherToBeSetTrue = false;

@@ -323,6 +323,10 @@ namespace KSPAlternateResourcePanel
                 mbARP.windowSettings.UpdateWindowRect();
         }
 
+        internal override void OnGUIEvery()
+        {
+            base.OnGUIEvery();
+        }
     }
 
 }
