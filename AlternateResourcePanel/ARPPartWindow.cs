@@ -369,6 +369,7 @@ namespace KSPAlternateResourcePanel
                 Drawing.DrawLine(new Vector2((Single)PartScreenPos.x, Screen.height - (Single)PartScreenPos.y),
                     new Vector2(WindowEndX, Screen.height - WindowEndY), colorLineCurrent, 2);
             }
+            base.OnGUIEvery();
         }
 
         Boolean UIHidden = false;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using KSP;
+using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
 
@@ -24,7 +25,7 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
-        internal Rect windowMainResetPos = new Rect(Screen.width - 298, 40, 299, 20);
+        internal Rect windowMainResetPos = new Rect(Screen.width - 381, 0, 299, 20);
         //variables
         internal PartResourceVisibleList SelectedResources;
 
@@ -152,7 +153,8 @@ namespace KSPAlternateResourcePanel
             InitDebugWindow();
 
             //plug us in to the draw queue and start the worker
-            RenderingManager.AddToPostDrawQueue(1, DrawGUI);
+            //Disabled for Unity5
+            //RenderingManager.AddToPostDrawQueue(1, DrawGUI);
             StartRepeatingWorker(10);
 
             //register for stage separation events - so we can cancel the noise on a sep
@@ -160,8 +162,8 @@ namespace KSPAlternateResourcePanel
             GameEvents.onFlightReady.Add(OnFlightReady);
 
             //Hook the App Launcher
-            OnGUIAppLauncherReady();
-            //GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherReady.Add(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Add(DestroyAppLauncherButton);
             GameEvents.onGUIApplicationLauncherUnreadifying.Add(OnGUIAppLauncherUnreadifying);
 
             //do the daily version check if required
@@ -184,12 +186,14 @@ namespace KSPAlternateResourcePanel
             lstResourcesVessel.OnMonitorStateChanged -= lstResourcesVessel_OnMonitorStateChanged;
             lstResourcesVessel.OnAlarmStateChanged -= lstResourcesVessel_OnAlarmStateChanged;
 
-            RenderingManager.RemoveFromPostDrawQueue(1, DrawGUI);
+            //Disabled for Unity5
+            //RenderingManager.RemoveFromPostDrawQueue(1, DrawGUI);
 
             GameEvents.onStageActivate.Remove(OnStageActivate);
             GameEvents.onFlightReady.Remove(OnFlightReady);
 
-            //GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherReady.Remove(OnGUIAppLauncherReady);
+            GameEvents.onGUIApplicationLauncherDestroyed.Remove(DestroyAppLauncherButton);
             GameEvents.onGUIApplicationLauncherUnreadifying.Remove(OnGUIAppLauncherUnreadifying);
             DestroyAppLauncherButton();
 
@@ -221,7 +225,7 @@ namespace KSPAlternateResourcePanel
 
         void OnFlightReady()
         {
-            AutoStagingMaxStage = Staging.StageCount-1;
+            AutoStagingMaxStage = StageManager.StageCount-1;
         }
 
 //        void lstResourcesVessel_OnMonitorStateChange(ARPResource sender, ARPResource.MonitorStateEnum alarmType, bool TurnedOn,Boolean AlarmAcknowledged)
@@ -408,8 +412,12 @@ namespace KSPAlternateResourcePanel
         //Hover Status for mouse
         internal static Boolean ShowAll = false;
 
-        void DrawGUI()
+
+        internal override void OnGUIEvery()
         {
+            //base.OnGUIEvery();
+
+
             //Draw the button - if we arent using blizzy's toolbar
             //if (!(settings.BlizzyToolbarIsAvailable && settings.UseBlizzyToolbarIfAvailable))
             if (settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.Basic)
@@ -523,7 +531,7 @@ namespace KSPAlternateResourcePanel
             lstResourcesLastStage.StartUpdatingList(settings.ShowRates, RatePeriod);
 
             //sort out the per stage list
-            for (int i = 0; i <= Staging.StageCount; i++)
+            for (int i = 0; i <= StageManager.StageCount; i++)
             {
                 if (!lstResourcesVesselPerStage.ContainsKey(i))
                 {
@@ -604,7 +612,7 @@ namespace KSPAlternateResourcePanel
                         }
 
                         //Update the whole vessel list
-                        lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1, Staging.StageCount)].UpdateResource(pr);
+                        lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1, StageManager.StageCount)].UpdateResource(pr);
 
                         //is the resource in the selected list
                         if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)
@@ -650,7 +658,7 @@ namespace KSPAlternateResourcePanel
                 lstStage.EndUpdatingList(settings.ShowRates);
             }
 
-            //List<Int32> StagesToDelete = lstResourcesVesselPerStage.Select(x => x.Key).Where(x => x > Staging.StageCount).ToList();
+            //List<Int32> StagesToDelete = lstResourcesVesselPerStage.Select(x => x.Key).Where(x => x > StageManager.StageCount).ToList();
             //foreach (Int32 stageID in StagesToDelete) {
             //    LogFormatted_DebugOnly("Removing Stage {0}", stageID);
             //    lstResourcesVesselPerStage.Remove(stageID);
@@ -779,7 +787,7 @@ namespace KSPAlternateResourcePanel
             //now do the autostaging stuff
             lstLastStageEngineModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEngines>()).ToList();
             lstLastStageEngineFXModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEnginesFX>()).ToList();
-            AutoStagingMaxStage = Mathf.Min(AutoStagingMaxStage, Staging.StageCount - 1);
+            AutoStagingMaxStage = Mathf.Min(AutoStagingMaxStage, StageManager.StageCount - 1);
             AutoStagingTerminateAt = Mathf.Min(AutoStagingTerminateAt, AutoStagingMaxStage);
             AutoStagingStatusColor = Color.white;
             if (settings.AutoStagingEnabled)
@@ -794,7 +802,7 @@ namespace KSPAlternateResourcePanel
                         if (lstLastStageEngineModules.Any(x => x.staged) || lstLastStageEngineFXModules.Any(x => x.staged))
                             AutoStagingRunning = true;
                     }
-                    else if (Staging.CurrentStage > AutoStagingTerminateAt)
+                    else if (StageManager.CurrentStage > AutoStagingTerminateAt)
                     {
                         //we are running, so now what
                         AutoStagingStatusColor = new Color32(183, 254, 0, 255);
@@ -814,9 +822,9 @@ namespace KSPAlternateResourcePanel
                         } else if (AutoStagingTriggeredAt != 0){
                             if (Planetarium.GetUniversalTime() - AutoStagingTriggeredAt > ((Double)settings.AutoStagingDelayInTenths / 10))
                             {
-                                //if (!settings.StagingIgnoreLock || Staging.stackLocked || FlightInputHandler.fetch.stageLock)
-                                LogFormatted("Autostage Triggered: {0}->{1}", Staging.CurrentStage, Staging.CurrentStage - 1);
-                                Staging.ActivateNextStage();
+                                //if (!settings.StagingIgnoreLock || StageManager.stackLocked || FlightInputHandler.fetch.stageLock)
+                                LogFormatted("Autostage Triggered: {0}->{1}", StageManager.CurrentStage, StageManager.CurrentStage - 1);
+                                StageManager.ActivateNextStage();
                                 AutoStagingTriggeredAt = 0;
                             } else {
                                 AutoStagingStatusColor = new Color32(232, 232, 0, 255);
@@ -894,7 +902,7 @@ namespace KSPAlternateResourcePanel
         {
             //Activate Stage via Space Bar in MapView if enabled and possible
             if (settings.StagingEnabledSpaceInMapView && MapView.MapIsEnabled && windowMain.Visible && blnVesselIsControllable && Input.GetKey(KeyCode.Space))
-                Staging.ActivateNextStage();
+                StageManager.ActivateNextStage();
         }
 
         //internal String TestTrans;
@@ -1181,9 +1189,7 @@ namespace KSPAlternateResourcePanel
                 first = false;
                 HighLogic.SaveFolder = "default";
                 Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
-
                 
-
                 if (game != null && game.flightState != null && game.compatible)
                 {
                     HighLogic.CurrentGame = game;
