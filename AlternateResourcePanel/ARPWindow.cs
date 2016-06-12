@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using KSP;
+using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
 
@@ -191,9 +192,9 @@ namespace KSPAlternateResourcePanel
                     if (GUILayout.Button("Stage:", Styles.styleStageTextHead, GUILayout.Width(50)))
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
                     GUIStyle styleStageNum = new GUIStyle(Styles.styleStageTextHead);
-                    GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString());
+                    GUIContent contStageNum = new GUIContent(StageManager.CurrentStage.ToString());
                     //styleStageNum.normal.textColor=new Color(173,43,43);
-                    //GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString(),"NO Active Engines");
+                    //GUIContent contStageNum = new GUIContent(StageManager.CurrentStage.ToString(),"NO Active Engines");
                     //if (THERE ARE ACTIVE ENGINES IN STAGE)
                     //{
                     //contStageNum.tooltip="Active Engines";
@@ -206,7 +207,7 @@ namespace KSPAlternateResourcePanel
                     {
                         if (mbARP.blnVesselIsControllable) {
                             if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
-                                Staging.ActivateNextStage();
+                                StageManager.ActivateNextStage();
                             GUILayout.Space(21 + IconAlarmOffset);
                             //GUILayout.Space(51 + IconAlarmOffset);
                         }
@@ -223,7 +224,7 @@ namespace KSPAlternateResourcePanel
                 {
                     if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50)))
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
-                    GUILayout.Label(Staging.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
+                    GUILayout.Label(StageManager.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
                     GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30));
                     GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30));
                     DrawHorizontalSlider(ref mbARP.AutoStagingTerminateAt, 0, mbARP.AutoStagingMaxStage);
