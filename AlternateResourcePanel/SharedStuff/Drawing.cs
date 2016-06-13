@@ -57,7 +57,7 @@ namespace KSPAlternateResourcePanel
             rectBar.x += rectBar.width + 5;
             rectBar.y -= 2;
             rectBar.width = 16;
-            rectBar.height = 10;
+            rectBar.height = 20;
 
             //Set Texture here based on flowstate
 
