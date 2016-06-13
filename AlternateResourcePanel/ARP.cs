@@ -612,7 +612,7 @@ namespace KSPAlternateResourcePanel
                         }
 
                         //Update the whole vessel list
-                        lstResourcesVesselPerStage[p.DecoupledAt().Clamp(1, StageManager.StageCount)].UpdateResource(pr);
+                        lstResourcesVesselPerStage[p.DecoupledAt().Clamp(0, StageManager.StageCount)].UpdateResource(pr);
 
                         //is the resource in the selected list
                         if (SelectedResources.ContainsKey(pr.info.id) && SelectedResources[pr.info.id].AllVisible && !settings.Resources[pr.info.id].ShowReserveLevels)

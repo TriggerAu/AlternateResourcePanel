@@ -28,6 +28,10 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.8.1.0        -    KSP Version: 1.1.2
+- Fixed issue with singe stage vessels showing no resources
+- Fixed issue with flow control buttons having small hitbox (Issue #83)
+
 Version 2.8.0.0        -    KSP Version: 1.1.2
 - Recompiled for 1.1
 - Added ability to Move to Top and Move to Bottom for resource config screens
