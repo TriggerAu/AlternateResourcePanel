@@ -17,7 +17,7 @@ namespace KSPAlternateResourcePanel
         internal Settings settings;
 
         Int32 WindowHeight = 480;
-        Int32 ScrollAreaWidth = 395;
+        Int32 ScrollAreaWidth = 440;
 
         internal Vector2 ScrollPosition = new Vector2();
         internal Vector2 vectMonTypeOffset = new Vector2(8, 56); //Vector2(8, 56);
@@ -32,7 +32,7 @@ namespace KSPAlternateResourcePanel
         internal override void Awake()
         {
             settings = KSPAlternateResourcePanel.settings;
-            WindowRect = new Rect(300, 0, 410, WindowHeight);
+            WindowRect = new Rect(300, 0, 455, WindowHeight);
 
             ddlMonType = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
             ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
@@ -160,8 +160,10 @@ namespace KSPAlternateResourcePanel
                     AddSeparatorAtEnd();
                     MoveResource(settings.Resources.Count - 1, i + 1);
                 }
+
+                //Move up and down
                 if (i > 0) {
-                    if (GUILayout.Button("↑", GUILayout.Width(21)))
+                    if (GUILayout.Button(new GUIContent("↑","Move Up"), GUILayout.Width(21)))
                     {
                         SwapResource(i - 1, i);
                     }
@@ -177,6 +179,31 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Space(21 + 4);
                 }
 
+                //Move top and Bottom
+                if (i > 0)
+                {
+                    if (GUILayout.Button(new GUIContent("↑↑","Move to Top"), GUILayout.Width(27)))
+                    {
+                        MoveResource(i,0);
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(27 + 4);
+                }
+                if (i < settings.Resources.Count - 1)
+                {
+                    if (GUILayout.Button(new GUIContent("↓↓", "Move to Bottom"), GUILayout.Width(27)))
+                    {
+                        MoveResource(i, settings.Resources.Count);
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(27 + 4);
+                }
+
+                // Visibility level and alarm values/Delete
                 if (!item.IsSeparator)
                 {
                     if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75)))

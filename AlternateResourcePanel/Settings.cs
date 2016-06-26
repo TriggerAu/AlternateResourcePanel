@@ -27,7 +27,7 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean ToggleOn = false;
         [Persistent] internal Boolean DisableHover = false;
         [Persistent] internal Boolean LockLocation= true;
-        internal Rect WindowPosition = new Rect(Screen.width - 298, 40, 299, 20);
+        internal Rect WindowPosition = new Rect(Screen.width - 381, 0, 299, 20);
         [Persistent] private RectStorage WindowPositionStored = new RectStorage();
         [Persistent] internal Boolean WindowPosUpdatedv24=false;
         [Persistent] internal Boolean ButtonPosUpdatedv24=false;
@@ -47,6 +47,7 @@ namespace KSPAlternateResourcePanel
         
         //[Persistent] 
         internal Boolean ShowTimeRem = false;
+        internal Boolean ShowBase = false;
 
         [Persistent] internal Boolean SplitLastStage = true;
         [Persistent] internal Boolean StageBarOnRight = true;

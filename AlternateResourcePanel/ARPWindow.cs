@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using KSP;
+using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
 
@@ -139,7 +140,7 @@ namespace KSPAlternateResourcePanel
                     Boolean Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].AllVisible;
 
                     //For resources with no stage specifics - or the Resources is set to split display and values are different for all vessel and flow enabled ones
-                    if (!settings.SplitLastStage || !lstResources[ResourceID].ResourceConfig.SplitLastStage ||
+                    if (!settings.SplitLastStage || !lstResources[ResourceID].ResourceConfig.SplitLastStage || settings.ShowBase ||
                         (lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
                             lstResources[ResourceID].ResourceDef.resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW) &&
                         (( !settings.Resources[ResourceID].ShowReserveLevels )
@@ -191,9 +192,9 @@ namespace KSPAlternateResourcePanel
                     if (GUILayout.Button("Stage:", Styles.styleStageTextHead, GUILayout.Width(50)))
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
                     GUIStyle styleStageNum = new GUIStyle(Styles.styleStageTextHead);
-                    GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString());
+                    GUIContent contStageNum = new GUIContent(StageManager.CurrentStage.ToString());
                     //styleStageNum.normal.textColor=new Color(173,43,43);
-                    //GUIContent contStageNum = new GUIContent(Staging.CurrentStage.ToString(),"NO Active Engines");
+                    //GUIContent contStageNum = new GUIContent(StageManager.CurrentStage.ToString(),"NO Active Engines");
                     //if (THERE ARE ACTIVE ENGINES IN STAGE)
                     //{
                     //contStageNum.tooltip="Active Engines";
@@ -206,12 +207,14 @@ namespace KSPAlternateResourcePanel
                     {
                         if (mbARP.blnVesselIsControllable) {
                             if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
-                                Staging.ActivateNextStage();
-                            GUILayout.Space(51 + IconAlarmOffset);
+                                StageManager.ActivateNextStage();
+                            GUILayout.Space(21 + IconAlarmOffset);
+                            //GUILayout.Space(51 + IconAlarmOffset);
                         }
                         else {
                             GUILayout.Label("No Vessel Control", GUILayout.Width(120));
-                            GUILayout.Space(31 + IconAlarmOffset);
+                            GUILayout.Space(1 + IconAlarmOffset);
+                            //GUILayout.Space(31 + IconAlarmOffset);
                         }
                     }
                     //GUILayout.Space(48 + IconAlarmOffset);
@@ -221,7 +224,7 @@ namespace KSPAlternateResourcePanel
                 {
                     if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50)))
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
-                    GUILayout.Label(Staging.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
+                    GUILayout.Label(StageManager.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
                     GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30));
                     GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30));
                     DrawHorizontalSlider(ref mbARP.AutoStagingTerminateAt, 0, mbARP.AutoStagingMaxStage);
@@ -246,28 +249,48 @@ namespace KSPAlternateResourcePanel
                     GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
                     StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
                     //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147 + IconAlarmOffset));
-                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
-                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
+                    //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
                 }
             }
             else
             {
                 //GUILayout.Space(234 + IconAlarmOffset);
-                //GUILayout.Space(207 + IconAlarmOffset);
-                GUILayout.Space(237 + IconAlarmOffset);
+                GUILayout.Space(207 + IconAlarmOffset);
+                //GUILayout.Space(237 + IconAlarmOffset);
             }
 
-            // ShowAll Button
-            if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            // ShowBase Button
+            Boolean blnShowBase = settings.ShowBase;
+            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? "Back to Vessel Display" : "Show Base Display\r\nAll resource within 2km of active vessel"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
             {
-                settings.ShowTimeRem = !settings.ShowTimeRem;
+                settings.ShowBase = blnShowBase;
             }
+            //if (GUILayout.Button(new GUIContent(settings.ShowBase ? Resources.btnViewBaseActive : Resources.btnViewBase, "Toggle Vessel/Base Display"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    settings.ShowBase = !settings.ShowBase;
+            //}
+
+            // ShowTime Button
+            Boolean blnShowTimeRem = settings.ShowTimeRem;
+            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? "Hide time Remianing": "Show Time Remaining"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23))) {
+                settings.ShowTimeRem = blnShowTimeRem;
+            }
+            //if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    settings.ShowTimeRem = !settings.ShowTimeRem;
+            //}
 
             // ShowAll Button
-            if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            Boolean blnToggleHidden = KSPAlternateResourcePanel.ShowAll;
+            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
             {
-                KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;
+                KSPAlternateResourcePanel.ShowAll = blnToggleHidden;
             }
+            //if (GUILayout.Button(new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
+            //{
+            //    KSPAlternateResourcePanel.ShowAll = !KSPAlternateResourcePanel.ShowAll;
+            //}
 
             //Settings Toggle button
             GUIContent btnMinMax = new GUIContent(Resources.btnChevronDown, "Show Settings...");
@@ -301,6 +324,10 @@ namespace KSPAlternateResourcePanel
                 mbARP.windowSettings.UpdateWindowRect();
         }
 
+        internal override void OnGUIEvery()
+        {
+            base.OnGUIEvery();
+        }
     }
 
 }

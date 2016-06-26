@@ -28,17 +28,19 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 16;
-        public Int32 intTest2=56;
-        public Int32 intTest3=8;
-        public Int32 intTest4 = 56;
-        public Int32 intTest5 = 0;
+        public Int32 intTest1 = 298;
+        public Int32 intTest2=40;
+        public Int32 intTest3=299;
+        public Int32 intTest4 = 20;
+        public static Int32 intTest5 = 10;
 
 
         //ApplicationLauncherButton origResButton=null;
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
+            mbARP.windowMainResetPos = new Rect(Screen.width - intTest1, intTest2, intTest3, intTest4);
+
             //GUILayout.Label(Drawing.RectTest.ToString());
             //GUILayout.Label(Drawing.RectTest2.ToString());
             //DrawTextBox(ref Drawing.RateYOffset);
@@ -79,9 +81,6 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-
-
-            //GUILayout.Label(String.Format("{0}", Staging.StageCount));
             Boolean blnControl = false;
             foreach (Part p in FlightGlobals.ActiveVessel.Parts)
             {
@@ -94,11 +93,13 @@ namespace KSPAlternateResourcePanel
             //GUILayout.Label(String.Format("CommandState:{0}", blnControl));
             GUILayout.Label(String.Format("vesseliscontrollable:{0}", mbARP.blnVesselIsControllable));
 
-
-            //foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            //if (mbARP.lstPartWindows != null)
             //{
-            //    //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
-            //    GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect ));
+            //    foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
+            //    {
+            //        //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
+            //        GUILayout.Label(string.Format("{0}-{1}", (pw.PartRef.transform.position).ToString(), pw.WindowRect));
+            //    }
             //}
 
             //for (int i = 1; i < mbARP.lstResourcesVesselPerStage.Keys.Max(); i++)
@@ -308,7 +309,7 @@ namespace KSPAlternateResourcePanel
             {
                 GUILayout.Label(String.Format("T:{0}-{1}-{2}", item.partID,item.ResourceID,item.transferState));
             }
-                        
+
             //if (GUILayout.Button("AAA"))
             //{
             //    LogFormatted("{0}",mbARP.lstTransfers.Any(x => x.partID == intTest4));
@@ -322,20 +323,23 @@ namespace KSPAlternateResourcePanel
             //    GUILayout.Label(item.Key.ToString());
             //}
             //GUILayout.Label(mbARP.TestTrans);
-            
+
             //foreach (String item in mbARP.lstString)
             //{
             //    GUILayout.Label(item);
-                
+
             //}
             //#region Auto Staging
             //GUILayout.Label(FlightGlobals.ActiveVessel.ctrlState.mainThrottle.ToString());
 
             //GUILayout.Label(String.Format("en:{0} delay:{1}, {2:0.0}", settings.AutoStagingEnabled, settings.AutoStagingDelayInTenths, ((Double)settings.AutoStagingDelayInTenths / 10)));
             //GUILayout.Label(String.Format("Arm:{0}-run:{1}", mbARP.AutoStagingArmed, mbARP.AutoStagingRunning));
-            
+
+            //GUILayout.Label(String.Format("{0}", Staging.StageCount));
             //GUILayout.Label(String.Format("Staging:{0}-Stop{1}", Staging.CurrentStage, mbARP.AutoStagingTerminateAt));
 
+            //GUILayout.Label(String.Format("{0}", KSP.UI.Screens.StageManager.StageCount));
+            //GUILayout.Label(String.Format("Staging:{0}-Stop{1}", KSP.UI.Screens.StageManager.CurrentStage, mbARP.AutoStagingTerminateAt));
             //GUILayout.Label(string.Format("{0}-{1}-{2}", mbARP.AutoStagingTriggeredAt, Planetarium.GetUniversalTime(), Planetarium.GetUniversalTime() - mbARP.AutoStagingTriggeredAt));
 
             //GUILayout.Label(string.Format("{0}", FlightInputHandler.fetch.stageLock));
@@ -375,10 +379,10 @@ namespace KSPAlternateResourcePanel
 
             //foreach (ARPResource r in mbARP.lstResourcesVessel.Values)
             //{
-            ////    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //    GUILayout.Label(String.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.RateFormatted, r.IsEmpty, r.EmptyAt.ToString("HH:mm:ss"), r.IsFull, r.FullAt.ToString("HH:mm:ss")));  //, r.RateFormatted2, r.RateSamples.Count));
 
-            ////    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
-            //    GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState,r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    //    //GUILayout.Label(String.Format("{0}-{1}-{2}-{3:0}-{4}-{5}", r.ResourceDef.name, r.AmountFormatted, r.MaxAmountFormatted, r.Amount / r.MaxAmount * 100, KSPAlternateResourcePanel.settings.Resources[r.ResourceDef.id].MonitorWarningLevel, r.MonitorWarning));  //, r.RateFormatted2, r.RateSamples.Count));
+            //    GUILayout.Label(String.Format("{0}-{1}-{2}", r.ResourceDef.name, r.MonitorState, r.AlarmState));  //, r.RateFormatted2, r.RateSamples.Count));
             //}
 
             //foreach (Int32 item in mbARP.lstResourcesToDisplay)
@@ -399,7 +403,7 @@ namespace KSPAlternateResourcePanel
             //foreach (Camera item in FlightCamera.fetch.cameras)
             //{
             //GUILayout.Label(item.name + item.transform.position.ToString());
-                
+
             //}
             //GUILayout.Label(String.Format("{0}", mbARP.windowMain.rectHighlight1.ToString()));
             //GUILayout.Label(String.Format("{0}", mbARP.windowSettings.WindowRect.ToString()));
@@ -441,8 +445,8 @@ namespace KSPAlternateResourcePanel
             //foreach (ARPPartWindow pw in mbARP.lstPartWindows.Values)
             //{
             //    GUILayout.Label(string.Format("{0}-{1}-{2}-{3}-{4}", pw.PartRef.partInfo.title, pw.WindowID,
-                    //GUILayout.Label(string.Format("{0}-{1}-{2}",pw.PartScreenPos.ToString(),pw.vectLinePartEnd.ToString(), pw.vectLineWindowEnd.ToString()));
-                    
+            //GUILayout.Label(string.Format("{0}-{1}-{2}",pw.PartScreenPos.ToString(),pw.vectLinePartEnd.ToString(), pw.vectLineWindowEnd.ToString()));
+
             //    //     Math.Round(pw.PartScreenPos.x, 0), Math.Round(pw.PartScreenPos.y, 0), Math.Round(pw.PartScreenPos.z, 0)));
 
             //    //GUILayout.Label(string.Format("{0}-{1}-{2}", pw.LeftSide, Math.Round(pw.PartScreenPos.x, 0), vectVesselCOMScreen.x + pw.SideThreshold));

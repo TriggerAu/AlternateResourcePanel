@@ -28,6 +28,18 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.8.1.0        -    KSP Version: 1.1.2
+- Fixed issue with singe stage vessels showing no resources
+- Fixed issue with flow control buttons having small hitbox (Issue #83)
+
+Version 2.8.0.0        -    KSP Version: 1.1.2
+- Recompiled for 1.1
+- Added ability to Move to Top and Move to Bottom for resource config screens
+
+Version 2.7.4.0        -    KSP Version: 1.0.5
+- Added in "Base" mode courtesy of https://github.com/mhoram-kerbin
+- Adjusted toggle styles on main screen to better indicate whats going on
+
 Version 2.7.3.0        -    KSP Version: 1.0.4
 - Adjusted Resource transfer code to allow multi out/in transfers - not just one to one (Issue #79)
 - Fixed oversight that allowed staging to work when it should have been locked out (Issue #77)
