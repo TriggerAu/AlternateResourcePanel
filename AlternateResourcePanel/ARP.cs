@@ -25,7 +25,7 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
-        internal Rect windowMainResetPos = new Rect(Screen.width - 381, 0, 299, 20);
+        internal Rect windowMainResetPos = new Rect(Screen.width - 339 - (GameSettings.UI_SCALE_APPS * 42), 0, 299, 20);
         //variables
         internal PartResourceVisibleList SelectedResources;
 

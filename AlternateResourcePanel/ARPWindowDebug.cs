@@ -28,18 +28,22 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        public Int32 intTest1 = 298;
-        public Int32 intTest2=40;
+        public Int32 intTest1 = 339;
+        public Int32 intTest2=0;
         public Int32 intTest3=299;
         public Int32 intTest4 = 20;
         public static Int32 intTest5 = 10;
-
 
         //ApplicationLauncherButton origResButton=null;
         //Boolean Clicked = false;
         internal override void DrawWindow(int id)
         {
-            mbARP.windowMainResetPos = new Rect(Screen.width - intTest1, intTest2, intTest3, intTest4);
+
+            ;
+
+            
+
+            mbARP.windowMainResetPos = new Rect(Screen.width - intTest1 - (GameSettings.UI_SCALE_APPS * 42), intTest2, intTest3, intTest4);
 
             //GUILayout.Label(Drawing.RectTest.ToString());
             //GUILayout.Label(Drawing.RectTest2.ToString());
