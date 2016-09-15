@@ -86,7 +86,7 @@ namespace KSPAlternateResourcePanel
             {
                 foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
                 {
-                    if (mc.State == ModuleCommand.ControlSourceState.Good)
+                    if (mc.ModuleState == ModuleCommand.ModuleControlState.Nominal)
                         blnControl = true;
                 }
             }
