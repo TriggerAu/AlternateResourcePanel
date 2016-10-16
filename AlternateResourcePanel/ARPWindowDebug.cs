@@ -85,15 +85,15 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("Draw Settings Duration: {0:0.00}ms", mbARP.windowSettings.DrawWindowInternalDuration.TotalMilliseconds));
             GUILayout.Label(String.Format("Draw Main Duration: {0:0.00}ms", mbARP.windowMain.DrawWindowInternalDuration.TotalMilliseconds));
 
-            Boolean blnControl = false;
-            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
-            {
-                foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
-                {
-                    if (mc.State == ModuleCommand.ControlSourceState.Good)
-                        blnControl = true;
-                }
-            }
+            //Boolean blnControl = false;
+            //foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            //{
+            //    foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
+            //    {
+            //        if (mc.State == ModuleCommand.ControlSourceState.Good)
+            //            blnControl = true;
+            //    }
+            //}
             //GUILayout.Label(String.Format("CommandState:{0}", blnControl));
             GUILayout.Label(String.Format("vesseliscontrollable:{0}", mbARP.blnVesselIsControllable));
 
