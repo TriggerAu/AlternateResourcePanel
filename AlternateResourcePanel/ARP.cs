@@ -25,7 +25,7 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
-        internal Rect windowMainResetPos = new Rect(Screen.width - 381, 0, 299, 20);
+        internal Rect windowMainResetPos = new Rect(Screen.width - 339 - (GameSettings.UI_SCALE_APPS * 42), 0, 299, 20);
         //variables
         internal PartResourceVisibleList SelectedResources;
 
@@ -557,12 +557,9 @@ namespace KSPAlternateResourcePanel
                 //Now loop through and update em
                 foreach (Part p in active.parts)
                 {
-                    //Check each part for a control module to see if its status is Good
-                    foreach (ModuleCommand mc in p.Modules.OfType<ModuleCommand>())
-                    {
-                        if (mc.State == ModuleCommand.ControlSourceState.Good && active == FlightGlobals.ActiveVessel)
-                            blnVesselIsControllable = true;
-                    }
+                    //Check if its a controllable vessel
+                    if(active == FlightGlobals.ActiveVessel && active.IsControllable)
+                        blnVesselIsControllable = true;
 
                     //is the part decoupled in the last stage
                     Boolean DecoupledInLastStage = (p.DecoupledAt() == LastStage);
@@ -586,7 +583,7 @@ namespace KSPAlternateResourcePanel
                                 if (!settings.ShowBase && !lstResourcesLastStage.ContainsKey(pr.info.id))
                                 {
                                     LogFormatted_DebugOnly("Adding 0 value into last stage");
-                                    PartResource prTemp = new PartResource() { info = pr.info, amount = 0, maxAmount = 0 };
+                                    PartResource prTemp = new PartResource(p) { info = pr.info, amount = 0, maxAmount = 0 };
                                     lstResourcesLastStage.UpdateResource(prTemp);
                                 }
                             }
@@ -1038,7 +1035,7 @@ namespace KSPAlternateResourcePanel
             //position the part windows
             if (lstPartWindows.Count > 0)
             {
-                vectVesselCOMScreen = FlightCamera.fetch.mainCamera.WorldToScreenPoint(FlightGlobals.ActiveVessel.findWorldCenterOfMass());
+                vectVesselCOMScreen = FlightCamera.fetch.mainCamera.WorldToScreenPoint(FlightGlobals.ActiveVessel.CoM);
 
                 DateTime dteStart = DateTime.Now;
 

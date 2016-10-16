@@ -7,6 +7,7 @@ using KSP;
 using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
+using System.Collections;
 
 namespace KSPAlternateResourcePanel
 {
@@ -25,7 +26,7 @@ namespace KSPAlternateResourcePanel
 
                 if (KSPAlternateResourcePanel.settings.ButtonStyleChosen == ARPWindowSettings.ButtonStyleEnum.StockReplace)
                 {
-                    ReplaceStockAppButton();
+                    StartCoroutine(ReplaceStockAppButton());
                 }
             }
         }
@@ -143,8 +144,12 @@ namespace KSPAlternateResourcePanel
 
         internal Boolean StockAppToBeHidden = false;
         internal DateTime StockAppToBeHiddenAttemptDate;
-        internal void ReplaceStockAppButton()
+
+        internal IEnumerator ReplaceStockAppButton()
         {
+            while(ResourceDisplay.Instance.appLauncherButton == null || !ApplicationLauncher.Ready)
+                yield return null;
+
             if (ResourceDisplay.Instance.appLauncherButton == null)
             {
                 if (!StockAppToBeHidden)
