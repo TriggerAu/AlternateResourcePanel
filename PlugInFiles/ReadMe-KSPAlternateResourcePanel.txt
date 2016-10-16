@@ -28,6 +28,9 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.9.0.0		-	KSP Version: 1.2.0
+- Recompile for 1.2
+
 Version 2.8.1.1        -    KSP Version: 1.1.3
 BETA VERSION
 - Attempt to fix issue with Stock buttone replacement
