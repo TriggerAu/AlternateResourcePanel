@@ -26,7 +26,7 @@ namespace KSPAlternateResourcePanel
 
                 if (KSPAlternateResourcePanel.settings.ButtonStyleChosen == ARPWindowSettings.ButtonStyleEnum.StockReplace)
                 {
-                    StartCoroutine(ReplaceStockAppButton());
+                    //StartCoroutine(ReplaceStockAppButton());
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace KSPAlternateResourcePanel
 
         internal IEnumerator ReplaceStockAppButton()
         {
-            while(ResourceDisplay.Instance.appLauncherButton == null || !ApplicationLauncher.Ready)
+            while(ResourceDisplay.Instance == null || ResourceDisplay.Instance.appLauncherButton == null || !ApplicationLauncher.Ready)
                 yield return null;
 
             if (ResourceDisplay.Instance.appLauncherButton == null)

@@ -227,6 +227,11 @@ namespace KSPAlternateResourcePanel
                 AppLauncherToBeSetTrue = true;
                 AppLauncherToBeSetTrueAttemptDate = DateTime.Now;
             }
+
+            if(settings.ButtonStyleToDisplay == ARPWindowSettings.ButtonStyleEnum.StockReplace) {
+                StartCoroutine(ReplaceStockAppButton());
+            }
+
         }
 
         //use this to trigger a clean up of sound at the end of the repeating worker loop
