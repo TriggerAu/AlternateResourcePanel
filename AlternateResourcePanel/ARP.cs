@@ -83,9 +83,26 @@ namespace KSPAlternateResourcePanel
             LogFormatted("Awakening the AlternateResourcePanel (ARP)");
 
             LogFormatted("Loading Settings");
-            settings = new Settings("settings.cfg");
-            if (!settings.Load())
-                LogFormatted("Settings Load Failed");
+            settings = new Settings("PluginData/settings.cfg");
+			Boolean blnSettingsLoaded = settings.Load();
+			if (!blnSettingsLoaded)
+			{
+				settings = new Settings("settings.cfg");
+				blnSettingsLoaded = settings.Load();
+				if (blnSettingsLoaded)
+				{
+					settings.FilePath = "PluginData/settings.cfg";
+					if (!System.IO.Directory.Exists(Resources.PathPlugin + "/PluginData"))
+						System.IO.Directory.CreateDirectory(Resources.PathPlugin + "/PluginData");
+					System.IO.File.Move(Resources.PathPlugin + "/settings.cfg", Resources.PathPlugin + "/PluginData/settings.cfg");
+				}
+			}
+
+			if (!blnSettingsLoaded)
+			{
+				settings.FilePath = "PluginData/settings.cfg";
+				LogFormatted("Settings Load Failed");
+			}
 
             //If the window is in the pre0.24 default then move it down so its not over the app launcher
             if (new Rect(Screen.width - 310, 0, 310, 40).Contains(settings.vectButtonPos))
