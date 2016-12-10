@@ -19,14 +19,14 @@ namespace KSPAlternateResourcePanel
         //internal static String PathPlugin = string.Format("{0}/{1}", PathTriggerTech, KSPAlternateResourcePanel._AssemblyName);
         internal static String PathPlugin = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).Replace("\\", "/");
         internal static String PathPluginToolbarIcons = string.Format("{0}/ToolbarIcons", PathPlugin);
-        internal static String PathPluginTextures = string.Format("{0}/Textures", PathPlugin);
+        internal static String PathPluginTextures = string.Format("{0}/PluginData/Textures", PathPlugin);
         //internal static String PathPluginData = string.Format("{0}/Data", PathPlugin);
         internal static String PathPluginSounds = string.Format("{0}/Sounds", PathPlugin);
 
         internal static String DBPathTriggerTech = string.Format("TriggerTech");
         internal static String DBPathPlugin = string.Format("TriggerTech/{0}", KSPAlternateResourcePanel._AssemblyName);
         internal static String DBPathToolbarIcons = string.Format("{0}/ToolbarIcons", DBPathPlugin);
-        internal static String DBPathTextures = string.Format("{0}/Textures", DBPathPlugin);
+        //internal static String DBPathTextures = string.Format("{0}/Textures", DBPathPlugin);
         internal static String DBPathPluginSounds = string.Format("{0}/Sounds", DBPathPlugin);
 
 
