@@ -269,7 +269,7 @@ if($ChoiceRtn -eq 0)
 
     #CreateCurseRelease 
 
-    CreateKerbalStuffRelease
+    #CreateKerbalStuffRelease
 
     $Choices= [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes","&No")
     $ChoiceRtn = $host.ui.PromptForChoice("Update versioncheck.txt file","Do you wish to update the versioncheck file in ghpages?",$Choices,0)
