@@ -148,7 +148,7 @@ namespace KSPAlternateResourcePanel
                     break;
                 case ButtonStyleEnum.StockReplace:
                     mbARP.btnAppLauncher = mbARP.InitAppLauncherButton();
-                    mbARP.ReplaceStockAppButton();
+                    StartCoroutine(mbARP.ReplaceStockAppButton());
                     mbARP.windowMain.DragEnabled=false;
                     mbARP.windowMain.WindowRect = new Rect(mbARP.windowMainResetPos);
                     mbARP.SceneChangeRequiredToRestoreResourcesApp = false;
