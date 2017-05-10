@@ -136,7 +136,7 @@ namespace ARPWrapper
                 
                 LogFormatted("Getting Last Stage Resources Object");
                 LastStageResourcesField = KSPARPType.GetField("lstResourcesLastStage", BindingFlags.Public | BindingFlags.Instance);
-                actualLastStageResources = VesselResourcesField.GetValue(actualARP);
+                actualLastStageResources = LastStageResourcesField.GetValue(actualARP);
                 LogFormatted("Success: " + (actualLastStageResources != null).ToString());
 
                 LogFormatted("Getting State Change Event");
