@@ -51,9 +51,9 @@ namespace KSPAlternateResourcePanel
 
             TooltipMouseOffset = new Vector2d(-10, 10);
 
-            ddlSettingsTab = new DropDownList(EnumExtensions.ToEnumDescriptions<SettingsTabs>(),this);
+            ddlSettingsTab = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<SettingsTabs>(),this);
 
-            ddlSettingsSkin = new DropDownList(EnumExtensions.ToEnumDescriptions<Settings.DisplaySkin>(), (Int32)settings.SelectedSkin,this);
+            ddlSettingsSkin = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<Settings.DisplaySkin>(), (Int32)settings.SelectedSkin,this);
             ddlSettingsSkin.OnSelectionChanged += ddlSettingsSkin_SelectionChanged;
 
             ddlSettingsAlarmsWarning = LoadSoundsList(Resources.clipAlarms.Keys.ToArray(),settings.AlarmsWarningSound);
@@ -61,10 +61,10 @@ namespace KSPAlternateResourcePanel
             ddlSettingsAlarmsWarning.OnSelectionChanged += ddlSettingsAlarmsWarning_OnSelectionChanged;
             ddlSettingsAlarmsAlert.OnSelectionChanged += ddlSettingsAlarmsAlert_OnSelectionChanged;
 
-            ddlSettingsRateStyle = new DropDownList(EnumExtensions.ToEnumDescriptions<Settings.RateDisplayEnum>(),(Int32)settings.RateDisplayType, this);
+            ddlSettingsRateStyle = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<Settings.RateDisplayEnum>(),(Int32)settings.RateDisplayType, this);
             ddlSettingsRateStyle.OnSelectionChanged += ddlSettingsRateStyle_OnSelectionChanged;
 
-            ddlSettingsButtonStyle = new DropDownList(EnumExtensions.ToEnumDescriptions<ButtonStyleEnum>(), (Int32)settings.ButtonStyleChosen, this);
+            ddlSettingsButtonStyle = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<ButtonStyleEnum>(), (Int32)settings.ButtonStyleChosen, this);
             ddlSettingsButtonStyle.OnSelectionChanged += ddlSettingsButtonStyle_OnSelectionChanged; 
 
             ddlManager.AddDDL(ddlSettingsButtonStyle);
