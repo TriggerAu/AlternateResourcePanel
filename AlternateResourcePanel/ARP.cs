@@ -82,6 +82,10 @@ namespace KSPAlternateResourcePanel
         {
             LogFormatted("Awakening the AlternateResourcePanel (ARP)");
 
+            LogFormatted("Checking for PluginData folder");
+            if (!System.IO.Directory.Exists(Resources.PathPlugin + "/PluginData"))
+                System.IO.Directory.CreateDirectory(Resources.PathPlugin + "/PluginData");
+
             LogFormatted("Loading Settings");
             settings = new Settings("PluginData/settings.cfg");
 			Boolean blnSettingsLoaded = settings.Load();

@@ -34,11 +34,11 @@ namespace KSPAlternateResourcePanel
             settings = KSPAlternateResourcePanel.settings;
             WindowRect = new Rect(300, 0, 455, WindowHeight);
 
-            ddlMonType = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
+            ddlMonType = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
             ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
             ddlMonType.OnSelectionChanged += ddlMonType_OnSelectionChanged;
 
-            ddlDisplayValueAs = new DropDownList(EnumExtensions.ToEnumDescriptions<ResourceSettings.DisplayUnitsEnum>(), this);
+            ddlDisplayValueAs = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<ResourceSettings.DisplayUnitsEnum>(), this);
             ddlDisplayValueAs.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
             ddlDisplayValueAs.OnSelectionChanged += ddlDisplayValueAs_OnSelectionChanged;
 
@@ -150,8 +150,11 @@ namespace KSPAlternateResourcePanel
 
                     if (Event.current.type == EventType.Repaint)
                     {
-                        Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
-                        lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                        if (lstResPositions.Count > 0)
+                        {
+                            Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
+                            lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                        }
                     }
                 }
 
