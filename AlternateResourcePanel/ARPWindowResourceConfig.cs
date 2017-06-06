@@ -150,8 +150,11 @@ namespace KSPAlternateResourcePanel
 
                     if (Event.current.type == EventType.Repaint)
                     {
-                        Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
-                        lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                        if (lstResPositions.Count > 0)
+                        {
+                            Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
+                            lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                        }
                     }
                 }
 
