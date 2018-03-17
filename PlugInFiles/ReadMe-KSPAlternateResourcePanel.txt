@@ -28,6 +28,9 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.9.3.0		-	KSP Version: 1.4.1
+- Recompile for 1.4.1
+
 Version 2.9.2.0		-	KSP Version: 1.3.0
 - Recompile for 1.3
 - Fix issue with Separator as first item (Issue #88)
