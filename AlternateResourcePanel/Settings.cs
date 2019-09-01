@@ -164,7 +164,8 @@ namespace KSPAlternateResourcePanel
         }
 
         public String Version = "";
-        [Persistent] public String VersionWeb = "";
+        [Persistent]
+        public String VersionWeb = "";
         public Boolean VersionAvailable
         {
             get
@@ -198,46 +199,48 @@ namespace KSPAlternateResourcePanel
         /// </summary>
         /// <param name="ForceCheck">Ignore all logic and simply do a check</param>
         /// <returns></returns>
-        public Boolean VersionCheck(Boolean ForceCheck)
+        public Boolean VersionCheck(MonoBehaviour parent, Boolean ForceCheck)
         {
             Boolean blnReturn = false;
             Boolean blnDoCheck = false;
 
             try
             {
-                if (ForceCheck)
+                if (!VersionCheckRunning)
                 {
-                    blnDoCheck = true;
-                    MonoBehaviourExtended.LogFormatted("Starting Version Check-Forced");
-                }
-                //else if (this.VersionWeb == "")
-                //{
-                //    blnDoCheck = true;
-                //    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
-                //}
-                else if (this.VersionCheckDate_Attempt < DateTime.Now.AddYears(-9))
-                {
-                    blnDoCheck = true;
-                    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current date stored");
-                }
-                else if (this.VersionCheckDate_Attempt.Date != DateTime.Now.Date)
-                {
-                    blnDoCheck = true;
-                    MonoBehaviourExtended.LogFormatted("Starting Version Check-stored date is not today");
+                    if (ForceCheck)
+                    {
+                        blnDoCheck = true;
+                        MonoBehaviourExtended.LogFormatted("Starting Version Check-Forced");
+                    }
+                    //else if (this.VersionWeb == "")
+                    //{
+                    //    blnDoCheck = true;
+                    //    MonoBehaviourExtended.LogFormatted("Starting Version Check-No current web version stored");
+                    //}
+                    else if (this.VersionCheckDate_Attempt < DateTime.Now.AddYears(-9))
+                    {
+                        blnDoCheck = true;
+                        MonoBehaviourExtended.LogFormatted("Starting Version Check-No current date stored");
+                    }
+                    else if (this.VersionCheckDate_Attempt.Date != DateTime.Now.Date)
+                    {
+                        blnDoCheck = true;
+                        MonoBehaviourExtended.LogFormatted("Starting Version Check-stored date is not today");
+                    }
+                    else
+                    {
+                        MonoBehaviourExtended.LogFormatted("Skipping version check");
+                    }
+
+                    if (blnDoCheck)
+                    {
+                        parent.StartCoroutine(CRVersionCheck());
+                    }
                 }
                 else
-                    MonoBehaviourExtended.LogFormatted("Skipping version check");
-
-
-                if (blnDoCheck)
                 {
-                    //prep the background thread
-                    bwVersionCheck = new BackgroundWorker();
-                    bwVersionCheck.DoWork += bwVersionCheck_DoWork;
-                    bwVersionCheck.RunWorkerCompleted += bwVersionCheck_RunWorkerCompleted;
-
-                    //fire the worker
-                    bwVersionCheck.RunWorkerAsync();
+                    MonoBehaviourExtended.LogFormatted("Starting Version Check-version check already running");
                 }
                 blnReturn = true;
             }
@@ -250,11 +253,10 @@ namespace KSPAlternateResourcePanel
         }
 
         internal Boolean VersionCheckRunning = false;
-        BackgroundWorker bwVersionCheck;
-        WWW wwwVersionCheck;
-
-        void bwVersionCheck_DoWork(object sender, DoWorkEventArgs e)
+        private System.Collections.IEnumerator CRVersionCheck()
         {
+            WWW wwwVersionCheck;
+
             //set initial stuff and save it
             VersionCheckRunning = true;
             this.VersionCheckResult = "Unknown - check again later";
@@ -264,13 +266,19 @@ namespace KSPAlternateResourcePanel
             //now do the download
             MonoBehaviourExtended.LogFormatted("Reading version from Web");
             wwwVersionCheck = new WWW(VersionCheckURL);
-            while (!wwwVersionCheck.isDone) { }
-            MonoBehaviourExtended.LogFormatted("Download complete:{0}", wwwVersionCheck.text.Length);
-            MonoBehaviourExtended.LogFormatted_DebugOnly("Content:{0}", wwwVersionCheck.text);
+            yield return wwwVersionCheck;
+            if (wwwVersionCheck.error == null)
+            {
+                CRVersionCheck_Completed(wwwVersionCheck);
+            }
+            else
+            {
+                MonoBehaviourExtended.LogFormatted("Version Download failed:{0}", wwwVersionCheck.error);
+            }
             VersionCheckRunning = false;
         }
 
-        void bwVersionCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void CRVersionCheck_Completed(WWW wwwVersionCheck)
         {
             try
             {

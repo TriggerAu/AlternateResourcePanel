@@ -189,7 +189,7 @@ namespace KSPAlternateResourcePanel
 
             //do the daily version check if required
             if (settings.DailyVersionCheck)
-                settings.VersionCheck(false);
+                settings.VersionCheck(this, false);
 
             APIAwake();
 
