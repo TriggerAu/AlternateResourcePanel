@@ -78,7 +78,7 @@ namespace KSPPluginFramework
 
         #endregion
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             //just some debugging stuff here
             LogFormatted_DebugOnly("New MBWindow Awakened");
