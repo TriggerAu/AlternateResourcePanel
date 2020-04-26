@@ -78,7 +78,7 @@ namespace KSPAlternateResourcePanel
         //List of resource transfers
         internal ARPTransferList lstTransfers;
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             LogFormatted("Awakening the AlternateResourcePanel (ARP)");
 

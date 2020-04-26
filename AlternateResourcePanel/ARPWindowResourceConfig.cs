@@ -29,7 +29,7 @@ namespace KSPAlternateResourcePanel
         DropDownList ddlMonType;
         DropDownList ddlDisplayValueAs;
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             settings = KSPAlternateResourcePanel.settings;
             WindowRect = new Rect(300, 0, 455, WindowHeight);

@@ -45,7 +45,7 @@ namespace KSPAlternateResourcePanel
         Int32 MinWindowHeight = 136;
         Int32 SettingsAreaWidth = 314; //284;
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             settings = KSPAlternateResourcePanel.settings;
 

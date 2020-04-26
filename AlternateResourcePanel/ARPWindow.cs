@@ -36,7 +36,7 @@ namespace KSPAlternateResourcePanel
         private PartResourceVisibleList SelectedResources;
         internal Int32 intLineHeight = 20;
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             TooltipMouseOffset = new Vector2d(-10, 10);
 
