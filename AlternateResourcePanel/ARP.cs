@@ -78,7 +78,7 @@ namespace KSPAlternateResourcePanel
         //List of resource transfers
         internal ARPTransferList lstTransfers;
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             LogFormatted("Awakening the AlternateResourcePanel (ARP)");
 
@@ -189,7 +189,7 @@ namespace KSPAlternateResourcePanel
 
             //do the daily version check if required
             if (settings.DailyVersionCheck)
-                settings.VersionCheck(false);
+                settings.VersionCheck(this, false);
 
             APIAwake();
 

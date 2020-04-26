@@ -104,7 +104,7 @@ namespace KSPAlternateResourcePanel
             }
         }
 
-        internal override void Awake()
+        internal override void OnAwake()
         {
             if (!MapView.MapIsEnabled)
                 Visible = true;

@@ -28,6 +28,11 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.10.0.0		-	KSP Version: 1.9.1
+- Recompile for 1.9.1
+- Fix version checking and initialization issues
+- Fix API Wrapper setup using wrong object for lastStage (Fixes #89)
+
 Version 2.9.3.0		-	KSP Version: 1.4.1
 - Recompile for 1.4.1
 
