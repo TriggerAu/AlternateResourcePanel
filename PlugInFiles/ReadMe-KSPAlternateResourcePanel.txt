@@ -4,7 +4,7 @@ An Alternate display of resources in whole vessel and current stage
 
 By Trigger Au
 
-Forum Thread for latest: http://forum.kerbalspaceprogram.com/threads/60227-KSP-Alternate-Resource-Panel
+Forum Thread for latest: https://forum.kerbalspaceprogram.com/index.php?/topic/54876-19x-ksp-alternate-resource-panel
 Documentation Site: https://sites.google.com/site/kspalternateresourcepanel
 
 INSTALLATION

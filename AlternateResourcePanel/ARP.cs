@@ -1212,13 +1212,13 @@ namespace KSPAlternateResourcePanel
     //            first = false;
     //            HighLogic.SaveFolder = "default";
     //            Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
-                
+
     //            if (game != null && game.flightState != null && game.compatible)
     //            {
     //                HighLogic.CurrentGame = game;
 
     //                Int32 FirstVessel;
-    //                Boolean blnFoundVessel=false;
+    //                Boolean blnFoundVessel = false;
     //                for (FirstVessel = 0; FirstVessel < game.flightState.protoVessels.Count; FirstVessel++)
     //                {
     //                    if (game.flightState.protoVessels[FirstVessel].vesselType != VesselType.SpaceObject &&
@@ -1230,7 +1230,7 @@ namespace KSPAlternateResourcePanel
     //                }
     //                if (!blnFoundVessel)
     //                    HighLogic.LoadScene(GameScenes.SPACECENTER);
-    //                else 
+    //                else
     //                    FlightDriver.StartAndFocusVessel(game, FirstVessel);
     //            }
 
