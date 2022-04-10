@@ -28,6 +28,13 @@ LICENSE
 This work is licensed under an MIT license as outlined at the OSI site. Visit the documentation site for more details and Attribution
 
 VERSION HISTORY
+Version 2.11.0.0		-	KSP Version: 1.12.3
+- Recompile for 12.1.3 - any 1.12 version
+- Fix for NRE on opening settings (Issue #96)
+- Fix EVA Fuel not displaying correctly
+- Fix resource duplication - thanks @Mathieu
+- Fix Readme.md links - thanks @rayanth 
+
 Version 2.10.0.0		-	KSP Version: 1.9.1
 - Recompile for 1.9.1
 - Fix version checking and initialization issues
