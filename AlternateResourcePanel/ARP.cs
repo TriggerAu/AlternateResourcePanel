@@ -293,19 +293,19 @@ namespace KSPAlternateResourcePanel
             if (settings.Resources.Count == 0) {
                 // Set a Default config
                 LogFormatted("Setting a Default Res Config");
-                settings.Resources.Add(1576437329, new ResourceSettings(1576437329, "ElectricCharge"));
-                settings.Resources.Add(2001413032, new ResourceSettings(2001413032, "MonoPropellant"));
-                settings.Resources.Add(-792463147, new ResourceSettings(-792463147, "EVA Propellant"));
+                settings.Resources.Add(1566956177, new ResourceSettings(1566956177, "ElectricCharge"));
+                settings.Resources.Add(-929029996, new ResourceSettings(-929029996, "MonoPropellant"));
+                settings.Resources.Add(-1511737247, new ResourceSettings(-1511737247, "EVA Propellant"));
                 settings.Resources.Add(34, new ResourceSettings(34, "") { IsSeparator = true });
-                settings.Resources.Add(466598945, new ResourceSettings(466598945, "Ablator"));
+                settings.Resources.Add(-637467525, new ResourceSettings(-637467525, "Ablator"));
                 settings.Resources.Add(35, new ResourceSettings(35, "") { IsSeparator = true });
-                settings.Resources.Add(374119730, new ResourceSettings(374119730, "LiquidFuel"));
-                settings.Resources.Add(-1823983486, new ResourceSettings(-1823983486, "Oxidizer"));
-                settings.Resources.Add(650317537, new ResourceSettings(650317537, "SolidFuel"));
+                settings.Resources.Add(-1483389306, new ResourceSettings(-1483389306, "LiquidFuel"));
+                settings.Resources.Add(-1154601244, new ResourceSettings(-1154601244, "Oxidizer"));
+                settings.Resources.Add(-234914041, new ResourceSettings(-234914041, "SolidFuel"));
                 settings.Resources.Add(36, new ResourceSettings(36, "") { IsSeparator = true });
-                settings.Resources.Add(-1909417378, new ResourceSettings(-1909417378, "IntakeAir"));
-                settings.Resources.Add(79554, new ResourceSettings(79554, "Ore"));
-                settings.Resources.Add(1447111193, new ResourceSettings(1447111193, "XenonGas"));
+                settings.Resources.Add(1669081118, new ResourceSettings(1669081118, "IntakeAir"));
+                settings.Resources.Add(386854434, new ResourceSettings(386854434, "Ore"));
+                settings.Resources.Add(-798680445, new ResourceSettings(-798680445, "XenonGas"));
             }
 
             foreach (PartResourceDefinition item in PartResourceLibrary.Instance.resourceDefinitions)
@@ -524,6 +524,9 @@ namespace KSPAlternateResourcePanel
         }
 
 
+
+        private List<PartResource> loopList = new List<PartResource>();
+
         /// <summary>
         /// Heres where the heavy lifting should occur
         /// </summary>
@@ -590,7 +593,22 @@ namespace KSPAlternateResourcePanel
                     //is the part decoupled in the last stage
                     Boolean DecoupledInLastStage = (p.DecoupledAt() == LastStage);
 
-                    foreach (PartResource pr in p.Resources)
+                    loopList.Clear();
+                    if(active.isEVA && active.evaController!=null && !string.IsNullOrEmpty(active.evaController.propellantResourceName))
+                    {
+                        loopList.Add(new PartResource(p) {info = PartResourceLibrary.Instance.resourceDefinitions[active.evaController.propellantResourceName],amount= active.evaController .Fuel,maxAmount= active.evaController.FuelCapacity });
+                    }
+
+                    for (int i = 0; i < p.Resources.Count; i++)
+                    {
+                        if (active.isEVA && active.evaController != null && active.evaController.propellantResourceName == p.Resources[i].resourceName)
+                            continue;
+
+                        loopList.Add(p.Resources[i]);
+                    }
+
+
+                    foreach (PartResource pr in loopList)
                     {
                         //store a list of all resources in vessel so we can nuke resources from the other lists later
                         if (!lstVesselResourceIDs.Contains(pr.info.id)) lstVesselResourceIDs.Add(pr.info.id);
@@ -1212,13 +1230,13 @@ namespace KSPAlternateResourcePanel
     //            first = false;
     //            HighLogic.SaveFolder = "default";
     //            Game game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
-                
+
     //            if (game != null && game.flightState != null && game.compatible)
     //            {
     //                HighLogic.CurrentGame = game;
 
     //                Int32 FirstVessel;
-    //                Boolean blnFoundVessel=false;
+    //                Boolean blnFoundVessel = false;
     //                for (FirstVessel = 0; FirstVessel < game.flightState.protoVessels.Count; FirstVessel++)
     //                {
     //                    if (game.flightState.protoVessels[FirstVessel].vesselType != VesselType.SpaceObject &&
@@ -1230,7 +1248,7 @@ namespace KSPAlternateResourcePanel
     //                }
     //                if (!blnFoundVessel)
     //                    HighLogic.LoadScene(GameScenes.SPACECENTER);
-    //                else 
+    //                else
     //                    FlightDriver.StartAndFocusVessel(game, FirstVessel);
     //            }
 

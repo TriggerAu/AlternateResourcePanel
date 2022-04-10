@@ -110,15 +110,20 @@ set Binary="%25GAMEPATH%25\KSP_x64.exe"
 if not $(ConfigurationName)==Debug goto DEBUGREBUILDCONFIG
 :DEBUGCONFIG
 rem Copy DLL and run KSP
+
 copy "$(TargetPath)" "%25DestPath%25"
-if exist "$(ProjectDir)..\..\StartX.exe" goto STARTX
+rem copy "$(TargetDir)$(TargetName).pdb" "%25DestPath%25"
+rem "C:\Program Files (x86)\Unity\Editor\Data\MonoBleedingEdge\bin\cli.bat" "C:\Program Files (x86)\Unity\Editor\Data\MonoBleedingEdge\lib\mono\4.0\pdb2mdb.exe" "%25DestPath%25\$(TargetFileName)"
+
+rem and then run the game
+if exist "$(ProjectDir)..\..\_Scripts\StartX.exe" goto STARTX
 echo Running Directly
 "%25Binary%25"
 goto END
 
 :STARTX
 echo STARTX running
-"$(ProjectDir)..\..\StartX.exe" "%25Binary%25"
+"$(ProjectDir)..\..\_Scripts\StartX.exe" "%25Binary%25"
 goto END
 "%25Binary%25"
 

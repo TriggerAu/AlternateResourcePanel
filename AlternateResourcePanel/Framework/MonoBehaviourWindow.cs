@@ -83,6 +83,7 @@ namespace KSPPluginFramework
             //just some debugging stuff here
             LogFormatted_DebugOnly("New MBWindow Awakened");
 
+            ClampToScreenOffset = new RectOffset(0, 0, 0, 0);
             blnFlightUIVisible = true;
 
         }
@@ -165,7 +166,7 @@ namespace KSPPluginFramework
         /// <summary>
         /// How close to the edges it can get if clamping is enabled - this can be negative if you want to allow it to go off screen by a certain amount
         /// </summary>
-        internal RectOffset ClampToScreenOffset = new RectOffset(0, 0, 0, 0);
+        internal RectOffset ClampToScreenOffset;
 
         private Boolean _Visible;
         /// <summary>
