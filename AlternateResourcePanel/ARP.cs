@@ -524,6 +524,9 @@ namespace KSPAlternateResourcePanel
         }
 
 
+
+        private List<PartResource> loopList = new List<PartResource>();
+
         /// <summary>
         /// Heres where the heavy lifting should occur
         /// </summary>
@@ -590,7 +593,22 @@ namespace KSPAlternateResourcePanel
                     //is the part decoupled in the last stage
                     Boolean DecoupledInLastStage = (p.DecoupledAt() == LastStage);
 
-                    foreach (PartResource pr in p.Resources)
+                    loopList.Clear();
+                    if(active.isEVA && active.evaController!=null && !string.IsNullOrEmpty(active.evaController.propellantResourceName))
+                    {
+                        loopList.Add(new PartResource(p) {info = PartResourceLibrary.Instance.resourceDefinitions[active.evaController.propellantResourceName],amount= active.evaController .Fuel,maxAmount= active.evaController.FuelCapacity });
+                    }
+
+                    for (int i = 0; i < p.Resources.Count; i++)
+                    {
+                        if (active.isEVA && active.evaController != null && active.evaController.propellantResourceName == p.Resources[i].resourceName)
+                            continue;
+
+                        loopList.Add(p.Resources[i]);
+                    }
+
+
+                    foreach (PartResource pr in loopList)
                     {
                         //store a list of all resources in vessel so we can nuke resources from the other lists later
                         if (!lstVesselResourceIDs.Contains(pr.info.id)) lstVesselResourceIDs.Add(pr.info.id);
