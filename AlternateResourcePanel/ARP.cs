@@ -9,6 +9,7 @@ using UnityEngine;
 using KSPPluginFramework;
 
 using ARPToolbarWrapper;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -19,7 +20,11 @@ namespace KSPAlternateResourcePanel
         {
             APIInstance = this;
         }
-
+        // Localization strings
+        private static string ARMEDWAITSTAGE = Localizer.Format("#ARP_LOC_005");
+        private static string RUNNING = Localizer.Format("#ARP_LOC_006");
+        private static string NOTARMED = Localizer.Format("#ARP_LOC_008");
+        private static string RUNCOMPLETE = Localizer.Format("#ARP_LOC_009");
         //windows
         internal ARPWindow windowMain;
         internal ARPWindowSettings windowSettings;
@@ -838,7 +843,7 @@ namespace KSPAlternateResourcePanel
                     if (!AutoStagingRunning)
                     {
                         AutoStagingStatusColor = Color.white;
-                        AutoStagingStatus = "Armed... waiting for stage";
+                        AutoStagingStatus = ARMEDWAITSTAGE; //"Armed... waiting for stage"
                         //when to set it to running
                         if (lstLastStageEngineModules.Any(x => x.staged) || lstLastStageEngineFXModules.Any(x => x.staged))
                             AutoStagingRunning = true;
@@ -847,7 +852,7 @@ namespace KSPAlternateResourcePanel
                     {
                         //we are running, so now what
                         AutoStagingStatusColor = new Color32(183, 254, 0, 255);
-                        AutoStagingStatus = "Running";
+                        AutoStagingStatus = RUNNING; // "Running"
 
                         //are all the engines that are active flamed out in the last stage
                         if (AutoStagingTriggeredAt == 0 && lstPartsLastStageEngines.Count > 0 && 
@@ -869,7 +874,7 @@ namespace KSPAlternateResourcePanel
                                 AutoStagingTriggeredAt = 0;
                             } else {
                                 AutoStagingStatusColor = new Color32(232, 232, 0, 255);
-                                AutoStagingStatus = String.Format("Delay:{0:0.0}s", ((Double)settings.AutoStagingDelayInTenths / 10) - (Planetarium.GetUniversalTime() -AutoStagingTriggeredAt ));
+                                AutoStagingStatus = Localizer.Format("#ARP_LOC_007", ((Double)settings.AutoStagingDelayInTenths / 10) - (Planetarium.GetUniversalTime() -AutoStagingTriggeredAt )); //String.Format("Delay:{0:0.0}s", ((Double)settings.AutoStagingDelayInTenths / 10) - (Planetarium.GetUniversalTime() -AutoStagingTriggeredAt ))
                             }
                         }
                     }
@@ -886,7 +891,7 @@ namespace KSPAlternateResourcePanel
                     if (AutoStagingTriggeredAt == 0)
                     {
                         AutoStagingStatusColor = new Color32(140, 140, 140,255);
-                        AutoStagingStatus = "Not Armed";
+                        AutoStagingStatus = NOTARMED; // "Not Armed"
                     }
                     else
                     {
@@ -894,7 +899,7 @@ namespace KSPAlternateResourcePanel
                             AutoStagingTriggeredAt = 0;
                         else
                         {
-                            AutoStagingStatus = "Run Complete";
+                            AutoStagingStatus = RUNCOMPLETE; // "Run Complete"
                             AutoStagingStatusColor = new Color32(183, 254, 0, 255);
                         }
                     }
