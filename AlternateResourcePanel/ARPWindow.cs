@@ -7,6 +7,7 @@ using KSP;
 using KSP.UI.Screens;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -35,6 +36,24 @@ namespace KSPAlternateResourcePanel
         private ARPResourceList lstResourcesLastStage;
         private PartResourceVisibleList SelectedResources;
         internal Int32 intLineHeight = 20;
+
+        // Localization strings
+        private static string NODISPLAY = Localizer.Format("#ARP_LOC_010");
+        private static string STAGE = Localizer.Format("#ARP_LOC_011");
+        private static string ACTSTAGE = Localizer.Format("#ARP_LOC_012");
+        private static string NOCONTROL = Localizer.Format("#ARP_LOC_013");
+        private static string AUTO = Localizer.Format("#ARP_LOC_014");
+        private static string TO = Localizer.Format("#ARP_LOC_015");
+        private static string ARM = Localizer.Format("#ARP_LOC_016");
+        private static string DISARM = Localizer.Format("#ARP_LOC_017");
+        private static string BACKTOVESSEL = Localizer.Format("#ARP_LOC_018");
+        private static string SHOWBASE = Localizer.Format("#ARP_LOC_019");
+        private static string HIDETIME = Localizer.Format("#ARP_LOC_020");
+        private static string SHOWTIME = Localizer.Format("#ARP_LOC_021");
+        private static string TOGGLERES = Localizer.Format("#ARP_LOC_022");
+        private static string SHOWSETTING = Localizer.Format("#ARP_LOC_023");
+        private static string HIDESETTING = Localizer.Format("#ARP_LOC_024");
+        private static string UPDATEVERSION = Localizer.Format("#ARP_LOC_025");
 
         internal override void OnAwake()
         {
@@ -78,7 +97,7 @@ namespace KSPAlternateResourcePanel
 
             if (mbARP.lstResourcesToDisplay.Count == 0)
             {
-                GUILayout.Label("No current resources configured to display");
+                GUILayout.Label(NODISPLAY); // "No current resources configured to display"
             }
             else
             {
@@ -189,7 +208,7 @@ namespace KSPAlternateResourcePanel
                 if (!settings.AutoStagingEnabled)
                 {
                     //GUILayout.Label("Stage:", Styles.styleStageTextHead, GUILayout.Width(50));
-                    if (GUILayout.Button("Stage:", Styles.styleStageTextHead, GUILayout.Width(50)))
+                    if (GUILayout.Button($"{STAGE}:", Styles.styleStageTextHead, GUILayout.Width(50))) // Stage
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
                     GUIStyle styleStageNum = new GUIStyle(Styles.styleStageTextHead);
                     GUIContent contStageNum = new GUIContent(StageManager.CurrentStage.ToString());
@@ -206,13 +225,13 @@ namespace KSPAlternateResourcePanel
                     if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
                     {
                         if (mbARP.blnVesselIsControllable) {
-                            if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
+                            if (GUILayout.Button(ACTSTAGE, "ButtonGeneral", GUILayout.Width(100))) // "Activate Stage"
                                 StageManager.ActivateNextStage();
                             GUILayout.Space(21 + IconAlarmOffset);
                             //GUILayout.Space(51 + IconAlarmOffset);
                         }
                         else {
-                            GUILayout.Label("No Vessel Control", GUILayout.Width(120));
+                            GUILayout.Label(NOCONTROL, GUILayout.Width(120)); // "No Vessel Control"
                             GUILayout.Space(1 + IconAlarmOffset);
                             //GUILayout.Space(31 + IconAlarmOffset);
                         }
@@ -222,20 +241,20 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50)))
+                    if (GUILayout.Button($"{AUTO}:", Styles.styleStageTextHead, GUILayout.Width(50))) // Auto
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
                     GUILayout.Label(StageManager.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
-                    GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30));
+                    GUILayout.Label(TO, Styles.styleStageTextHead, GUILayout.Width(30)); // "to"
                     GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30));
                     DrawHorizontalSlider(ref mbARP.AutoStagingTerminateAt, 0, mbARP.AutoStagingMaxStage);
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
 
-                    String  strButtonArm = "Arm";
+                    String  strButtonArm = ARM; // "Arm"
                     GUIStyle styleArm = new GUIStyle(SkinsLibrary.CurrentSkin.button) { fontStyle = FontStyle.Bold };
                     if (mbARP.AutoStagingArmed)
                     {
-                        strButtonArm = "Disarm";
+                        strButtonArm = DISARM; // "Disarm"
                         styleArm.normal.textColor = styleArm.hover.textColor = new Color32(207,31,31,255) ;
                     }
                     else
@@ -262,7 +281,7 @@ namespace KSPAlternateResourcePanel
 
             // ShowBase Button
             Boolean blnShowBase = settings.ShowBase;
-            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? "Back to Vessel Display" : "Show Base Display\r\nAll resource within 2km of active vessel"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
+            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? BACKTOVESSEL : SHOWBASE), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23))) // "Back to Vessel Display"|"Show Base Display\r\nAll resource within 2km of active vessel"
             {
                 settings.ShowBase = blnShowBase;
             }
@@ -273,7 +292,8 @@ namespace KSPAlternateResourcePanel
 
             // ShowTime Button
             Boolean blnShowTimeRem = settings.ShowTimeRem;
-            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? "Hide time Remianing": "Show Time Remaining"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23))) {
+            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? HIDETIME : SHOWTIME), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23))) // "Hide time Remianing" "Show Time Remaining"
+            {
                 settings.ShowTimeRem = blnShowTimeRem;
             }
             //if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
@@ -283,7 +303,7 @@ namespace KSPAlternateResourcePanel
 
             // ShowAll Button
             Boolean blnToggleHidden = KSPAlternateResourcePanel.ShowAll;
-            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
+            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, TOGGLERES), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23))) // "Toggle Hidden Resources"
             {
                 KSPAlternateResourcePanel.ShowAll = blnToggleHidden;
             }
@@ -293,15 +313,15 @@ namespace KSPAlternateResourcePanel
             //}
 
             //Settings Toggle button
-            GUIContent btnMinMax = new GUIContent(Resources.btnChevronDown, "Show Settings...");
+            GUIContent btnMinMax = new GUIContent(Resources.btnChevronDown, SHOWSETTING); // "Show Settings..."
             if (windowSettings.Visible) { 
-                btnMinMax.image = Resources.btnChevronUp; btnMinMax.tooltip = "Hide Settings";
+                btnMinMax.image = Resources.btnChevronUp; btnMinMax.tooltip = HIDESETTING; // "Hide Settings"
             }
             else if (settings.VersionAttentionFlag && DateTime.Now.Millisecond < 500) {
                 btnMinMax.image = Resources.btnSettingsAttention; 
             }
             
-            if (settings.VersionAttentionFlag) btnMinMax.tooltip = "Updated Version Available - " + btnMinMax.tooltip;
+            if (settings.VersionAttentionFlag) btnMinMax.tooltip = $"{UPDATEVERSION} - " + btnMinMax.tooltip; // Updated Version Available
             
             if (GUILayout.Button(btnMinMax,"ButtonSettings",GUILayout.Width(23)))
             {
