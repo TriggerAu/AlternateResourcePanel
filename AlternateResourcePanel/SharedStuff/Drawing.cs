@@ -267,40 +267,39 @@ namespace KSPAlternateResourcePanel
 
         internal static String FormatTime(Double TimeInSecs)
         {
-            return KSPUtil.dateTimeFormatter.PrintDateDeltaCompact(TimeInSecs, true, true, true);
-            //String strReturn = "";
+            String strReturn = "";
 
-            //Double Second = TimeInSecs % 60;
-            //Double Minute = Math.Truncate((TimeInSecs / 60) % 60);
-            //Double HourRaw = TimeInSecs / 60 / 60;
+            Double Second = TimeInSecs % 60;
+            Double Minute = Math.Truncate((TimeInSecs / 60) % 60);
+            Double HourRaw = TimeInSecs / 60 / 60;
 
-            //Double Hour;
-            //if (GameSettings.KERBIN_TIME)
-            //    Hour = Math.Truncate(HourRaw % 6);
-            //else
-            //    Hour = Math.Truncate(HourRaw % 24);
+            Double Hour;
+            if (GameSettings.KERBIN_TIME)
+                Hour = Math.Truncate(HourRaw % 6);
+            else
+                Hour = Math.Truncate(HourRaw % 24);
 
-            //Double Day;
-            //if (GameSettings.KERBIN_TIME)
-            //    Day = Math.Truncate((HourRaw % (426 * 6)) / 6);
-            //else
-            //    Day = Math.Truncate((HourRaw % (365 * 24)) / 24);
+            Double Day;
+            if (GameSettings.KERBIN_TIME)
+                Day = Math.Truncate((HourRaw % (426 * 6)) / 6);
+            else
+                Day = Math.Truncate((HourRaw % (365 * 24)) / 24);
 
-            //Double Year;
-            //if (GameSettings.KERBIN_TIME)
-            //    Year = Math.Truncate((HourRaw / (426 * 6)));
-            //else
-            //    Year = Math.Truncate((HourRaw / (365 * 24)));
+            Double Year;
+            if (GameSettings.KERBIN_TIME)
+                Year = Math.Truncate((HourRaw / (426 * 6)));
+            else
+                Year = Math.Truncate((HourRaw / (365 * 24)));
 
-            //if (Year > 0)
-            //    strReturn = String.Format("{0:0}y {1:0}d {2:00}:{3:00}:{4:00}", Year, Day, Hour, Minute, Second);
-            //else if (Day > 0)
-            //    strReturn = String.Format("{0:0}d {1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
-            //else if (Hour > 0)
-            //    strReturn = String.Format("{1:0}:{2:00}:{3:00}", Day, Hour, Minute, Second);
-            //else 
-            //    strReturn = String.Format("{2:0}:{3:00.0}", Day, Hour, Minute, Second);
-            //return strReturn;
+            if (Year > 0)
+                strReturn = String.Format("{0:0}y {1:0}d {2:00}:{3:00}:{4:00}", Year, Day, Hour, Minute, Second);
+            else if (Day > 0)
+                strReturn = String.Format("{0:0}d {1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
+            else if (Hour > 0)
+                strReturn = String.Format("{1:0}:{2:00}:{3:00}", Day, Hour, Minute, Second);
+            else
+                strReturn = String.Format("{2:0}:{3:00.0}", Day, Hour, Minute, Second);
+            return strReturn;
         }
 
 
