@@ -139,7 +139,7 @@ namespace KSPAlternateResourcePanel
             for (int i = 0; i < settings.Resources.Count; i++)
             {
                 ResourceSettings item = settings.Resources.Values.ElementAt(i);
-                if(item == null || PartResourceLibrary.Instance.GetDefinition(item.id) == null)
+                if(item == null || (PartResourceLibrary.Instance.GetDefinition(item.id) == null && !item.IsSeparator))
                 {
                     continue;
                 }
