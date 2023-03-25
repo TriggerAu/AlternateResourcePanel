@@ -169,7 +169,7 @@ namespace KSPAlternateResourcePanel
                     }
                     GUILayout.EndVertical();
                     //GUILayout.Label(item.name, GUILayout.Width(NameWidth));
-                    if (GUILayout.Button(item.name, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
+                    if (GUILayout.Button(PartResourceLibrary.Instance.GetDefinition(item.name).displayName, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
                         if (ResourceToShowAlarmChanger == item.id)
                             ResourceToShowAlarmChanger = 0;
                         else
