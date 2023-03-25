@@ -7,6 +7,7 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPPluginFramework
 {
@@ -404,6 +405,9 @@ namespace KSPPluginFramework
                     }
                 }
             }
+            private static string PAGE = Localizer.Format("#ARP_LOC_135");
+            private static string PREV = Localizer.Format("#ARP_LOC_136");
+            private static string NEXT = Localizer.Format("#ARP_LOC_137");
 
             //Draw the actual button for the list
             internal Boolean DrawButton()
@@ -418,7 +422,7 @@ namespace KSPPluginFramework
                 if (blnReturn) ListVisible = !ListVisible;
 
                 //get the drawn button rectangle
-                if (Event.current.type == EventType.repaint)
+                if (Event.current.type == EventType.Repaint)
                     rectButton = GUILayoutUtility.GetLastRect();
                 //draw a dropdown symbol on the right edge
                 if (DropDownGlyph != null)
@@ -501,9 +505,9 @@ namespace KSPPluginFramework
                         iPad = 1;
 
                         //Draw paging buttons
-                        GUI.Label(new Rect(rectListBox) { x = rectListBox.x + ListBoxPadding.left, height = 20 }, String.Format("Page {0}/{1:0}", ListPageNum + 1, Math.Floor((Single)Items.Count / ListPageLength) + 1), stylePager);
-                        GUI.Button(new Rect(rectListBox) { x = rectListBox.x + rectListBox.width - 80 - ListBoxPadding.right, y = rectListBox.y + 2, width = 40, height = 16 }, "Prev");
-                        GUI.Button(new Rect(rectListBox) { x = rectListBox.x + rectListBox.width - 40 - ListBoxPadding.right, y = rectListBox.y + 2, width = 40, height = 16 }, "Next");
+                        GUI.Label(new Rect(rectListBox) { x = rectListBox.x + ListBoxPadding.left, height = 20 }, String.Format("{2} {0}/{1:0}", ListPageNum + 1, Math.Floor((Single)Items.Count / ListPageLength) + 1, PAGE), stylePager); // Page
+                        GUI.Button(new Rect(rectListBox) { x = rectListBox.x + rectListBox.width - 80 - ListBoxPadding.right, y = rectListBox.y + 2, width = 40, height = 16 }, PREV); // "Prev"
+                        GUI.Button(new Rect(rectListBox) { x = rectListBox.x + rectListBox.width - 40 - ListBoxPadding.right, y = rectListBox.y + 2, width = 40, height = 16 }, NEXT); // "Next"
                     }
 
                     //now draw each listitem
@@ -530,7 +534,7 @@ namespace KSPPluginFramework
 
             internal Boolean CloseOnOutsideClick()
             {
-                if (ListVisible && Event.current.type == EventType.mouseDown && !rectListBox.Contains(Event.current.mousePosition))
+                if (ListVisible && Event.current.type == EventType.MouseDown && !rectListBox.Contains(Event.current.mousePosition))
                 {
                     ListVisible = false;
                     return true;
