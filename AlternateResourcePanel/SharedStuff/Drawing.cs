@@ -16,7 +16,7 @@ namespace KSPAlternateResourcePanel
             GUIContent contLabel;
             contLabel = GetResourceIcon(ResourceName);
 
-            contLabel.tooltip = ResourceName;
+            contLabel.tooltip = PartResourceLibrary.Instance.GetDefinition(ResourceName).displayName;// ResourceName;
             GUILayout.Label(contLabel, Styles.styleBarName, GUILayout.ExpandWidth(false));
 
             //return the rect that is the position of the Icon
