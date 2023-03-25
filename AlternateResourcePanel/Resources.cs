@@ -8,6 +8,7 @@ using System.IO;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -91,6 +92,16 @@ namespace KSPAlternateResourcePanel
         
         //Alarm Library
         internal static Dictionary<String, AudioClip> clipAlarms;
+
+        // Localization strings
+        private static string CLICKDISABLE = Localizer.Format("#ARP_LOC_138");
+        private static string CLICKENABLE = Localizer.Format("#ARP_LOC_139");
+        private static string ARP = Localizer.Format("#ARP_LOC_140");
+        private static string ALTERNATERESPANEL = Localizer.Format("#ARP_LOC_141");
+        private static string MOD = Localizer.Format("#ARP_LOC_142");
+        private static string MODRESDEFINITION = Localizer.Format("#ARP_LOC_143");
+        private static string PLAYER = Localizer.Format("#ARP_LOC_144");
+        private static string PLAYERSICON = Localizer.Format("#ARP_LOC_145");
 
         internal static void LoadSounds()
         {
@@ -185,8 +196,8 @@ namespace KSPAlternateResourcePanel
             LoadImageFromFile(ref btnPlayGreen, "img_PlayGreen.png");
             LoadImageFromFile(ref btnBan, "img_BanRed.png");
 
-            guiFlowEnabled = new GUIContent(btnPlayGreen, "Click to disable");
-            guiFlowDisabled = new GUIContent(btnBan, "Click to enable");
+            guiFlowEnabled = new GUIContent(btnPlayGreen, CLICKDISABLE); // "Click to disable"
+            guiFlowDisabled = new GUIContent(btnBan, CLICKENABLE); // "Click to enable"
             //LoadImageFromFile(ref btnDropDownSep, "img_DropDownSep.png");
 
             //LoadImageFromFile(ref texDropDownListBox, "tex_DropDownListBox.png");
@@ -307,9 +318,9 @@ namespace KSPAlternateResourcePanel
         {
             switch (Name.ToLower())
             {
-                case "ksparp": return new GUIContent("ARP", "Alternate Resource Panel");
-                case "mod": return new GUIContent("Mod", "Mod Resource Definition");
-                case "player": return new GUIContent("Player", "Players Icons");
+                case "ksparp": return new GUIContent(ARP, ALTERNATERESPANEL); // "ARP""Alternate Resource Panel"
+                case "mod": return new GUIContent(MOD, MODRESDEFINITION); // "Mod""Mod Resource Definition"
+                case "player": return new GUIContent(PLAYER, PLAYERSICON); // "Player""Players Icons"
                 default:
                     return new GUIContent("ERROR", "");
             }
