@@ -115,7 +115,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Space(2);
-            GUILayout.Label(ICON, Styles.styleStageTextHead,GUILayout.Width(32)); // "Icon"
+            GUILayout.Label(ICON, Styles.styleStageTextHead, GUILayout.Width(32)); // "Icon"
             GUILayout.Label(NAME, Styles.styleStageTextHead, GUILayout.Width(120)); // "Name"
             GUILayout.Label(POSITION, Styles.styleStageTextHead, GUILayout.Width(56)); // "Position"
             GUILayout.Space(6);
