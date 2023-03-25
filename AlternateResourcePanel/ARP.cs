@@ -457,7 +457,7 @@ namespace KSPAlternateResourcePanel
                 rectButton.x = settings.vectButtonPos.x;
                 rectButton.y = settings.vectButtonPos.y;
 
-                if (GUI.Button(rectButton, "Alternate", SkinsLibrary.CurrentSkin.GetStyle("ButtonMain")))
+                if (GUI.Button(rectButton, "Alternate", SkinsLibrary.CurrentSkin.GetStyle("ButtonMain"))) // 
                 {
                     settings.ToggleOn = !settings.ToggleOn;
                     settings.Save();
