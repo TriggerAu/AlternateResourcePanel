@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using KSP.Localization;
 
 namespace KSPPluginFramework
 {
@@ -36,7 +37,7 @@ namespace KSPPluginFramework
             List<KeyValuePair<TEnum, string>> temp = Enum
                 .GetValues(typeof(TEnum))
                 .Cast<TEnum>()
-                .Select(x => new KeyValuePair<TEnum, string>(x, ((Enum)((System.Object)x)).Description()))
+                .Select(x => new KeyValuePair<TEnum, string>(x, Localizer.Format(((Enum)((System.Object)x)).Description())))
                 .ToList();
             return temp.Select(x => x.Value).ToList<String>();
         }
