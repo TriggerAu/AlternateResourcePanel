@@ -248,7 +248,14 @@ namespace KSPAlternateResourcePanel
                 // Visibility level and alarm values/Delete
                 if (!item.IsSeparator)
                 {
-                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75)))
+                    string visibility = settings.Resources[item.id].Visibility.ToString();
+                    if (settings.Resources[item.id].Visibility.ToString() == "AlwaysOn")
+                        visibility = Localizer.Format("#ARP_LOC_163");
+                    else if (settings.Resources[item.id].Visibility.ToString() == "Threshold")
+                        visibility = Localizer.Format("#ARP_LOC_164");
+                    else if (settings.Resources[item.id].Visibility.ToString() == "Hidden")
+                        visibility = Localizer.Format("#ARP_LOC_165");
+                    if (GUILayout.Button(visibility, GUILayout.Width(75))) // settings.Resources[item.id].Visibility.ToString()
                     {
                         settings.Resources[item.id].Visibility = settings.Resources[item.id].Visibility.Next();
                     }
