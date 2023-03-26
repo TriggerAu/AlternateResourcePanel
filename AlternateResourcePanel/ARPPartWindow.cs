@@ -281,7 +281,7 @@ namespace KSPAlternateResourcePanel
 
 
                     String strOut = (tmpTransfer.transferState == TransferStateEnum.Out && tmpTransfer.Active) ? STOP : OUT; //"Stop""Out"
-                    String strIn = (tmpTransfer.transferState == TransferStateEnum.In && tmpTransfer.Active) ? STOP : OUT; // "Stop""In"
+                    String strIn = (tmpTransfer.transferState == TransferStateEnum.In && tmpTransfer.Active) ? STOP : IN; // "Stop""In"
                     Boolean blnTempOut = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.Out, strOut, styleTransferButton);
                     Boolean blnTempIn = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.In, strIn, styleTransferButton);
 
