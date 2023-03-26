@@ -16,7 +16,7 @@ namespace KSPAlternateResourcePanel
             GUIContent contLabel;
             contLabel = GetResourceIcon(ResourceName);
 
-            contLabel.tooltip = ResourceName;
+            contLabel.tooltip = PartResourceLibrary.Instance.GetDefinition(ResourceName).displayName;// ResourceName;
             GUILayout.Label(contLabel, Styles.styleBarName, GUILayout.ExpandWidth(false));
 
             //return the rect that is the position of the Icon
@@ -272,7 +272,7 @@ namespace KSPAlternateResourcePanel
             Double Second = TimeInSecs % 60;
             Double Minute = Math.Truncate((TimeInSecs / 60) % 60);
             Double HourRaw = TimeInSecs / 60 / 60;
-            
+
             Double Hour;
             if (GameSettings.KERBIN_TIME)
                 Hour = Math.Truncate(HourRaw % 6);
@@ -297,7 +297,7 @@ namespace KSPAlternateResourcePanel
                 strReturn = String.Format("{0:0}d {1:00}:{2:00}:{3:00}", Day, Hour, Minute, Second);
             else if (Hour > 0)
                 strReturn = String.Format("{1:0}:{2:00}:{3:00}", Day, Hour, Minute, Second);
-            else 
+            else
                 strReturn = String.Format("{2:0}:{3:00.0}", Day, Hour, Minute, Second);
             return strReturn;
         }

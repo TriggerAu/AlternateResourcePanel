@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using UnityEngine.Networking;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -64,12 +66,17 @@ namespace KSPAlternateResourcePanel
         [Persistent] internal Boolean AlarmsVolumeFromUI=true;
         [Persistent] internal Single AlarmsVolume=0.25f;
 
+        // Localization strings
+        private static string FOREVER = Localizer.Format("#ARP_LOC_146");
+        private static string TIMES = Localizer.Format("#ARP_LOC_147");
+        private static string NODATARECORDED = Localizer.Format("#ARP_LOC_156");
+
         private String RepeatsToString(Int32 value)
         {
             if (value > 5)
-                return "For Ever";
+                return FOREVER; // "For Ever"
             else
-                return value + " Time(s)";
+                return value + " " + TIMES; // Time(s)
         }
 
 
@@ -137,17 +144,17 @@ namespace KSPAlternateResourcePanel
 
         internal enum DisplaySkin
         {
-            [Description("KSP Style")]          Default,
-            [Description("Unity Style")]        Unity,
-            [Description("Unity/KSP Buttons")]  UnityWKSPButtons
+            [Description("#ARP_LOC_148")]          Default, // KSP Style
+            [Description("#ARP_LOC_149")]        Unity, // Unity Style
+            [Description("#ARP_LOC_150")]  UnityWKSPButtons // Unity/KSP Buttons
         }
         internal enum RateDisplayEnum
         {
-            [Description("KSP Default")]            Default,
-            [Description("Left/Right")]             LeftRight,
-            [Description("Left/Right + Text")]      LeftRightPlus,
-            [Description("Up/Down")]                UpDown,
-            [Description("Up/Down + Text")]         UpDownPlus
+            [Description("#ARP_LOC_151")]            Default, // KSP Default
+            [Description("#ARP_LOC_152")]             LeftRight, // Left/Right
+            [Description("#ARP_LOC_153")]      LeftRightPlus, // Left/Right + Text
+            [Description("#ARP_LOC_154")]                UpDown, // Up/Down
+            [Description("#ARP_LOC_155")]         UpDownPlus //Up/Down + Text
         }
 
         
@@ -158,7 +165,7 @@ namespace KSPAlternateResourcePanel
         private String ConvertVersionCheckDateToString(DateTime Date)
         {
             if (Date < DateTime.Now.AddYears(-10))
-                return "No Date Recorded";
+                return NODATARECORDED; // "No Date Recorded"
             else
                 return String.Format("{0:yyyy-MM-dd}", Date);
         }
@@ -412,16 +419,16 @@ namespace KSPAlternateResourcePanel
         }
         internal enum MonitorDirections
         {
-            [Description("Monitor for High Values")]    High,
-            [Description("Monitor for Low Values")]     Low
+            [Description("#ARP_LOC_157")]    High, // Monitor for High Values
+            [Description("#ARP_LOC_158")]     Low // Monitor for Low Values
         }
         
         internal enum DisplayUnitsEnum
         {
-            [Description("Default KSP Units")]          Units,
-            [Description("Display as Tonnes")]          Tonnes,
-            [Description("Display as Kilograms")]       Kilograms,
-            [Description("Display as Liters")]          Liters
+            [Description("#ARP_LOC_159")]          Units, // Default KSP Units
+            [Description("#ARP_LOC_160")]          Tonnes, // Display as Tonnes
+            [Description("#ARP_LOC_161")]       Kilograms, // Display as Kilograms
+            [Description("#ARP_LOC_162")]          Liters // Display as Liters
         }
 
     }

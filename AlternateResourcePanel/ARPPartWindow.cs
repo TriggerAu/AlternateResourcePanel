@@ -6,11 +6,17 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
     class ARPPartWindow : MonoBehaviourWindow
     {
+        // Localization strings
+        private static string TRANSFER = Localizer.Format("#ARP_LOC_001");
+        private static string STOP = Localizer.Format("#ARP_LOC_002");
+        private static string IN = Localizer.Format("#ARP_LOC_003");
+        private static string OUT = Localizer.Format("#ARP_LOC_004");
         //internal ARPPartWindow(Part Part)
         //{
         //    this.Part = Part;
@@ -261,7 +267,7 @@ namespace KSPAlternateResourcePanel
                     styleTransfer.padding.top = -8;
                     styleTransfer.padding.bottom = 0;
                     //GUILayout.Label("Transfer: " + tmpTransfer.transferState, styleTransfer);
-                    GUILayout.Label("Transfer: " , styleTransfer);
+                    GUILayout.Label($"{TRANSFER}: " , styleTransfer); // Transfer
 
                     GUILayout.Space(21);
 
@@ -274,8 +280,8 @@ namespace KSPAlternateResourcePanel
                     styleTransferButton.margin = new RectOffset(0, 0, 0, 0);
 
 
-                    String strOut = (tmpTransfer.transferState == TransferStateEnum.Out && tmpTransfer.Active) ? "Stop" : "Out";
-                    String strIn = (tmpTransfer.transferState == TransferStateEnum.In && tmpTransfer.Active) ? "Stop" : "In";
+                    String strOut = (tmpTransfer.transferState == TransferStateEnum.Out && tmpTransfer.Active) ? STOP : OUT; //"Stop""Out"
+                    String strIn = (tmpTransfer.transferState == TransferStateEnum.In && tmpTransfer.Active) ? STOP : IN; // "Stop""In"
                     Boolean blnTempOut = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.Out, strOut, styleTransferButton);
                     Boolean blnTempIn = GUILayout.Toggle(tmpTransfer.transferState == TransferStateEnum.In, strIn, styleTransferButton);
 
@@ -355,7 +361,7 @@ namespace KSPAlternateResourcePanel
             if (Visible && !UIHidden)
             {
                 Boolean oldMouseOver = MouseOver;
-                MouseOver =  (Event.current.type== EventType.repaint) && WindowRect.Contains(Event.current.mousePosition);
+                MouseOver =  (Event.current.type== EventType.Repaint) && WindowRect.Contains(Event.current.mousePosition);
 
                 if (oldMouseOver != MouseOver)
                 {

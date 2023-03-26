@@ -7,6 +7,7 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -21,22 +22,92 @@ namespace KSPAlternateResourcePanel
         private DropDownList ddlSettingsAlarmsWarning;
         private DropDownList ddlSettingsAlarmsAlert;
 
+        // Localization Strings
+        private static string SETTINGSECTION = Localizer.Format("#ARP_LOC_067");
+        private static string RATES = Localizer.Format("#ARP_LOC_068");
+        private static string CALCBY = Localizer.Format("#ARP_LOC_069");
+        private static string RATESTYLE = Localizer.Format("#ARP_LOC_070");
+        private static string SHOWRATECHANGE = Localizer.Format("#ARP_LOC_071");
+        private static string SHOWRATEFORPART = Localizer.Format("#ARP_LOC_072");
+        private static string REALTIME = Localizer.Format("#ARP_LOC_073");
+        private static string STAGEBARS = Localizer.Format("#ARP_LOC_074");
+        private static string BARSPOS = Localizer.Format("#ARP_LOC_075");
+        private static string ENABLED = Localizer.Format("#ARP_LOC_076");
+        private static string SINGLEBAR = Localizer.Format("#ARP_LOC_077");
+        private static string ONLEFT = Localizer.Format("#ARP_LOC_078");
+        private static string ONRIGHT = Localizer.Format("#ARP_LOC_079");
+        private static string RESOURCES = Localizer.Format("#ARP_LOC_080");
+        private static string CONFIGRESOURCESETTING = Localizer.Format("#ARP_LOC_081");
+        private static string SHOWWINDOWALARM = Localizer.Format("#ARP_LOC_082");
+        private static string POPWINDOW = Localizer.Format("#ARP_LOC_083");
+        private static string STYLING = Localizer.Format("#ARP_LOC_084");
+        private static string BUTTON = Localizer.Format("#ARP_LOC_085");
+        private static string NOTINSTALLTOOLBAR = Localizer.Format("#ARP_LOC_086");
+        private static string OPENBROWSER = Localizer.Format("#ARP_LOC_087");
+        private static string HIDEWHNESHOW = Localizer.Format("#ARP_LOC_088");
+        private static string HIDEARP = Localizer.Format("#ARP_LOC_089");
+        private static string RESTOREDONCHANGE = Localizer.Format("#ARP_LOC_090");
+        private static string ICONSETS = Localizer.Format("#ARP_LOC_091");
+        private static string SELECTICONORDER = Localizer.Format("#ARP_LOC_092");
+        private static string SEPARATOR = Localizer.Format("#ARP_LOC_093");
+        private static string PADDING = Localizer.Format("#ARP_LOC_094");
+        private static string EMPTIES = Localizer.Format("#ARP_LOC_095");
+        private static string HIDEEMPTYRES = Localizer.Format("#ARP_LOC_096");
+        private static string HIDEFULLRES = Localizer.Format("#ARP_LOC_097");
+        private static string AFTER = Localizer.Format("#ARP_LOC_098");
+        private static string SECS = Localizer.Format("#ARP_LOC_099");
+        private static string VISUALS = Localizer.Format("#ARP_LOC_100");
+        private static string DISABLEHOVER = Localizer.Format("#ARP_LOC_101");
+        private static string LOCKPOS = Localizer.Format("#ARP_LOC_102");
+        private static string SAVEPOS = Localizer.Format("#ARP_LOC_103");
+        private static string RESETPOS = Localizer.Format("#ARP_LOC_104");
+        private static string ALARMS = Localizer.Format("#ARP_LOC_105");
+        private static string VOLUME = Localizer.Format("#ARP_LOC_106");
+        private static string LEVEL = Localizer.Format("#ARP_LOC_107");
+        private static string ENABLEALARMS = Localizer.Format("#ARP_LOC_108");
+        private static string USEKSPUIVOLUME = Localizer.Format("#ARP_LOC_109");
+        private static string SOUNDS = Localizer.Format("#ARP_LOC_110");
+        private static string WARNING = Localizer.Format("#ARP_LOC_111");
+        private static string REPEAT = Localizer.Format("#ARP_LOC_112");
+        private static string ALERT = Localizer.Format("#ARP_LOC_113");
+        private static string STAGING = Localizer.Format("#ARP_LOC_114");
+        private static string AUTO = Localizer.Format("#ARP_LOC_115");
+        private static string DELAY = Localizer.Format("#ARP_LOC_116");
+        private static string AUTOSTAGING = Localizer.Format("#ARP_LOC_117");
+        private static string VERSIONCHECK = Localizer.Format("#ARP_LOC_118");
+        private static string DAILYCHECK = Localizer.Format("#ARP_LOC_119");
+        private static string NOWCHECK = Localizer.Format("#ARP_LOC_120");
+        private static string LASTCHECK = Localizer.Format("#ARP_LOC_121");
+        private static string CURVERSION = Localizer.Format("#ARP_LOC_122");
+        private static string LASTVERSION = Localizer.Format("#ARP_LOC_123");
+        private static string CHECKING = Localizer.Format("#ARP_LOC_124");
+        private static string UPDATEDAVAILABLE = Localizer.Format("#ARP_LOC_125");
+        private static string DOCUMENT = Localizer.Format("#ARP_LOC_126");
+        private static string SOURCECODE = Localizer.Format("#ARP_LOC_127");
+        private static string FORUMPAGE = Localizer.Format("#ARP_LOC_128");
+        private static string CLICKHERE = Localizer.Format("#ARP_LOC_129");
+        private static string TESTSOUND = Localizer.Format("#ARP_LOC_130");
+        private static string STOPPLAYSOUND = Localizer.Format("#ARP_LOC_131");
+        private static string STAGINGENABLED = Localizer.Format("#ARP_LOC_132");
+        private static string MAPVIEWSTAGING = Localizer.Format("#ARP_LOC_133");
+        private static string MAPVIEWSPACEBAR = Localizer.Format("#ARP_LOC_134");
+
         internal enum SettingsTabs
         {
-            [Description("General Properties")] General,
-            [Description("Styling/Visuals")]    Styling,
-            [Description("Alarm Properties")]   Alarms,
-            [Description("Staging Controls")]   Staging,
-            [Description("About...")]   About,
+            [Description("#ARP_LOC_058")] General, // General Properties
+            [Description("#ARP_LOC_059")]    Styling, // Styling/Visuals
+            [Description("#ARP_LOC_060")]   Alarms, // Alarm Properties
+            [Description("#ARP_LOC_061")]   Staging, // Staging Controls
+            [Description("#ARP_LOC_062")]   About, // About...
         }
 
 
         internal enum ButtonStyleEnum
         {
-            [Description("Basic button")]                       Basic,
-            [Description("Common Toolbar (by Blizzy78)")]       Toolbar,
-            [Description("KSP App Launcher Button")]            Launcher,
-            [Description("Replace Stock Resources App")]        StockReplace,
+            [Description("#ARP_LOC_063")]                       Basic, // Basic button
+            [Description("#ARP_LOC_064")]       Toolbar, // Common Toolbar (by Blizzy78)
+            [Description("#ARP_LOC_065")]            Launcher, // KSP App Launcher Button
+            [Description("#ARP_LOC_066")]        StockReplace, // Replace Stock Resources App
         }
 
         private DropDownList ddlSettingsButtonStyle;
@@ -177,7 +248,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Settings Section", Styles.styleStageTextHead,GUILayout.Width(140));
+            GUILayout.Label(SETTINGSECTION, Styles.styleStageTextHead,GUILayout.Width(140)); // "Settings Section"
             GUILayout.Space(5);
             ddlSettingsTab.DrawButton();
             GUILayout.Space(4);
@@ -221,18 +292,18 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2);
-            GUILayout.Label("Rates:", Styles.styleStageTextHead);
+            GUILayout.Label($"{RATES}:", Styles.styleStageTextHead); // Rates
             GUILayout.Space(13);
-            GUILayout.Label("Calc By:", Styles.styleStageTextHead);
-            GUILayout.Label("Rate Style:", Styles.styleStageTextHead);
+            GUILayout.Label($"{CALCBY}:", Styles.styleStageTextHead); // Calc By
+            GUILayout.Label($"{RATESTYLE}:", Styles.styleStageTextHead); // Rate Style
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
 
-            if (DrawToggle(ref settings.ShowRates, "Show Rate Change Values", Styles.styleToggle))
+            if (DrawToggle(ref settings.ShowRates, SHOWRATECHANGE, Styles.styleToggle)) // "Show Rate Change Values"
                 settings.Save();
             //if (DrawToggle(ref settings.ShowRatesTimeRem, "Toggle Time Remaining", Styles.styleToggle))
             //    settings.Save();
-            if (DrawToggle(ref settings.ShowRatesForParts, "Show Rates for Parts", Styles.styleToggle))
+            if (DrawToggle(ref settings.ShowRatesForParts, SHOWRATEFORPART, Styles.styleToggle)) // "Show Rates for Parts"
             {
                 settings.Save();
             }
@@ -241,7 +312,7 @@ namespace KSPAlternateResourcePanel
             if (DrawToggle(ref settings.RatesUseUT, "UT", Styles.styleToggle,GUILayout.Width(60)))
                 settings.Save();
             Boolean NotUT = !settings.RatesUseUT;
-            if (DrawToggle(ref NotUT, "Real Time", Styles.styleToggle))
+            if (DrawToggle(ref NotUT, REALTIME, Styles.styleToggle)) // "Real Time"
             {
                 settings.RatesUseUT=!settings.RatesUseUT;
                 settings.Save();
@@ -256,27 +327,27 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical(GUILayout.Width(60));
 
             GUILayout.Space(2);
-            GUILayout.Label("Stage Bars:", Styles.styleStageTextHead);
+            GUILayout.Label($"{STAGEBARS}:", Styles.styleStageTextHead); // Stage Bars
             if (settings.SplitLastStage)
             {
                 GUILayout.Space(-6);
-                GUILayout.Label("Bars Pos:", Styles.styleStageTextHead);
+                GUILayout.Label($"{BARSPOS}:", Styles.styleStageTextHead); // Bars Pos
             }
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             GUILayout.Space(2);
-            if (DrawToggle(ref settings.SplitLastStage, new GUIContent("Enabled", "Turn this off to show single green bars and no last stage separation."), Styles.styleToggle))
+            if (DrawToggle(ref settings.SplitLastStage, new GUIContent(ENABLED, SINGLEBAR), Styles.styleToggle)) // "Enabled""Turn this off to show single green bars and no last stage separation."
                 settings.Save();
             if (settings.SplitLastStage)
             {
                 GUILayout.BeginHorizontal();
                 Boolean NotRight = !settings.StageBarOnRight;
-                if (DrawToggle(ref NotRight, "On Left", Styles.styleToggle, GUILayout.Width(90)))
+                if (DrawToggle(ref NotRight, ONLEFT, Styles.styleToggle, GUILayout.Width(90))) // "On Left"
                 {
                     settings.StageBarOnRight = !settings.StageBarOnRight; 
                     settings.Save();
                 }
-                if (DrawToggle(ref settings.StageBarOnRight, "On Right", Styles.styleToggle))
+                if (DrawToggle(ref settings.StageBarOnRight, ONRIGHT, Styles.styleToggle)) // "On Right"
                 {
                     settings.Save();
                 }
@@ -289,10 +360,10 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2);
-            GUILayout.Label("Resources:", Styles.styleStageTextHead);
+            GUILayout.Label($"{RESOURCES}:", Styles.styleStageTextHead); // Resources
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
-            if (DrawButton("Configure Resource Settings"))
+            if (DrawButton(CONFIGRESOURCESETTING)) // "Configure Resource Settings"
             {
                 mbARP.windowResourceConfig.Visible = !mbARP.windowResourceConfig.Visible;
                 if (mbARP.windowResourceConfig.Visible)
@@ -304,7 +375,7 @@ namespace KSPAlternateResourcePanel
                         mbARP.windowResourceConfig.WindowRect.x = mbARP.windowMain.WindowRect.x + mbARP.windowMain.WindowRect.width;
                 }
             }
-            if (DrawToggle(ref settings.ShowWindowOnResourceMonitor, new GUIContent("Show Window on Alarm", "If an alarm is exceeded then popup the window if it is not already visible. Will hide again when acknowledged."),Styles.styleToggle))
+            if (DrawToggle(ref settings.ShowWindowOnResourceMonitor, new GUIContent(SHOWWINDOWALARM, POPWINDOW),Styles.styleToggle)) // "Show Window on Alarm""If an alarm is exceeded then popup the window if it is not already visible. Will hide again when acknowledged."
                 settings.Save();
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
@@ -319,8 +390,8 @@ namespace KSPAlternateResourcePanel
 
             GUILayout.BeginVertical(GUILayout.Width(60));
             GUILayout.Space(2); //to even up the text
-            GUILayout.Label("Styling:", Styles.styleStageTextHead);
-            GUILayout.Label("Button:", Styles.styleStageTextHead);
+            GUILayout.Label($"{STYLING}:", Styles.styleStageTextHead); // Styling
+            GUILayout.Label($"{BUTTON}:", Styles.styleStageTextHead); // Button
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
@@ -333,7 +404,7 @@ namespace KSPAlternateResourcePanel
             {
                 if (settings.ButtonStyleChosen == ButtonStyleEnum.Toolbar)
                 {
-                    if (GUILayout.Button(new GUIContent("Not Installed. Click for Toolbar Info", "Click to open your browser and find out more about the Common Toolbar"), Styles.styleTextCenterGreen))
+                    if (GUILayout.Button(new GUIContent(NOTINSTALLTOOLBAR, OPENBROWSER), Styles.styleTextCenterGreen)) // "Not Installed. Click for Toolbar Info""Click to open your browser and find out more about the Common Toolbar"
                         Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60863");
                     intBlizzyToolbarMissingHeight=18;
                 }
@@ -351,7 +422,7 @@ namespace KSPAlternateResourcePanel
             }
             if (settings.ButtonStyleToDisplay == ButtonStyleEnum.Launcher)
             {
-                if (DrawToggle(ref settings.AppLauncherMutuallyExclusive, new GUIContent("Hide when other Apps show", "Hide the ARP when other stock Apps display (like the stock Resource App)"), Styles.styleToggle))
+                if (DrawToggle(ref settings.AppLauncherMutuallyExclusive, new GUIContent(HIDEWHNESHOW, HIDEARP), Styles.styleToggle)) // "Hide when other Apps show""Hide the ARP when other stock Apps display (like the stock Resource App)"
                 {
                     mbARP.AppLauncherButtonMutuallyExclusive(settings.AppLauncherMutuallyExclusive);
 
@@ -374,7 +445,7 @@ namespace KSPAlternateResourcePanel
             if (mbARP.SceneChangeRequiredToRestoreResourcesApp)
             {
                 GUILayout.Space(-4);
-                GUILayout.Label("Stock App restored on scene change", Styles.styleTextYellowBold);
+                GUILayout.Label(RESTOREDONCHANGE, Styles.styleTextYellowBold); // "Stock App restored on scene change"
                 GUILayout.Space(4);
             }
 
@@ -389,10 +460,10 @@ namespace KSPAlternateResourcePanel
             //Icons
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label(new GUIContent("Iconsets:","Select the order of priority for choosing icons. Highest priority to the left"), Styles.styleStageTextHead);
+            GUILayout.Label(new GUIContent($"{ICONSETS}:",SELECTICONORDER), Styles.styleStageTextHead); // Iconsets"Select the order of priority for choosing icons. Highest priority to the left"
             GUILayout.Space(2);
-            GUILayout.Label(new GUIContent("Separator:","Padding around resource separators"), Styles.styleStageTextHead);
-            GUILayout.Label("Empties:", Styles.styleStageTextHead);
+            GUILayout.Label(new GUIContent($"{SEPARATOR}:",PADDING), Styles.styleStageTextHead); // Separator"Padding around resource separators"
+            GUILayout.Label($"{EMPTIES}:", Styles.styleStageTextHead); // Empties
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
@@ -420,17 +491,17 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label(String.Format("{0}px",settings.SpacerPadding));
             GUILayout.EndHorizontal();
 
-            if (DrawToggle(ref settings.HideEmptyResources, "Hide Empty Resources", Styles.styleToggle)) {
+            if (DrawToggle(ref settings.HideEmptyResources, HIDEEMPTYRES, Styles.styleToggle)) { // "Hide Empty Resources"
                 settings.Save();
             }
-            if (DrawToggle(ref settings.HideFullResources, "Hide Full Resources", Styles.styleToggle)) {
+            if (DrawToggle(ref settings.HideFullResources, HIDEFULLRES, Styles.styleToggle)) { // "Hide Full Resources"
                 settings.Save();
             }
             GUILayout.BeginHorizontal();
-            GUILayout.Label("After:");
+            GUILayout.Label($"{AFTER}:"); // After
             settings.HideAfter = (Int32)GUILayout.HorizontalSlider(settings.HideAfter, 0, 10, GUILayout.Width(128 + mbARP.windowMain.IconAlarmOffset));
             GUILayout.Space(3);
-            GUILayout.Label(String.Format("{0} secs", settings.HideAfter));
+            GUILayout.Label(String.Format("{0} {1}", settings.HideAfter, SECS)); // secs
             GUILayout.EndHorizontal();
             GUILayout.Space(4);
             GUILayout.EndVertical();
@@ -443,26 +514,26 @@ namespace KSPAlternateResourcePanel
                 //Visuals
                 GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
                 GUILayout.BeginVertical(GUILayout.Width(60));
-                GUILayout.Label("Visuals:", Styles.styleStageTextHead);
+                GUILayout.Label($"{VISUALS}:", Styles.styleStageTextHead); // Visuals
                 GUILayout.EndVertical();
                 GUILayout.BeginVertical();
-                if (DrawToggle(ref settings.DisableHover, "Disable Show on Button Hover", Styles.styleToggle)) {
+                if (DrawToggle(ref settings.DisableHover, DISABLEHOVER, Styles.styleToggle)) { // "Disable Show on Button Hover"
                     settings.Save();
                 }
 
                 //if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle)) {
-                if (DrawToggle(ref settings.LockLocation, "Lock Window Position", Styles.styleToggle))
+                if (DrawToggle(ref settings.LockLocation, LOCKPOS, Styles.styleToggle)) // "Lock Window Position"
                 {
                     mbARP.windowMain.DragEnabled = !settings.LockLocation;
                     settings.Save();
                 }
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Save Position"))
+                if (GUILayout.Button(SAVEPOS)) // "Save Position"
                 {
                     settings.WindowPosition = mbARP.windowMain.WindowRect;
                     settings.Save();
                 }
-                if (GUILayout.Button("Reset Position"))
+                if (GUILayout.Button(RESETPOS)) // "Reset Position"
                     mbARP.blnResetWindow = true;
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
@@ -493,17 +564,17 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginVertical(GUILayout.Width(70));
             GUILayout.Space(2);
-            GUILayout.Label("Alarms:", Styles.styleStageTextHead);
+            GUILayout.Label($"{ALARMS}:", Styles.styleStageTextHead); // Alarms
             GUILayout.Space(-5);
-            GUILayout.Label("Volume:", Styles.styleStageTextHead);
+            GUILayout.Label($"{VOLUME}:", Styles.styleStageTextHead); // Volume
             GUILayout.Space(-3);
-            GUILayout.Label("      Level:");
+            GUILayout.Label($"      {LEVEL}:"); // Level
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             GUILayout.Space(2);
-            if (DrawToggle(ref settings.AlarmsEnabled, "Enable Alarms Functionality", Styles.styleToggle))
+            if (DrawToggle(ref settings.AlarmsEnabled, ENABLEALARMS, Styles.styleToggle)) // "Enable Alarms Functionality"
                 settings.Save();
-            if (DrawToggle(ref settings.AlarmsVolumeFromUI, "Use KSP UI Volume", Styles.styleToggle))
+            if (DrawToggle(ref settings.AlarmsVolumeFromUI, USEKSPUIVOLUME, Styles.styleToggle)) // "Use KSP UI Volume"
             {
                 settings.Save();
             }
@@ -518,15 +589,15 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
 
-            GUILayout.Label("Sounds",Styles.styleStageTextHead);
+            GUILayout.Label(SOUNDS,Styles.styleStageTextHead); // "Sounds"
             GUILayout.BeginVertical(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Warning:", GUILayout.Width(70));
+            GUILayout.Label($"{WARNING}:", GUILayout.Width(70)); // Warning
             ddlSettingsAlarmsWarning.DrawButton();
             DrawTestSoundButton(mbARP.clipAlarmsWarning, settings.AlarmsWarningRepeats);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Repeat:", GUILayout.Width(70));
+            GUILayout.Label($"{REPEAT}:", GUILayout.Width(70)); // Repeat
             //settings.AlarmsWarningRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130));
             if (DrawHorizontalSlider(ref settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130)))
                 settings.Save();
@@ -537,12 +608,12 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label("", Styles.styleSeparatorH);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Alert:", GUILayout.Width(70));
+            GUILayout.Label($"{ALERT}:", GUILayout.Width(70)); // Alert
             ddlSettingsAlarmsAlert.DrawButton();
             DrawTestSoundButton(mbARP.clipAlarmsAlert, settings.AlarmsAlertRepeats);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Repeat:", GUILayout.Width(70));
+            GUILayout.Label($"{REPEAT}:", GUILayout.Width(70)); // Repeat
             //settings.AlarmsAlertRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsAlertRepeats, 1, 6, GUILayout.Width(130));
             if (DrawHorizontalSlider(ref settings.AlarmsAlertRepeats,1,6, GUILayout.Width(130)))
                 settings.Save();
@@ -556,10 +627,10 @@ namespace KSPAlternateResourcePanel
         private void DrawTestSoundButton(AudioClip clip, Int32 Repeats)
         {
             Boolean blnStop = false;
-            GUIContent btn = new GUIContent(Resources.btnPlay, "Test Sound");
+            GUIContent btn = new GUIContent(Resources.btnPlay, TESTSOUND); // "Test Sound"
             if (KSPAlternateResourcePanel.audioController.isClipPlaying(clip))
             {
-                btn = new GUIContent(Resources.btnStop, "StopPlaying");
+                btn = new GUIContent(Resources.btnStop, STOPPLAYSOUND); // "StopPlaying"
                 blnStop=true;
             }
             if (GUILayout.Button(btn, GUILayout.Width(20)))
@@ -576,7 +647,7 @@ namespace KSPAlternateResourcePanel
             //Staging
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(64));//, GUILayout.Height(84));
             GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Label("Staging:", Styles.styleStageTextHead);
+            GUILayout.Label($"{STAGING}:", Styles.styleStageTextHead); // Staging
             //if (settings.StagingEnabled)
             //{
             //    GUILayout.Space(34);
@@ -584,14 +655,14 @@ namespace KSPAlternateResourcePanel
             //}
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
-            if (DrawToggle(ref settings.StagingEnabled, "Staging Enabled", Styles.styleToggle)) 
+            if (DrawToggle(ref settings.StagingEnabled, STAGINGENABLED, Styles.styleToggle)) // "Staging Enabled"
                 settings.Save();
             if (settings.StagingEnabled)
             {
-                if (DrawToggle(ref settings.StagingEnabledInMapView, "Allow Staging in Mapview", Styles.styleToggle))
+                if (DrawToggle(ref settings.StagingEnabledInMapView, MAPVIEWSTAGING, Styles.styleToggle)) // "Allow Staging in Mapview"
                     settings.Save();
                 if (settings.StagingEnabledInMapView)
-                    if (DrawToggle(ref settings.StagingEnabledSpaceInMapView, "Allow Space Bar in Mapview", Styles.styleToggle) )
+                    if (DrawToggle(ref settings.StagingEnabledSpaceInMapView, MAPVIEWSPACEBAR, Styles.styleToggle) ) // "Allow Space Bar in Mapview"
                         settings.Save();
                 //if (DrawToggle(ref settings.StagingIgnoreStageLock, "Ignore Keyboard Stage Lock", Styles.styleToggle))
                 //    settings.Save();
@@ -604,15 +675,15 @@ namespace KSPAlternateResourcePanel
             {
                 GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(50));
                 GUILayout.BeginVertical(GUILayout.Width(60));
-                GUILayout.Label("Auto:", Styles.styleStageTextHead);
+                GUILayout.Label($"{AUTO}:", Styles.styleStageTextHead); // Auto
                 if (settings.AutoStagingEnabled)
                 {
                     GUILayout.Space(-2);
-                    GUILayout.Label("Delay:", Styles.styleStageTextHead.PaddingChangeBottom(-5));
+                    GUILayout.Label($"{DELAY}:", Styles.styleStageTextHead.PaddingChangeBottom(-5)); // Delay
                 }
                 GUILayout.EndVertical();
                 GUILayout.BeginVertical();
-                if (DrawToggle(ref settings.AutoStagingEnabled, "Auto Staging Enabled", Styles.styleToggle))
+                if (DrawToggle(ref settings.AutoStagingEnabled, AUTOSTAGING, Styles.styleToggle)) // "Auto Staging Enabled"
                     settings.Save();
                 if (settings.AutoStagingEnabled)
                 {
@@ -623,7 +694,7 @@ namespace KSPAlternateResourcePanel
                         settings.AutoStagingDelayInTenths = (Int32)(AutoStagingDelay * 10);
                         settings.Save();
                     }
-                    GUILayout.Label(String.Format("{0:0.0} sec", AutoStagingDelay), GUILayout.Width(50));
+                    GUILayout.Label(String.Format("{0:0.0} {1}", AutoStagingDelay, SECS), GUILayout.Width(50)); // sec
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndVertical();
@@ -635,17 +706,17 @@ namespace KSPAlternateResourcePanel
         {
             //Update check Area to Add
             //Update Check Area
-            GUILayout.Label("Version Check", Styles.styleStageTextHead);
+            GUILayout.Label(VERSIONCHECK, Styles.styleStageTextHead); // "Version Check"
 
             GUILayout.BeginVertical(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
             GUILayout.Space(3);
-            if (DrawToggle(ref settings.DailyVersionCheck, "Check Version Daily",Styles.styleToggle))
+            if (DrawToggle(ref settings.DailyVersionCheck, DAILYCHECK,Styles.styleToggle)) // "Check Version Daily"
                 settings.Save();
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Check Version Now"))
+            if (GUILayout.Button(NOWCHECK)) // "Check Version Now"
             {
                 settings.VersionCheck(this, true);
                 //Hide the flag as we already have the window open;
@@ -656,9 +727,9 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical(GUILayout.Width(160));
             GUILayout.Space(4);
-            GUILayout.Label("Last Check Attempt:");
-            GUILayout.Label("Current Version:");
-            GUILayout.Label("Last Version from Web:");
+            GUILayout.Label($"{LASTCHECK}:"); // Last Check Attempt
+            GUILayout.Label($"{CURVERSION}:"); // Current Version
+            GUILayout.Label($"{LASTVERSION}:"); // Last Version from Web
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
             GUILayout.Label(settings.VersionCheckDate_AttemptString, Styles.styleTextGreen);
@@ -667,7 +738,7 @@ namespace KSPAlternateResourcePanel
             if (settings.VersionCheckRunning)
             {
                 Int32 intDots = Convert.ToInt32(Math.Truncate(DateTime.Now.Millisecond / 250d)) + 1;
-                GUILayout.Label(String.Format("{0} Checking", new String('.', intDots)), Styles.styleTextYellowBold);
+                GUILayout.Label(String.Format("{0} {1}", new String('.', intDots), CHECKING), Styles.styleTextYellowBold); // Checking
             }
             else
             {
@@ -683,7 +754,7 @@ namespace KSPAlternateResourcePanel
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(80);
-                if(GUILayout.Button("Updated Version Available", Styles.styleTextYellowBold))
+                if(GUILayout.Button(UPDATEDAVAILABLE, Styles.styleTextYellowBold)) // "Updated Version Available"
                     Application.OpenURL("https://github.com/TriggerAu/AlternateResourcePanel/releases"); 
                 GUILayout.EndHorizontal();
             }
@@ -695,18 +766,18 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
             //GUILayout.Label("Written by:", Styles.styleStageTextHead);
-            GUILayout.Label("Documentation and Links:", Styles.styleStageTextHead);
-            GUILayout.Label("Source Code / Downloads:", Styles.styleStageTextHead);
-            GUILayout.Label("Forum Page:", Styles.styleStageTextHead);
+            GUILayout.Label($"{DOCUMENT}:", Styles.styleStageTextHead); // Documentation and Links
+            GUILayout.Label($"{SOURCECODE}:", Styles.styleStageTextHead); // Source Code / Downloads
+            GUILayout.Label($"{FORUMPAGE}:", Styles.styleStageTextHead); // Forum Page
             GUILayout.EndVertical();
 
             GUILayout.BeginVertical();
             //GUILayout.Label("Trigger Au",KACResources.styleContent);
-            if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
+            if (GUILayout.Button(CLICKHERE, Styles.styleTextCenterGreen)) // "Click Here"
                 Application.OpenURL("https://sites.google.com/site/kspalternateresourcepanel/");
-            if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
+            if (GUILayout.Button(CLICKHERE, Styles.styleTextCenterGreen)) // "Click Here"
                 Application.OpenURL("https://github.com/TriggerAu/AlternateResourcePanel/");
-            if (GUILayout.Button("Click Here", Styles.styleTextCenterGreen))
+            if (GUILayout.Button(CLICKHERE, Styles.styleTextCenterGreen)) // "Click Here"
                 Application.OpenURL("http://forum.kerbalspaceprogram.com/threads/60227-KSP-Alternate-Resource-Panel");
 
             GUILayout.EndVertical();

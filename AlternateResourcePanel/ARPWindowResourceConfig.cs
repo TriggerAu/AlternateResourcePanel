@@ -7,6 +7,7 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSPPluginFramework;
+using KSP.Localization;
 
 namespace KSPAlternateResourcePanel
 {
@@ -29,6 +30,39 @@ namespace KSPAlternateResourcePanel
         DropDownList ddlMonType;
         DropDownList ddlDisplayValueAs;
 
+        // Localization strings
+        private static string CONFIGRES = Localizer.Format("#ARP_LOC_026");
+        private static string CLOSE = Localizer.Format("#ARP_LOC_027");
+        private static string ICON = Localizer.Format("#ARP_LOC_028");
+        private static string NAME = Localizer.Format("#ARP_LOC_029");
+        private static string POSITION = Localizer.Format("#ARP_LOC_030");
+        private static string VISIBILITY = Localizer.Format("#ARP_LOC_031");
+        private static string MONITOR = Localizer.Format("#ARP_LOC_032");
+        private static string ADDSEPARATOR = Localizer.Format("#ARP_LOC_033");
+        private static string MOVEUP = Localizer.Format("#ARP_LOC_034");
+        private static string MOVETOTOP = Localizer.Format("#ARP_LOC_035");
+        private static string MOVETOBOTTOM = Localizer.Format("#ARP_LOC_036");
+        private static string DELETE = Localizer.Format("#ARP_LOC_037");
+        private static string DISPLAYAS = Localizer.Format("#ARP_LOC_038");
+        private static string MONITORLV = Localizer.Format("#ARP_LOC_039");
+        private static string WARNINGLV = Localizer.Format("#ARP_LOC_040");
+        private static string ALERTLV = Localizer.Format("#ARP_LOC_041");
+        private static string ALARMSFORTHIS = Localizer.Format("#ARP_LOC_042");
+        private static string ALARMENABLE = Localizer.Format("#ARP_LOC_043");
+        private static string EMPTYBEHAV = Localizer.Format("#ARP_LOC_044");
+        private static string HIDEEMPTY = Localizer.Format("#ARP_LOC_045");
+        private static string FULLBEHAV = Localizer.Format("#ARP_LOC_046");
+        private static string HIDEFULL = Localizer.Format("#ARP_LOC_047");
+        private static string STAGEBAR = Localizer.Format("#ARP_LOC_048");
+        private static string SPLITENABLE = Localizer.Format("#ARP_LOC_049");
+        private static string SPLITBEHAV = Localizer.Format("#ARP_LOC_050");
+        private static string SHOWRESERVELV = Localizer.Format("#ARP_LOC_051");
+        private static string INSTEADWHOLE = Localizer.Format("#ARP_LOC_052");
+        private static string SORTGROUP = Localizer.Format("#ARP_LOC_053");
+        private static string SAVE = Localizer.Format("#ARP_LOC_054");
+        private static string UNABLETOFIND = Localizer.Format("#ARP_LOC_055");
+        private static string MOVING = Localizer.Format("#ARP_LOC_056");
+        private static string SEPARATOR = Localizer.Format("#ARP_LOC_057");
         internal override void OnAwake()
         {
             settings = KSPAlternateResourcePanel.settings;
@@ -75,18 +109,18 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Configure Resources",Styles.styleTextYellowBold);
+            GUILayout.Label(CONFIGRES,Styles.styleTextYellowBold); // "Configure Resources"
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Close")) this.Visible = false;
+            if (GUILayout.Button(CLOSE)) this.Visible = false; // "Close"
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Space(2);
-            GUILayout.Label("Icon", Styles.styleStageTextHead,GUILayout.Width(32));
-            GUILayout.Label("Name", Styles.styleStageTextHead, GUILayout.Width(120));
-            GUILayout.Label("Position", Styles.styleStageTextHead, GUILayout.Width(56));
+            GUILayout.Label(ICON, Styles.styleStageTextHead, GUILayout.Width(32)); // "Icon"
+            GUILayout.Label(NAME, Styles.styleStageTextHead, GUILayout.Width(120)); // "Name"
+            GUILayout.Label(POSITION, Styles.styleStageTextHead, GUILayout.Width(56)); // "Position"
             GUILayout.Space(6);
-            GUILayout.Label("Visibility", Styles.styleStageTextHead, GUILayout.Width(80));
-            GUILayout.Label("Monitor", Styles.styleStageTextHead, GUILayout.Width(60));
+            GUILayout.Label(VISIBILITY, Styles.styleStageTextHead, GUILayout.Width(80)); // "Visibility"
+            GUILayout.Label(MONITOR, Styles.styleStageTextHead, GUILayout.Width(60)); // "Monitor"
             GUILayout.EndHorizontal();
 
             Int32 SepToDelete = 0;
@@ -105,7 +139,7 @@ namespace KSPAlternateResourcePanel
             for (int i = 0; i < settings.Resources.Count; i++)
             {
                 ResourceSettings item = settings.Resources.Values.ElementAt(i);
-                if(item == null || PartResourceLibrary.Instance.GetDefinition(item.id) == null)
+                if(item == null || (PartResourceLibrary.Instance.GetDefinition(item.id) == null && !item.IsSeparator))
                 {
                     continue;
                 }
@@ -135,7 +169,7 @@ namespace KSPAlternateResourcePanel
                     }
                     GUILayout.EndVertical();
                     //GUILayout.Label(item.name, GUILayout.Width(NameWidth));
-                    if (GUILayout.Button(item.name, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
+                    if (GUILayout.Button(PartResourceLibrary.Instance.GetDefinition(item.name).displayName, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
                         if (ResourceToShowAlarmChanger == item.id)
                             ResourceToShowAlarmChanger = 0;
                         else
@@ -163,7 +197,7 @@ namespace KSPAlternateResourcePanel
                     }
                 }
 
-                if (GUILayout.Button(new GUIContent("S","Add Separator"), GUILayout.Width(21)))
+                if (GUILayout.Button(new GUIContent("S",ADDSEPARATOR), GUILayout.Width(21))) // "Add Separator"
                 {
                     AddSeparatorAtEnd();
                     MoveResource(settings.Resources.Count - 1, i + 1);
@@ -171,7 +205,7 @@ namespace KSPAlternateResourcePanel
 
                 //Move up and down
                 if (i > 0) {
-                    if (GUILayout.Button(new GUIContent("↑","Move Up"), GUILayout.Width(21)))
+                    if (GUILayout.Button(new GUIContent("↑",MOVEUP), GUILayout.Width(21))) // "Move Up"
                     {
                         SwapResource(i - 1, i);
                     }
@@ -190,7 +224,7 @@ namespace KSPAlternateResourcePanel
                 //Move top and Bottom
                 if (i > 0)
                 {
-                    if (GUILayout.Button(new GUIContent("↑↑","Move to Top"), GUILayout.Width(27)))
+                    if (GUILayout.Button(new GUIContent("↑↑", MOVETOTOP), GUILayout.Width(27))) // "Move to Top"
                     {
                         MoveResource(i,0);
                     }
@@ -201,7 +235,7 @@ namespace KSPAlternateResourcePanel
                 }
                 if (i < settings.Resources.Count - 1)
                 {
-                    if (GUILayout.Button(new GUIContent("↓↓", "Move to Bottom"), GUILayout.Width(27)))
+                    if (GUILayout.Button(new GUIContent("↓↓", MOVETOBOTTOM), GUILayout.Width(27))) // "Move to Bottom"
                     {
                         MoveResource(i, settings.Resources.Count);
                     }
@@ -214,7 +248,14 @@ namespace KSPAlternateResourcePanel
                 // Visibility level and alarm values/Delete
                 if (!item.IsSeparator)
                 {
-                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75)))
+                    string visibility = settings.Resources[item.id].Visibility.ToString();
+                    if (settings.Resources[item.id].Visibility.ToString() == "AlwaysOn")
+                        visibility = Localizer.Format("#ARP_LOC_163");
+                    else if (settings.Resources[item.id].Visibility.ToString() == "Threshold")
+                        visibility = Localizer.Format("#ARP_LOC_164");
+                    else if (settings.Resources[item.id].Visibility.ToString() == "Hidden")
+                        visibility = Localizer.Format("#ARP_LOC_165");
+                    if (GUILayout.Button(visibility, GUILayout.Width(75))) // settings.Resources[item.id].Visibility.ToString()
                     {
                         settings.Resources[item.id].Visibility = settings.Resources[item.id].Visibility.Next();
                     }
@@ -233,7 +274,7 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    if (GUILayout.Button("Delete", GUILayout.Width(75 + 58 + 4)))
+                    if (GUILayout.Button(DELETE, GUILayout.Width(75 + 58 + 4))) // "Delete"
                     {
                         SepToDelete = item.id;
                     }
@@ -248,15 +289,15 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Space(8);//4
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Display As:", Styles.styleStageTextHead, GUILayout.Width(151));
-                    //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
+                    GUILayout.Label($"{DISPLAYAS}:", Styles.styleStageTextHead, GUILayout.Width(151)); // 
+                    //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));Display As
                     ddlDisplayValueAs.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
                     ddlDisplayValueAs.DrawButton();
                     GUILayout.Space(4);
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Monitoring Levels:",Styles.styleStageTextHead, GUILayout.Width(151));
+                    GUILayout.Label($"{MONITORLV}:",Styles.styleStageTextHead, GUILayout.Width(151)); // Monitoring Levels
                     //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
                     ddlMonType.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
                     ddlMonType.DrawButton();
@@ -264,13 +305,13 @@ namespace KSPAlternateResourcePanel
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Warning Level:",GUILayout.Width(90));
+                    GUILayout.Label($"{WARNINGLV}:",GUILayout.Width(90)); // Warning Level
                     settings.Resources[item.id].MonitorWarningLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorWarningLevel, 0, 100,GUILayout.Width(220)));
                     GUILayout.Label(settings.Resources[item.id].MonitorWarningLevel.ToString() + "%",GUILayout.Width(35));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Alert Level:", GUILayout.Width(90));
+                    GUILayout.Label($"{ALERTLV}:", GUILayout.Width(90)); // Alert Level
                     settings.Resources[item.id].MonitorAlertLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorAlertLevel, 0, 100, GUILayout.Width(220)));
                     GUILayout.Label(settings.Resources[item.id].MonitorAlertLevel.ToString() + "%", GUILayout.Width(35));
                     GUILayout.EndHorizontal();
@@ -286,28 +327,28 @@ namespace KSPAlternateResourcePanel
                     GUIStyle temp = new GUIStyle(Styles.styleStageTextHead);
                     temp.padding.top = 0;
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Alarms for this:", temp, GUILayout.Width(120));
-                    DrawToggle(ref settings.Resources[item.id].AlarmEnabled, "Alarm Enabled", Styles.styleToggle);
+                    GUILayout.Label($"{ALARMSFORTHIS}:", temp, GUILayout.Width(120)); // Alarms for this
+                    DrawToggle(ref settings.Resources[item.id].AlarmEnabled, ALARMENABLE, Styles.styleToggle); //  "Alarm Enabled"
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Empty Behaviour:", temp, GUILayout.Width(120));
-                    DrawToggle(ref settings.Resources[item.id].HideWhenEmpty, "Hide When Empty", Styles.styleToggle);
+                    GUILayout.Label($"{EMPTYBEHAV}:", temp, GUILayout.Width(120)); // Empty Behaviour
+                    DrawToggle(ref settings.Resources[item.id].HideWhenEmpty, HIDEEMPTY, Styles.styleToggle); // "Hide When Empty"
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120));
-                    DrawToggle(ref settings.Resources[item.id].HideWhenFull, "Hide When Full", Styles.styleToggle);
+                    GUILayout.Label($"{FULLBEHAV}:", temp, GUILayout.Width(120)); // Full Behaviour
+                    DrawToggle(ref settings.Resources[item.id].HideWhenFull, HIDEFULL, Styles.styleToggle); // "Hide When Full"
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Stage Bars:", temp, GUILayout.Width(120));
-                    DrawToggle(ref settings.Resources[item.id].SplitLastStage, "Split Enabled", Styles.styleToggle);
+                    GUILayout.Label($"{STAGEBAR}:", temp, GUILayout.Width(120)); // Stage Bars
+                    DrawToggle(ref settings.Resources[item.id].SplitLastStage, SPLITENABLE, Styles.styleToggle); // "Split Enabled"
                     GUILayout.EndHorizontal();
                     if (settings.Resources[item.id].SplitLastStage && (
                         PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.ALL_VESSEL ||
                         PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW)
                         ) { 
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120));
-                        DrawToggle(ref settings.Resources[item.id].ShowReserveLevels, new GUIContent("Show Reserve Levels","instead of Whole Vessel/Last Stage split"), Styles.styleToggle);
+                        GUILayout.Label($"{SPLITBEHAV}:", temp, GUILayout.Width(120)); // Split Behaviour
+                        DrawToggle(ref settings.Resources[item.id].ShowReserveLevels, new GUIContent(SHOWRESERVELV, INSTEADWHOLE), Styles.styleToggle); // "Show Reserve Levels""instead of Whole Vessel/Last Stage split"
                         GUILayout.EndHorizontal();
                     }
                     GUILayout.Space(3);
@@ -329,16 +370,16 @@ namespace KSPAlternateResourcePanel
             }
 
             GUILayout.BeginHorizontal();
-            if (DrawButton("Add Separator"))
+            if (DrawButton(ADDSEPARATOR)) // "Add Separator"
             {
                 AddSeparatorAtEnd();
             }
-            if (DrawButton("Sort Groups"))
+            if (DrawButton(SORTGROUP)) // "Sort Groups"
             {
                 SortGroups();
             }
 
-            if (DrawButton("Save"))
+            if (DrawButton(SAVE)) // "Save"
             {
                 settings.Save();
             }
@@ -384,7 +425,7 @@ namespace KSPAlternateResourcePanel
             }
             if (SepAttempts > 100)
             {
-                ScreenMessages.PostScreenMessage("Unable to find a new Separator ID", 3, ScreenMessageStyle.UPPER_RIGHT);
+                ScreenMessages.PostScreenMessage(UNABLETOFIND, 3, ScreenMessageStyle.UPPER_RIGHT); // "Unable to find a new Separator ID"
             }
             settings.Resources.Add(SepID, new ResourceSettings() { id = SepID, IsSeparator = true });
         }
@@ -415,7 +456,7 @@ namespace KSPAlternateResourcePanel
             else { resourceOver = null; iconOver = null; }
 
             //did we click on an Icon with mouse button 0
-            if (Event.current.type == EventType.mouseDown && 
+            if (Event.current.type == EventType.MouseDown && 
                 Event.current.button==0 && iconOver!=null)
             {
                 LogFormatted_DebugOnly("Drag Start");
@@ -425,7 +466,7 @@ namespace KSPAlternateResourcePanel
                 DropWillReorderList = false;
             }
             //did we release the mouse
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0)
             {
                 if (resourceOver != null)
@@ -455,7 +496,7 @@ namespace KSPAlternateResourcePanel
             base.OnGUIEvery();
 
             //disable resource dragging if we mouseup outside the window
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0 &&
                 !this.WindowRect.Contains(new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)))
             {
@@ -472,8 +513,8 @@ namespace KSPAlternateResourcePanel
                 styleResMove.alignment = TextAnchor.MiddleLeft;
 
                 //set and draw the text like a tooltip
-                String Message = "  Moving";
-                if (resourceDrag.name == "Separator") Message += " Separator";
+                String Message = "  " + MOVING; // Moving
+                if (resourceDrag.name == "Separator") Message += " " + SEPARATOR; // Separator
                 Rect LabelPos = new Rect(Input.mousePosition.x-5,Screen.height-Input.mousePosition.y-9,120,22);
                 GUI.Label(LabelPos, Message, SkinsLibrary.CurrentTooltip);
                 
