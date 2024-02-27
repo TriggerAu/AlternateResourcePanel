@@ -16,8 +16,8 @@ namespace KSPAlternateResourcePanel
         internal KSPAlternateResourcePanel mbARP;
         internal Settings settings;
 
-        Int32 WindowHeight = 480;
-        Int32 ScrollAreaWidth = 440;
+        float WindowHeight = 480 * GameSettings.UI_SCALE;
+        float ScrollAreaWidth = 440 * GameSettings.UI_SCALE;
 
         internal Vector2 ScrollPosition = new Vector2();
         internal Vector2 vectMonTypeOffset = new Vector2(8, 56); //Vector2(8, 56);
@@ -32,7 +32,9 @@ namespace KSPAlternateResourcePanel
         internal override void OnAwake()
         {
             settings = KSPAlternateResourcePanel.settings;
-            WindowRect = new Rect(300, 0, 455, WindowHeight);
+            WindowRect = new Rect(300, 0, 455 * GameSettings.UI_SCALE, WindowHeight);
+
+            TooltipMouseOffset = new Vector2d(20, -20);
 
             ddlMonType = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
             ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
@@ -81,12 +83,12 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Space(2);
-            GUILayout.Label("Icon", Styles.styleStageTextHead,GUILayout.Width(32));
-            GUILayout.Label("Name", Styles.styleStageTextHead, GUILayout.Width(120));
-            GUILayout.Label("Position", Styles.styleStageTextHead, GUILayout.Width(56));
+            GUILayout.Label("Icon", Styles.styleStageTextHead,GUILayout.Width(32 * GameSettings.UI_SCALE));
+            GUILayout.Label("Name", Styles.styleStageTextHead, GUILayout.Width(120 * GameSettings.UI_SCALE));
+            GUILayout.Label("Position", Styles.styleStageTextHead, GUILayout.Width(56 * GameSettings.UI_SCALE));
             GUILayout.Space(6);
-            GUILayout.Label("Visibility", Styles.styleStageTextHead, GUILayout.Width(80));
-            GUILayout.Label("Monitor", Styles.styleStageTextHead, GUILayout.Width(60));
+            GUILayout.Label("Visibility", Styles.styleStageTextHead, GUILayout.Width(80 * GameSettings.UI_SCALE));
+            GUILayout.Label("Monitor", Styles.styleStageTextHead, GUILayout.Width(60 * GameSettings.UI_SCALE));
             GUILayout.EndHorizontal();
 
             Int32 SepToDelete = 0;
@@ -131,11 +133,11 @@ namespace KSPAlternateResourcePanel
                         //if (lstResPositions.Count != 0)
                         //    intOffset = lstResPositions.Last().resourceRect.y + 22;
                         //Rect resResourcePos = new Rect(mbARP.windowDebug.intTest1, mbARP.windowDebug.intTest2 + intOffset, 0, 0);
-                        lstResPositions.Add(new ResourcePosition(item.id, item.name, IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                        lstResPositions.Add(new ResourcePosition(item.id, item.name, IconRect, (int)(ScrollAreaWidth - 20), (ResourceToShowAlarm == item.id)));
                     }
                     GUILayout.EndVertical();
                     //GUILayout.Label(item.name, GUILayout.Width(NameWidth));
-                    if (GUILayout.Button(item.name, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth))) {
+                    if (GUILayout.Button(item.name, SkinsLibrary.CurrentSkin.label, GUILayout.Width(NameWidth * GameSettings.UI_SCALE))) {
                         if (ResourceToShowAlarmChanger == item.id)
                             ResourceToShowAlarmChanger = 0;
                         else
@@ -148,8 +150,9 @@ namespace KSPAlternateResourcePanel
                     }
                 } else {
                     GUILayout.BeginVertical();
+                    GUILayout.FlexibleSpace();
                     GUILayout.Space(13);
-                    GUILayout.Label("", Styles.styleSeparatorH, GUILayout.Width(120+36));
+                    GUILayout.Label("", Styles.styleSeparatorH, GUILayout.Width((120 * GameSettings.UI_SCALE) + 36));
                     GUILayout.Space(7);
                     GUILayout.EndVertical();
 
@@ -157,13 +160,13 @@ namespace KSPAlternateResourcePanel
                     {
                         if (lstResPositions.Count > 0)
                         {
-                            Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 + 36 };
-                            lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, ScrollAreaWidth - 20, (ResourceToShowAlarm == item.id)));
+                            Rect IconRect = new Rect(lstResPositions.Last().iconRect) { y = lstResPositions.Last().iconRect.y + 22, width = 120 * GameSettings.UI_SCALE + 36 };
+                            lstResPositions.Add(new ResourcePosition(item.id, "Separator", IconRect, (int)(ScrollAreaWidth - 20), (ResourceToShowAlarm == item.id)));
                         }
                     }
                 }
 
-                if (GUILayout.Button(new GUIContent("S","Add Separator"), GUILayout.Width(21)))
+                if (GUILayout.Button(new GUIContent("S","Add Separator"), GUILayout.Width(21 * GameSettings.UI_SCALE)))
                 {
                     AddSeparatorAtEnd();
                     MoveResource(settings.Resources.Count - 1, i + 1);
@@ -171,7 +174,7 @@ namespace KSPAlternateResourcePanel
 
                 //Move up and down
                 if (i > 0) {
-                    if (GUILayout.Button(new GUIContent("↑","Move Up"), GUILayout.Width(21)))
+                    if (GUILayout.Button(new GUIContent("↑","Move Up"), GUILayout.Width(21 * GameSettings.UI_SCALE)))
                     {
                         SwapResource(i - 1, i);
                     }
@@ -179,7 +182,7 @@ namespace KSPAlternateResourcePanel
                     GUILayout.Space(21 + 4);
                 }
                 if (i < settings.Resources.Count - 1) {
-                    if (GUILayout.Button("↓", GUILayout.Width(21)))
+                    if (GUILayout.Button("↓", GUILayout.Width(21 * GameSettings.UI_SCALE)))
                     {
                         SwapResource(i, i+1);
                     }
@@ -190,7 +193,7 @@ namespace KSPAlternateResourcePanel
                 //Move top and Bottom
                 if (i > 0)
                 {
-                    if (GUILayout.Button(new GUIContent("↑↑","Move to Top"), GUILayout.Width(27)))
+                    if (GUILayout.Button(new GUIContent("↑↑","Move to Top"), GUILayout.Width(27 * GameSettings.UI_SCALE)))
                     {
                         MoveResource(i,0);
                     }
@@ -201,7 +204,7 @@ namespace KSPAlternateResourcePanel
                 }
                 if (i < settings.Resources.Count - 1)
                 {
-                    if (GUILayout.Button(new GUIContent("↓↓", "Move to Bottom"), GUILayout.Width(27)))
+                    if (GUILayout.Button(new GUIContent("↓↓", "Move to Bottom"), GUILayout.Width(27 * GameSettings.UI_SCALE)))
                     {
                         MoveResource(i, settings.Resources.Count);
                     }
@@ -214,11 +217,11 @@ namespace KSPAlternateResourcePanel
                 // Visibility level and alarm values/Delete
                 if (!item.IsSeparator)
                 {
-                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75)))
+                    if (GUILayout.Button(settings.Resources[item.id].Visibility.ToString(), GUILayout.Width(75 * GameSettings.UI_SCALE)))
                     {
                         settings.Resources[item.id].Visibility = settings.Resources[item.id].Visibility.Next();
                     }
-                    if (GUILayout.Button(string.Format("{0}/{1}", settings.Resources[item.id].MonitorWarningLevel, settings.Resources[item.id].MonitorAlertLevel), GUILayout.Width(58)))
+                    if (GUILayout.Button(string.Format("{0}/{1}", settings.Resources[item.id].MonitorWarningLevel, settings.Resources[item.id].MonitorAlertLevel), GUILayout.Width(58 * GameSettings.UI_SCALE)))
                     {
                         if (ResourceToShowAlarmChanger == item.id) 
                             ResourceToShowAlarmChanger = 0; 
@@ -233,7 +236,7 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    if (GUILayout.Button("Delete", GUILayout.Width(75 + 58 + 4)))
+                    if (GUILayout.Button("Delete", GUILayout.Width(75 * GameSettings.UI_SCALE + 58 + 4)))
                     {
                         SepToDelete = item.id;
                     }
@@ -244,11 +247,11 @@ namespace KSPAlternateResourcePanel
 
                 if (ResourceToShowAlarm==item.id)
                 {
-                    GUILayout.BeginVertical(GUILayout.Height(40),GUILayout.Width(ScrollAreaWidth-20));
-                    GUILayout.Space(8);//4
+                    GUILayout.BeginVertical(GUILayout.Height(40 * GameSettings.UI_SCALE),GUILayout.Width(ScrollAreaWidth - 20));
+                    GUILayout.Space(8);
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Display As:", Styles.styleStageTextHead, GUILayout.Width(151));
+                    GUILayout.Label("Display As:", Styles.styleStageTextHead, GUILayout.Width(151 * GameSettings.UI_SCALE));
                     //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
                     ddlDisplayValueAs.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
                     ddlDisplayValueAs.DrawButton();
@@ -256,7 +259,7 @@ namespace KSPAlternateResourcePanel
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Monitoring Levels:",Styles.styleStageTextHead, GUILayout.Width(151));
+                    GUILayout.Label("Monitoring Levels:",Styles.styleStageTextHead, GUILayout.Width(151 * GameSettings.UI_SCALE));
                     //GUILayout.Label("Monitoring Type:", GUILayout.Width(mbARP.windowDebug.intTest1));
                     ddlMonType.SetListBoxOffset(vectMonTypeOffset - ScrollPosition);
                     ddlMonType.DrawButton();
@@ -264,15 +267,15 @@ namespace KSPAlternateResourcePanel
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Warning Level:",GUILayout.Width(90));
-                    settings.Resources[item.id].MonitorWarningLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorWarningLevel, 0, 100,GUILayout.Width(220)));
-                    GUILayout.Label(settings.Resources[item.id].MonitorWarningLevel.ToString() + "%",GUILayout.Width(35));
+                    GUILayout.Label("Warning Level:",GUILayout.Width(90 * GameSettings.UI_SCALE));
+                    settings.Resources[item.id].MonitorWarningLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorWarningLevel, 0, 100,GUILayout.Width(220 * GameSettings.UI_SCALE)));
+                    GUILayout.Label(settings.Resources[item.id].MonitorWarningLevel.ToString() + "%",GUILayout.Width(35 * GameSettings.UI_SCALE));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Alert Level:", GUILayout.Width(90));
-                    settings.Resources[item.id].MonitorAlertLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorAlertLevel, 0, 100, GUILayout.Width(220)));
-                    GUILayout.Label(settings.Resources[item.id].MonitorAlertLevel.ToString() + "%", GUILayout.Width(35));
+                    GUILayout.Label("Alert Level:", GUILayout.Width(90 * GameSettings.UI_SCALE));
+                    settings.Resources[item.id].MonitorAlertLevel = (Int32)Math.Round(GUILayout.HorizontalSlider(settings.Resources[item.id].MonitorAlertLevel, 0, 100, GUILayout.Width(220 * GameSettings.UI_SCALE)));
+                    GUILayout.Label(settings.Resources[item.id].MonitorAlertLevel.ToString() + "%", GUILayout.Width(35 * GameSettings.UI_SCALE));
                     GUILayout.EndHorizontal();
                     GUILayout.EndVertical();
 
@@ -286,19 +289,19 @@ namespace KSPAlternateResourcePanel
                     GUIStyle temp = new GUIStyle(Styles.styleStageTextHead);
                     temp.padding.top = 0;
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Alarms for this:", temp, GUILayout.Width(120));
+                    GUILayout.Label("Alarms for this:", temp, GUILayout.Width(120 * GameSettings.UI_SCALE));
                     DrawToggle(ref settings.Resources[item.id].AlarmEnabled, "Alarm Enabled", Styles.styleToggle);
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Empty Behaviour:", temp, GUILayout.Width(120));
+                    GUILayout.Label("Empty Behaviour:", temp, GUILayout.Width(120 * GameSettings.UI_SCALE));
                     DrawToggle(ref settings.Resources[item.id].HideWhenEmpty, "Hide When Empty", Styles.styleToggle);
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120));
+                    GUILayout.Label("Full Behaviour:", temp, GUILayout.Width(120 * GameSettings.UI_SCALE));
                     DrawToggle(ref settings.Resources[item.id].HideWhenFull, "Hide When Full", Styles.styleToggle);
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Stage Bars:", temp, GUILayout.Width(120));
+                    GUILayout.Label("Stage Bars:", temp, GUILayout.Width(120 * GameSettings.UI_SCALE));
                     DrawToggle(ref settings.Resources[item.id].SplitLastStage, "Split Enabled", Styles.styleToggle);
                     GUILayout.EndHorizontal();
                     if (settings.Resources[item.id].SplitLastStage && (
@@ -306,7 +309,7 @@ namespace KSPAlternateResourcePanel
                         PartResourceLibrary.Instance.resourceDefinitions[item.id].resourceFlowMode == ResourceFlowMode.STAGE_PRIORITY_FLOW)
                         ) { 
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120));
+                        GUILayout.Label("Split Behaviour:", temp, GUILayout.Width(120 * GameSettings.UI_SCALE));
                         DrawToggle(ref settings.Resources[item.id].ShowReserveLevels, new GUIContent("Show Reserve Levels","instead of Whole Vessel/Last Stage split"), Styles.styleToggle);
                         GUILayout.EndHorizontal();
                     }
@@ -407,7 +410,7 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                     resourceInsertIndex = -1;
-                iconOver = lstResPositions.FirstOrDefault(x => x.iconRect.Contains(MousePosition + ScrollPosition + -new Vector2(8, 54)));
+                iconOver = lstResPositions.FirstOrDefault(x => x.iconRect.Contains(MousePosition + ScrollPosition - new Vector2(8, 54)));
 
                 //Will the drop actually change the list
                 DropWillReorderList = (resourceInsertIndex != resourceDragIndex) && (resourceInsertIndex != resourceDragIndex + 1);
@@ -415,7 +418,7 @@ namespace KSPAlternateResourcePanel
             else { resourceOver = null; iconOver = null; }
 
             //did we click on an Icon with mouse button 0
-            if (Event.current.type == EventType.mouseDown && 
+            if (Event.current.type == EventType.MouseDown && 
                 Event.current.button==0 && iconOver!=null)
             {
                 LogFormatted_DebugOnly("Drag Start");
@@ -425,7 +428,7 @@ namespace KSPAlternateResourcePanel
                 DropWillReorderList = false;
             }
             //did we release the mouse
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0)
             {
                 if (resourceOver != null)
@@ -455,7 +458,7 @@ namespace KSPAlternateResourcePanel
             base.OnGUIEvery();
 
             //disable resource dragging if we mouseup outside the window
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0 &&
                 !this.WindowRect.Contains(new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)))
             {
@@ -474,14 +477,14 @@ namespace KSPAlternateResourcePanel
                 //set and draw the text like a tooltip
                 String Message = "  Moving";
                 if (resourceDrag.name == "Separator") Message += " Separator";
-                Rect LabelPos = new Rect(Input.mousePosition.x-5,Screen.height-Input.mousePosition.y-9,120,22);
+                Rect LabelPos = new Rect(Input.mousePosition.x - 5, Screen.height - Input.mousePosition.y - 9, 120, 22);
                 GUI.Label(LabelPos, Message, SkinsLibrary.CurrentTooltip);
                 
                 //If its a resourcethen draw the icon too
                 if (resourceDrag.name != "Separator")
                 {
                     GUIContent contIcon = Drawing.GetResourceIcon(resourceDrag.name); ;
-                    Rect ResPos = new Rect(Input.mousePosition.x + 55, Screen.height - Input.mousePosition.y-6, 32, 16);
+                    Rect ResPos = new Rect(Input.mousePosition.x + 55, Screen.height - Input.mousePosition.y - 6, 32, 16);
                     GUI.Box(ResPos, contIcon, new GUIStyle());
                 }
                 //On top of everything

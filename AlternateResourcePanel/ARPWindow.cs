@@ -34,11 +34,11 @@ namespace KSPAlternateResourcePanel
         private ARPResourceList lstResources;
         private ARPResourceList lstResourcesLastStage;
         private PartResourceVisibleList SelectedResources;
-        internal Int32 intLineHeight = 20;
+        internal Int32 intLineHeight = (int)(20 * GameSettings.UI_SCALE);
 
         internal override void OnAwake()
         {
-            TooltipMouseOffset = new Vector2d(-10, 10);
+            TooltipMouseOffset = new Vector2d(20, -20);
 
             onWindowMoveComplete += ARPWindow_onWindowMoveComplete;
         }
@@ -65,9 +65,9 @@ namespace KSPAlternateResourcePanel
         }
 
         //public Rect rectIcon;
-        internal Int32 IconAlarmOffset = 12;
-        internal Int32 Icon2BarOffset_Left = 40;
-        internal Int32 Icon2BarOffset_Right = 40 + 140;
+        internal Int32 IconAlarmOffset = (int)(12 * GameSettings.UI_SCALE);
+        internal Int32 Icon2BarOffset_Left = (int)(40 * GameSettings.UI_SCALE);
+        internal Int32 Icon2BarOffset_Right = (int)(40 * GameSettings.UI_SCALE + (180 * GameSettings.UI_SCALE));
 
         internal override void DrawWindow(Int32 id)
         {
@@ -148,7 +148,7 @@ namespace KSPAlternateResourcePanel
                         )
                     {
                         //full width bar
-                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset_Left, 275, 15);  //was 245
+                        rectBar = Drawing.CalcBarRect(rectIcon, Icon2BarOffset_Left, (int)(360 * GameSettings.UI_SCALE), (int)(15 * GameSettings.UI_SCALE));  // KB1
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             //MonoBehaviourExtended.LogFormatted_DebugOnly("Clicked");
                             SelectedResources.TogglePartResourceVisible(ResourceID);
@@ -159,7 +159,7 @@ namespace KSPAlternateResourcePanel
                         Int32 StageBarOffset = settings.StageBarOnRight ? Icon2BarOffset_Right : Icon2BarOffset_Left;
 
                         //need full Vessel and current stage bars
-                        rectBar = Drawing.CalcBarRect(rectIcon, FullVesselBarOffset, 135, 15);  //was 120
+                        rectBar = Drawing.CalcBarRect(rectIcon, FullVesselBarOffset, (int)(180 * GameSettings.UI_SCALE), (int)(15 * GameSettings.UI_SCALE));  // KB1
                         if (Drawing.DrawResourceBar(rectBar, lstResources[ResourceID], Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                             SelectedResources.TogglePartResourceVisible(ResourceID);
 
@@ -167,7 +167,7 @@ namespace KSPAlternateResourcePanel
                         if (lstResourcesLastStage.ContainsKey(ResourceID))
                         {
                             Highlight = SelectedResources.ContainsKey(ResourceID) && SelectedResources[ResourceID].LastStageVisible;
-                            rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, 135, 15);  //was 120
+                            rectBar = Drawing.CalcBarRect(rectIcon, StageBarOffset, (int)(180 * GameSettings.UI_SCALE), (int)(15 * GameSettings.UI_SCALE));  // KB1
                             if (Drawing.DrawResourceBar(rectBar, lstResourcesLastStage[ResourceID], Styles.styleBarBlue_Back, Styles.styleBarBlue, Styles.styleBarBlue_Thin, settings.ShowRates, Highlight, Styles.styleBarHighlight))
                                 SelectedResources.TogglePartResourceVisible(ResourceID, true);
                         }
@@ -201,18 +201,18 @@ namespace KSPAlternateResourcePanel
                     styleStageNum.normal.textColor = new Color(117, 206, 60);
                     //}
 
-                    GUILayout.Label(contStageNum, styleStageNum, GUILayout.Width(20));
+                    GUILayout.Label(contStageNum, styleStageNum, GUILayout.Width(20 * GameSettings.UI_SCALE));
 
                     if (settings.StagingEnabledInMapView || !MapView.MapIsEnabled)
                     {
                         if (mbARP.blnVesselIsControllable) {
-                            if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100)))
+                            if (GUILayout.Button("Activate Stage", "ButtonGeneral", GUILayout.Width(100 * GameSettings.UI_SCALE)))
                                 StageManager.ActivateNextStage();
                             GUILayout.Space(21 + IconAlarmOffset);
                             //GUILayout.Space(51 + IconAlarmOffset);
                         }
                         else {
-                            GUILayout.Label("No Vessel Control", GUILayout.Width(120));
+                            GUILayout.Label("No Vessel Control", GUILayout.Width(120 * GameSettings.UI_SCALE));
                             GUILayout.Space(1 + IconAlarmOffset);
                             //GUILayout.Space(31 + IconAlarmOffset);
                         }
@@ -222,11 +222,11 @@ namespace KSPAlternateResourcePanel
                 }
                 else
                 {
-                    if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50)))
+                    if (GUILayout.Button("Auto:", Styles.styleStageTextHead, GUILayout.Width(50 * GameSettings.UI_SCALE)))
                         settings.AutoStagingEnabled = !settings.AutoStagingEnabled;
-                    GUILayout.Label(StageManager.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20));
-                    GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30));
-                    GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30));
+                    GUILayout.Label(StageManager.CurrentStage.ToString(),Styles.styleStageTextHead, GUILayout.Width(20 * GameSettings.UI_SCALE));
+                    GUILayout.Label("to", Styles.styleStageTextHead, GUILayout.Width(30 * GameSettings.UI_SCALE));
+                    GUILayout.Label(mbARP.AutoStagingTerminateAt.ToString(), Styles.styleStageTextHead, GUILayout.Width(30 * GameSettings.UI_SCALE));
                     DrawHorizontalSlider(ref mbARP.AutoStagingTerminateAt, 0, mbARP.AutoStagingMaxStage);
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
@@ -243,13 +243,13 @@ namespace KSPAlternateResourcePanel
                         styleArm.normal.textColor = styleArm.hover.textColor = new Color32(183,254,0,255);
                     }
 
-                    if (GUILayout.Button(strButtonArm,styleArm ,GUILayout.Width(75)))
+                    if (GUILayout.Button(strButtonArm,styleArm ,GUILayout.Width(75 * GameSettings.UI_SCALE)))
                         mbARP.AutoStagingArmed = !mbARP.AutoStagingArmed;
                     
                     GUIStyle StatusStyle = new GUIStyle(SkinsLibrary.CurrentSkin.label) ;
                     StatusStyle.normal.textColor = mbARP.AutoStagingStatusColor;
                     //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(147 + IconAlarmOffset));
-                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 + IconAlarmOffset));
+                    GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(120 * GameSettings.UI_SCALE + IconAlarmOffset));
                     //GUILayout.Label(mbARP.AutoStagingStatus, StatusStyle, GUILayout.Width(150 + IconAlarmOffset));
                 }
             }
@@ -262,7 +262,7 @@ namespace KSPAlternateResourcePanel
 
             // ShowBase Button
             Boolean blnShowBase = settings.ShowBase;
-            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? "Back to Vessel Display" : "Show Base Display\r\nAll resource within 2km of active vessel"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
+            if (DrawToggle(ref blnShowBase, new GUIContent(Resources.btnViewBaseActive, blnShowBase ? "Back to Vessel Display" : "Show Base Display\r\nAll resource within 2km of active vessel"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23 * GameSettings.UI_SCALE)))
             {
                 settings.ShowBase = blnShowBase;
             }
@@ -273,7 +273,7 @@ namespace KSPAlternateResourcePanel
 
             // ShowTime Button
             Boolean blnShowTimeRem = settings.ShowTimeRem;
-            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? "Hide time Remianing": "Show Time Remaining"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23))) {
+            if (DrawToggle(ref blnShowTimeRem, new GUIContent(Resources.btnViewTimes, blnShowTimeRem ? "Hide time Remianing": "Show Time Remaining"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin,"ButtonToggle").PaddingChange(1), GUILayout.Width(23 * GameSettings.UI_SCALE))) {
                 settings.ShowTimeRem = blnShowTimeRem;
             }
             //if (GUILayout.Button(new GUIContent(Resources.btnViewTimes, "Toggle Time Remaining"), SkinsLibrary.CurrentSkin.button.PaddingChange(1), GUILayout.Width(23)))
@@ -283,7 +283,7 @@ namespace KSPAlternateResourcePanel
 
             // ShowAll Button
             Boolean blnToggleHidden = KSPAlternateResourcePanel.ShowAll;
-            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23)))
+            if (DrawToggle(ref blnToggleHidden, new GUIContent(Resources.btnViewAll, "Toggle Hidden Resources"), SkinsLibrary.GetStyle(SkinsLibrary.CurrentSkin, "ButtonToggle").PaddingChange(1), GUILayout.Width(23 * GameSettings.UI_SCALE)))
             {
                 KSPAlternateResourcePanel.ShowAll = blnToggleHidden;
             }
@@ -303,7 +303,7 @@ namespace KSPAlternateResourcePanel
             
             if (settings.VersionAttentionFlag) btnMinMax.tooltip = "Updated Version Available - " + btnMinMax.tooltip;
             
-            if (GUILayout.Button(btnMinMax,"ButtonSettings",GUILayout.Width(23)))
+            if (GUILayout.Button(btnMinMax,"ButtonSettings",GUILayout.Width(23 * GameSettings.UI_SCALE)))
             {
                 windowSettings.Visible = !windowSettings.Visible;
                 if (windowSettings.Visible && settings.VersionAttentionFlag)

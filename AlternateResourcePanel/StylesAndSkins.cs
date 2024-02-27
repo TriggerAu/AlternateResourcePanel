@@ -100,29 +100,32 @@ namespace KSPAlternateResourcePanel
             styleButton.name = "ButtonGeneral";
             styleButton.normal.background = SkinsLibrary.DefKSPSkin.button.normal.background;
             styleButton.hover.background = SkinsLibrary.DefKSPSkin.button.hover.background;
-            styleButton.normal.textColor = new Color(207, 207, 207);
-            styleButton.fontStyle = FontStyle.Normal;
-            styleButton.fixedHeight = 20;
+            styleButton.normal.textColor = new Color(7, 7, 7);
+            styleButton.fontStyle = FontStyle.Bold;
+            styleButton.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleButton.fixedHeight = 12 * GameSettings.UI_SCALE;
             styleButton.padding.top = 2;
-            //styleButton.alignment = TextAnchor.MiddleCenter;
+            styleButton.alignment = TextAnchor.MiddleCenter;
 
             styleButtonUnity = new GUIStyle(styleButton);
             styleButtonUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
             styleButtonUnity.hover.background = SkinsLibrary.DefUnitySkin.button.hover.background;
-
+            styleButtonUnity.fontSize = (int)(10 * GameSettings.UI_SCALE);
 
             styleButtonMain = new GUIStyle(styleButton);
             styleButtonMain.name = "ButtonMain";
-            styleButtonMain.fixedHeight = 20;
+            styleButtonMain.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleButtonMain.fixedHeight = 12 * GameSettings.UI_SCALE;
 
             styleButtonMainUnity = new GUIStyle(styleButtonMain);
             styleButtonMainUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
             styleButtonMainUnity.hover.background = SkinsLibrary.DefUnitySkin.button.hover.background;
 
-
             styleButtonSettings = new GUIStyle(styleButton);
             styleButtonSettings.name = "ButtonSettings";
             styleButtonSettings.padding = new RectOffset(1, 1, 1, 1);
+            styleButtonSettings.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleButtonSettings.fixedHeight = 12 * GameSettings.UI_SCALE;
             //styleButtonSettings.fixedWidth = 40;
 
             styleButtonSettingsUnity = new GUIStyle(styleButtonSettings);
@@ -133,13 +136,16 @@ namespace KSPAlternateResourcePanel
             styleButtonToggle.name = "ButtonToggle";
             styleButtonToggle.onNormal.background = styleButtonToggle.active.background;
             styleButtonToggleUnity = new GUIStyle(styleButtonToggle);
+            styleButtonToggleUnity.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleButtonToggleUnity.fixedHeight = 12 * GameSettings.UI_SCALE;
             styleButtonToggleUnity.normal.background = SkinsLibrary.DefUnitySkin.button.normal.background;
             styleButtonToggleUnity.hover.background = SkinsLibrary.DefUnitySkin.button.hover.background;
             styleButtonToggleUnity.onNormal.background = SkinsLibrary.DefUnitySkin.button.active.background;
 
             styleTooltipStyle = new GUIStyle();
             styleTooltipStyle.name = "Tooltip";
-            styleTooltipStyle.fontSize = 12;
+            styleTooltipStyle.fontSize = (int)(12 * GameSettings.UI_SCALE);
+            styleTooltipStyle.fixedHeight = 24 * GameSettings.UI_SCALE;
             styleTooltipStyle.normal.textColor = new Color32(207, 207, 207, 255);
             styleTooltipStyle.stretchHeight = true;
             styleTooltipStyle.wordWrap = true;
@@ -151,42 +157,53 @@ namespace KSPAlternateResourcePanel
 
             styleDropDownButton = new GUIStyle(styleButton);
             styleDropDownButton.padding.right = 20;
+            styleDropDownButton.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleDropDownButton.fixedHeight = 12 * GameSettings.UI_SCALE;
             styleDropDownButtonUnity = new GUIStyle(styleButtonUnity);
             styleDropDownButtonUnity.padding.right = 20;
 
             styleDropDownListBox = new GUIStyle();
             styleDropDownListBox.normal.background = Resources.texBox;
+            styleDropDownListBox.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleDropDownListBox.fixedHeight = 12 * GameSettings.UI_SCALE;
             //Extra border to prevent bleed of color - actual border is only 1 pixel wide
             styleDropDownListBox.border = new RectOffset(3, 3, 3, 3);
+            styleDropDownListBox.alignment = TextAnchor.MiddleRight;
 
             styleDropDownListBoxUnity = new GUIStyle();
             styleDropDownListBoxUnity.normal.background = Resources.texBoxUnity;
+            styleDropDownListBoxUnity.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleDropDownListBoxUnity.fixedHeight = 12 * GameSettings.UI_SCALE;
             //Extra border to prevent bleed of color - actual border is only 1 pixel wide
             styleDropDownListBoxUnity.border = new RectOffset(3, 3, 3, 3);
-
+            styleDropDownListBoxUnity.alignment = TextAnchor.MiddleRight;
 
             styleDropDownListItem = new GUIStyle();
             styleDropDownListItem.normal.textColor = new Color(207, 207, 207);
+            styleDropDownListItem.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleDropDownListItem.fixedHeight = 12 * GameSettings.UI_SCALE;
             Texture2D texBack = Styles.CreateColorPixel(new Color(207, 207, 207));
             styleDropDownListItem.hover.background = texBack;
             styleDropDownListItem.onHover.background = texBack;
             styleDropDownListItem.hover.textColor = Color.black;
             styleDropDownListItem.onHover.textColor = Color.black;
             styleDropDownListItem.padding = new RectOffset(4, 4, 3, 4);
-
+            styleDropDownListItem.alignment = TextAnchor.MiddleRight;
 
             stylePartWindowPanel = new GUIStyle(stylePanel);
             stylePartWindowPanel.padding = new RectOffset(1, 1, 1, 1);
             stylePartWindowPanel.margin = new RectOffset(0, 0, 0, 0);
+            stylePartWindowPanel.fixedWidth = (int)((ARPPartWindow.WindowWidthForBars + ARPPartWindow.WindowWidthForFlowControl) * GameSettings.UI_SCALE);
 
             stylePartWindowPanelUnity = new GUIStyle();
             stylePartWindowPanelUnity.padding = new RectOffset(1, 1, 1, 1);
             stylePartWindowPanelUnity.margin = new RectOffset(0, 0, 0, 0);
+            stylePartWindowPanel.fixedWidth = (int)((ARPPartWindow.WindowWidthForBars + ARPPartWindow.WindowWidthForFlowControl) * GameSettings.UI_SCALE);
 
             stylePartWindowHead = new GUIStyle(GUI.skin.label);
             stylePartWindowHead.normal.background = Resources.texPartWindowHead;
             stylePartWindowHead.border = new RectOffset(6, 6, 6, 6);
-            stylePartWindowHead.stretchWidth = true;
+            stylePartWindowHead.fixedWidth = (int)((ARPPartWindow.WindowWidthForBars + ARPPartWindow.WindowWidthForFlowControl) * GameSettings.UI_SCALE);
             stylePartWindowHead.normal.textColor = Color.white;
             stylePartWindowHead.padding = new RectOffset(5, 1, 1, 1);
             stylePartWindowHead.margin = new RectOffset(0, 0, 0, 0);
@@ -195,27 +212,29 @@ namespace KSPAlternateResourcePanel
 
             #region Common Styles
             styleAlarmButton = new GUIStyle();
-            styleAlarmButton.fixedWidth=16;
-            styleAlarmButton.fixedHeight=16;
+            styleAlarmButton.fixedWidth= 16 * GameSettings.UI_SCALE;
+            styleAlarmButton.fixedHeight= 16 * GameSettings.UI_SCALE;
 
-            styleBarName = new GUIStyle() { fixedHeight = 16, fixedWidth = 32 };
-            styleBarName.normal.textColor = Color.white;
-            //styleBarName.alignment = TextAnchor.MiddleCenter;
+            styleBarName = new GUIStyle() { fixedHeight = 16 * GameSettings.UI_SCALE, fixedWidth = 32 * GameSettings.UI_SCALE };
+            styleBarName.normal.textColor = Color.black;
+            styleBarName.alignment = TextAnchor.MiddleCenter; //HEREHERE
 
             //styleBarDef = new GUIStyle(GUI.skin.box);
             styleBarDef = new GUIStyle(SkinsLibrary.DefUnitySkin.box);
             styleBarDef.border = new RectOffset(2, 2, 2, 2);
-            styleBarDef.normal.textColor = Color.white;
-            styleBarDef.fixedHeight = 15;
-            styleBarDef.alignment = TextAnchor.UpperCenter;
+            styleBarDef.normal.textColor = Color.black;
+            styleBarDef.fixedHeight = 15 * GameSettings.UI_SCALE;
+            styleBarDef.alignment = TextAnchor.MiddleCenter;
 
             styleBarBlue = new GUIStyle(styleBarDef);
+            styleBarBlue.fixedHeight = 15 * GameSettings.UI_SCALE; // HEREHERE
             styleBarBlue.normal.background = Resources.texBarBlue;
             styleBarBlue_Back = new GUIStyle(styleBarDef);
             styleBarBlue_Back.normal.background = Resources.texBarBlue_Back;
             styleBarBlue_Thin = new GUIStyle(styleBarBlue);
             styleBarBlue_Thin.border = new RectOffset(0, 0, 0, 0);
             styleBarGreen = new GUIStyle(styleBarDef);
+            styleBarGreen.fixedHeight = 15 * GameSettings.UI_SCALE;
             styleBarGreen.normal.background = Resources.texBarGreen;
             styleBarGreen_Back = new GUIStyle(styleBarDef);
             styleBarGreen_Back.normal.background = Resources.texBarGreen_Back;
@@ -223,14 +242,15 @@ namespace KSPAlternateResourcePanel
             styleBarGreen_Thin.border = new RectOffset(0, 0, 0, 0);
 
             styleText = new GUIStyle(SkinsLibrary.DefUnitySkin.label);
-            styleText.fontSize = 12;
+            styleText.fixedHeight = 15 * GameSettings.UI_SCALE;
+            styleText.fontSize = (int)(12 * GameSettings.UI_SCALE);
             styleText.alignment = TextAnchor.MiddleLeft;
-            styleText.normal.textColor = new Color(207, 207, 207);
+            styleText.normal.textColor = new Color(7, 7, 7);
             styleText.wordWrap = false;
 
             styleTextGreen = new GUIStyle(styleText);
             styleTextGreen.normal.textColor = new Color32(183, 254, 0, 255); ;
-             styleTextYellow = new GUIStyle(styleText);
+            styleTextYellow = new GUIStyle(styleText);
             styleTextYellow.normal.textColor = Color.yellow;
             styleTextYellowBold = new GUIStyle(styleTextYellow);
             styleTextYellowBold.fontStyle = FontStyle.Bold;
@@ -241,8 +261,9 @@ namespace KSPAlternateResourcePanel
             styleTextCenterGreen.normal.textColor = new Color32(183, 254, 0, 255);
             
             styleBarText = new GUIStyle(styleText);
+            styleBarText.fontStyle = FontStyle.Bold;
             styleBarText.alignment = TextAnchor.MiddleCenter;
-            styleBarText.normal.textColor = new Color(255, 255, 255, 0.8f);
+            styleBarText.normal.textColor = new Color(0, 0, 0, 1.0f);
 
             styleBarRateText = new GUIStyle(styleBarText);
             styleBarRateText.alignment = TextAnchor.MiddleRight;
@@ -257,11 +278,12 @@ namespace KSPAlternateResourcePanel
             styleBarHighlightRed.normal.background = Resources.texBarHighlightRed;
 
             styleStageText = new GUIStyle(GUI.skin.label);
-            styleStageText.normal.textColor = new Color(207, 207, 207);
+            styleStageText.normal.textColor = new Color(7, 7, 7);
             styleStageText.wordWrap = false;
 
 
             styleStageTextHead = new GUIStyle(styleStageText);
+            styleStageTextHead.fontSize = (int)(10 * GameSettings.UI_SCALE);
             styleStageTextHead.fontStyle = FontStyle.Bold;
             styleStageTextHead.wordWrap = false;
 
@@ -269,7 +291,8 @@ namespace KSPAlternateResourcePanel
 
             styleToggle = new GUIStyle(HighLogic.Skin.toggle);
             styleToggle.normal.textColor = new Color(207, 207, 207);
-            styleToggle.fixedHeight = 20;
+            styleToggle.fontSize = (int)(10 * GameSettings.UI_SCALE);
+            styleToggle.fixedHeight = 12 * GameSettings.UI_SCALE;
             styleToggle.padding = new RectOffset(6, 0, -2, 0);
 
             styleSettingsArea = new GUIStyle(HighLogic.Skin.textArea);
@@ -285,12 +308,12 @@ namespace KSPAlternateResourcePanel
             styleSeparatorV = new GUIStyle();
             styleSeparatorV.normal.background = Resources.texSeparatorV;
             styleSeparatorV.border = new RectOffset(0, 0, 6, 6);
-            styleSeparatorV.fixedWidth = 2;
+            styleSeparatorV.fixedWidth = 2 * GameSettings.UI_SCALE;
 
             styleSeparatorH = new GUIStyle();
             styleSeparatorH.normal.background = Resources.texSeparatorH;
             styleSeparatorH.border = new RectOffset(6, 6, 0, 0);
-            styleSeparatorH.fixedHeight = 2;
+            styleSeparatorH.fixedHeight = 2 * GameSettings.UI_SCALE;
 
             //the border determins which bit doesnt repeat
             styleDragInsert = new GUIStyle();

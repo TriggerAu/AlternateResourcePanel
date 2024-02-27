@@ -57,10 +57,10 @@ namespace KSPAlternateResourcePanel
         internal static Single SideThreshold = 8;
         internal static Single WindowOffset = 200;
         internal static Single WindowSpaceOffset = 5;
-        internal static Single WindowWidthForBars = 169;
+        internal static Single WindowWidthForBars = 199;
         internal static Single WindowWidthForFlowControl = 16;
 
-        internal static Int32 Icon2BarOffset = 36;
+        internal static Int32 Icon2BarOffset = 36;//
 
         //Line stuff
         Color colorLineCurrent = new Color(207, 207, 207);
@@ -80,7 +80,7 @@ namespace KSPAlternateResourcePanel
         private void UpdateWindowSizeAndVariables()
         {
             Rect NewPosition = new Rect(WindowRect);
-            NewPosition.width = WindowWidthForBars + WindowWidthForFlowControl;
+            NewPosition.width = (WindowWidthForBars + WindowWidthForFlowControl) * GameSettings.UI_SCALE;
             NewPosition.height = ((this.ResourceList.Count + 1 + this.TransfersCount ) * mbARP.windowMain.intLineHeight) + 1;
 
             //where to position the window
@@ -89,7 +89,7 @@ namespace KSPAlternateResourcePanel
             else if (!this.LeftSide && (this.PartScreenPos.x < (mbARP.vectVesselCOMScreen.x - SideThreshold)))
                 this.LeftSide = true;
 
-            // STore it back
+            // Store it back
             WindowRect = NewPosition;
         }
 
@@ -188,7 +188,7 @@ namespace KSPAlternateResourcePanel
             }
 
             GUILayout.BeginVertical();
-            GUI.Label(new Rect(0,0,WindowWidthForBars+WindowWidthForFlowControl-1,18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
+            GUI.Label(new Rect(0,0,(WindowWidthForBars+WindowWidthForFlowControl-1) * GameSettings.UI_SCALE, 18), this.PartRef.partInfo.title, Styles.stylePartWindowHead);
             GUILayout.Space(18);
             int i = 0;
             foreach (int key in this.ResourceList.Keys)
@@ -214,7 +214,7 @@ namespace KSPAlternateResourcePanel
                 Rect rectIcon = Drawing.DrawResourceIcon(this.ResourceList[key].ResourceDef.name);
                 GUILayout.Space(2);
 
-                Rect rectBar = Drawing.CalcBarRect(rectIcon,Icon2BarOffset,120,15);
+                Rect rectBar = Drawing.CalcBarRect(rectIcon, (int)(Icon2BarOffset * GameSettings.UI_SCALE), (int)(150 * GameSettings.UI_SCALE), 15);
                 if (Drawing.DrawResourceBar(rectBar, this.ResourceList[key], 
                     Styles.styleBarGreen_Back, Styles.styleBarGreen, Styles.styleBarGreen_Thin,
                     settings.ShowRatesForParts, TransferActive, Highlight))
@@ -355,7 +355,7 @@ namespace KSPAlternateResourcePanel
             if (Visible && !UIHidden)
             {
                 Boolean oldMouseOver = MouseOver;
-                MouseOver =  (Event.current.type== EventType.repaint) && WindowRect.Contains(Event.current.mousePosition);
+                MouseOver =  (Event.current.type== EventType.Repaint) && WindowRect.Contains(Event.current.mousePosition);
 
                 if (oldMouseOver != MouseOver)
                 {

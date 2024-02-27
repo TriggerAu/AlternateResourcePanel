@@ -42,14 +42,14 @@ namespace KSPAlternateResourcePanel
         private DropDownList ddlSettingsButtonStyle;
         
         internal Single WindowHeight;
-        Int32 MinWindowHeight = 136;
-        Int32 SettingsAreaWidth = 314; //284;
+        Int32 MinWindowHeight = (int)(136 * GameSettings.UI_SCALE);
+        Int32 SettingsAreaWidth = (int)(314 * GameSettings.UI_SCALE); // KB1
 
         internal override void OnAwake()
         {
             settings = KSPAlternateResourcePanel.settings;
 
-            TooltipMouseOffset = new Vector2d(-10, 10);
+            TooltipMouseOffset = new Vector2d(20, 10);
 
             ddlSettingsTab = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<SettingsTabs>(),this);
 
@@ -177,13 +177,13 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Settings Section", Styles.styleStageTextHead,GUILayout.Width(140));
+            GUILayout.Label("Settings Section", Styles.styleStageTextHead,GUILayout.Width(140 * GameSettings.UI_SCALE));
             GUILayout.Space(5);
             ddlSettingsTab.DrawButton();
             GUILayout.Space(4);
             GUILayout.EndHorizontal();
 
-            SettingsAreaWidth = 314; //284;
+            SettingsAreaWidth = (int)(314 * GameSettings.UI_SCALE); //284;
             if (settings.AlarmsEnabled)
                 SettingsAreaWidth += mbARP.windowMain.IconAlarmOffset;
             //GUILayout.Box("", Styles.styleSeparatorH, GUILayout.Height(2));
@@ -219,10 +219,10 @@ namespace KSPAlternateResourcePanel
         private void DrawWindow_General()
         {
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(60));
-            GUILayout.Space(2);
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
+            GUILayout.Space(2 * GameSettings.UI_SCALE);
             GUILayout.Label("Rates:", Styles.styleStageTextHead);
-            GUILayout.Space(13);
+            GUILayout.Space(13 * GameSettings.UI_SCALE);
             GUILayout.Label("Calc By:", Styles.styleStageTextHead);
             GUILayout.Label("Rate Style:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
@@ -238,7 +238,7 @@ namespace KSPAlternateResourcePanel
             }
 
             GUILayout.BeginHorizontal();
-            if (DrawToggle(ref settings.RatesUseUT, "UT", Styles.styleToggle,GUILayout.Width(60)))
+            if (DrawToggle(ref settings.RatesUseUT, "UT", Styles.styleToggle,GUILayout.Width(60 * GameSettings.UI_SCALE)))
                 settings.Save();
             Boolean NotUT = !settings.RatesUseUT;
             if (DrawToggle(ref NotUT, "Real Time", Styles.styleToggle))
@@ -253,7 +253,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
 
             GUILayout.Space(2);
             GUILayout.Label("Stage Bars:", Styles.styleStageTextHead);
@@ -271,7 +271,7 @@ namespace KSPAlternateResourcePanel
             {
                 GUILayout.BeginHorizontal();
                 Boolean NotRight = !settings.StageBarOnRight;
-                if (DrawToggle(ref NotRight, "On Left", Styles.styleToggle, GUILayout.Width(90)))
+                if (DrawToggle(ref NotRight, "On Left", Styles.styleToggle, GUILayout.Width(90 * GameSettings.UI_SCALE)))
                 {
                     settings.StageBarOnRight = !settings.StageBarOnRight; 
                     settings.Save();
@@ -287,7 +287,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
             GUILayout.Space(2);
             GUILayout.Label("Resources:", Styles.styleStageTextHead);
             GUILayout.EndVertical();
@@ -315,9 +315,9 @@ namespace KSPAlternateResourcePanel
         private void DrawWindow_Styling()
         {
             //Styling
-            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(54));
+            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(54 * GameSettings.UI_SCALE));
 
-            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
             GUILayout.Space(2); //to even up the text
             GUILayout.Label("Styling:", Styles.styleStageTextHead);
             GUILayout.Label("Button:", Styles.styleStageTextHead);
@@ -388,7 +388,7 @@ namespace KSPAlternateResourcePanel
 
             //Icons
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
             GUILayout.Label(new GUIContent("Iconsets:","Select the order of priority for choosing icons. Highest priority to the left"), Styles.styleStageTextHead);
             GUILayout.Space(2);
             GUILayout.Label(new GUIContent("Separator:","Padding around resource separators"), Styles.styleStageTextHead);
@@ -401,7 +401,7 @@ namespace KSPAlternateResourcePanel
             {
                 if (i > 0)
                 {
-                    if (GUILayout.Button("<->", GUILayout.Width(30)))
+                    if (GUILayout.Button("<->", GUILayout.Width(30 * GameSettings.UI_SCALE)))
                     {
                         String strTemp = settings.lstIconOrder[i];
                         settings.lstIconOrder[i] = settings.lstIconOrder[i - 1];
@@ -410,12 +410,12 @@ namespace KSPAlternateResourcePanel
                         settings.Save();
                     }
                 }
-                GUILayout.Label(Resources.IconOrderContent(settings.lstIconOrder[i]), Styles.styleTextCenter, GUILayout.Width(40));
+                GUILayout.Label(Resources.IconOrderContent(settings.lstIconOrder[i]), Styles.styleTextCenter, GUILayout.Width(40 * GameSettings.UI_SCALE));
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Space(4);
-            settings.SpacerPadding = (Int32)GUILayout.HorizontalSlider(settings.SpacerPadding, 0, 5, GUILayout.Width(168+mbARP.windowMain.IconAlarmOffset));
+            settings.SpacerPadding = (Int32)GUILayout.HorizontalSlider(settings.SpacerPadding, 0, 5, GUILayout.Width(168 * GameSettings.UI_SCALE + mbARP.windowMain.IconAlarmOffset));
             GUILayout.Space(3);
             GUILayout.Label(String.Format("{0}px",settings.SpacerPadding));
             GUILayout.EndHorizontal();
@@ -428,7 +428,7 @@ namespace KSPAlternateResourcePanel
             }
             GUILayout.BeginHorizontal();
             GUILayout.Label("After:");
-            settings.HideAfter = (Int32)GUILayout.HorizontalSlider(settings.HideAfter, 0, 10, GUILayout.Width(128 + mbARP.windowMain.IconAlarmOffset));
+            settings.HideAfter = (Int32)GUILayout.HorizontalSlider(settings.HideAfter, 0, 10, GUILayout.Width(128 * GameSettings.UI_SCALE + mbARP.windowMain.IconAlarmOffset));
             GUILayout.Space(3);
             GUILayout.Label(String.Format("{0} secs", settings.HideAfter));
             GUILayout.EndHorizontal();
@@ -442,7 +442,7 @@ namespace KSPAlternateResourcePanel
             {
                 //Visuals
                 GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-                GUILayout.BeginVertical(GUILayout.Width(60));
+                GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
                 GUILayout.Label("Visuals:", Styles.styleStageTextHead);
                 GUILayout.EndVertical();
                 GUILayout.BeginVertical();
@@ -491,7 +491,7 @@ namespace KSPAlternateResourcePanel
         {
 
             GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
-            GUILayout.BeginVertical(GUILayout.Width(70));
+            GUILayout.BeginVertical(GUILayout.Width(70 * GameSettings.UI_SCALE));
             GUILayout.Space(2);
             GUILayout.Label("Alarms:", Styles.styleStageTextHead);
             GUILayout.Space(-5);
@@ -510,9 +510,9 @@ namespace KSPAlternateResourcePanel
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             if (settings.AlarmsVolumeFromUI)
-                GUILayout.HorizontalSlider((Int32)(GameSettings.UI_VOLUME*100), 0, 100,GUILayout.Width(160));
+                GUILayout.HorizontalSlider((Int32)(GameSettings.UI_VOLUME*100), 0, 100,GUILayout.Width(160 * GameSettings.UI_SCALE));
             else
-                settings.AlarmsVolume = GUILayout.HorizontalSlider(settings.AlarmsVolume * 100, 0, 100, GUILayout.Width(160)) / 100;
+                settings.AlarmsVolume = GUILayout.HorizontalSlider(settings.AlarmsVolume * 100, 0, 100, GUILayout.Width(160 * GameSettings.UI_SCALE)) / 100;
             GUILayout.Label(KSPAlternateResourcePanel.audioController.VolumePct.ToString() + "%");
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
@@ -521,14 +521,14 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label("Sounds",Styles.styleStageTextHead);
             GUILayout.BeginVertical(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth));
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Warning:", GUILayout.Width(70));
+            GUILayout.Label("Warning:", GUILayout.Width(70 * GameSettings.UI_SCALE));
             ddlSettingsAlarmsWarning.DrawButton();
             DrawTestSoundButton(mbARP.clipAlarmsWarning, settings.AlarmsWarningRepeats);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Repeat:", GUILayout.Width(70));
+            GUILayout.Label("Repeat:", GUILayout.Width(70 * GameSettings.UI_SCALE));
             //settings.AlarmsWarningRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130));
-            if (DrawHorizontalSlider(ref settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130)))
+            if (DrawHorizontalSlider(ref settings.AlarmsWarningRepeats, 1, 6, GUILayout.Width(130 * GameSettings.UI_SCALE)))
                 settings.Save();
             GUILayout.Space(3);
             GUILayout.Label (settings.AlarmsWarningRepeatsText);
@@ -537,14 +537,14 @@ namespace KSPAlternateResourcePanel
             GUILayout.Label("", Styles.styleSeparatorH);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Alert:", GUILayout.Width(70));
+            GUILayout.Label("Alert:", GUILayout.Width(70 * GameSettings.UI_SCALE));
             ddlSettingsAlarmsAlert.DrawButton();
             DrawTestSoundButton(mbARP.clipAlarmsAlert, settings.AlarmsAlertRepeats);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Repeat:", GUILayout.Width(70));
+            GUILayout.Label("Repeat:", GUILayout.Width(70 * GameSettings.UI_SCALE));
             //settings.AlarmsAlertRepeats = (Int32)GUILayout.HorizontalSlider(settings.AlarmsAlertRepeats, 1, 6, GUILayout.Width(130));
-            if (DrawHorizontalSlider(ref settings.AlarmsAlertRepeats,1,6, GUILayout.Width(130)))
+            if (DrawHorizontalSlider(ref settings.AlarmsAlertRepeats,1,6, GUILayout.Width(130 * GameSettings.UI_SCALE)))
                 settings.Save();
             GUILayout.Space(3);
             GUILayout.Label(settings.AlarmsAlertRepeatsText);
@@ -562,7 +562,7 @@ namespace KSPAlternateResourcePanel
                 btn = new GUIContent(Resources.btnStop, "StopPlaying");
                 blnStop=true;
             }
-            if (GUILayout.Button(btn, GUILayout.Width(20)))
+            if (GUILayout.Button(btn, GUILayout.Width(20 * GameSettings.UI_SCALE)))
             {
                 if (blnStop)
                     KSPAlternateResourcePanel.audioController.Stop();
@@ -574,8 +574,8 @@ namespace KSPAlternateResourcePanel
         private void DrawWindow_Staging()
         {
             //Staging
-            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(64));//, GUILayout.Height(84));
-            GUILayout.BeginVertical(GUILayout.Width(60));
+            GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(64 * GameSettings.UI_SCALE)); // KB1
+            GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
             GUILayout.Label("Staging:", Styles.styleStageTextHead);
             //if (settings.StagingEnabled)
             //{
@@ -602,8 +602,8 @@ namespace KSPAlternateResourcePanel
             //AutoStaging
             if (settings.StagingEnabled)
             {
-                GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(50));
-                GUILayout.BeginVertical(GUILayout.Width(60));
+                GUILayout.BeginHorizontal(Styles.styleSettingsArea, GUILayout.Width(SettingsAreaWidth), GUILayout.Height(50 * GameSettings.UI_SCALE));
+                GUILayout.BeginVertical(GUILayout.Width(60 * GameSettings.UI_SCALE));
                 GUILayout.Label("Auto:", Styles.styleStageTextHead);
                 if (settings.AutoStagingEnabled)
                 {
@@ -618,12 +618,12 @@ namespace KSPAlternateResourcePanel
                 {
                     Single AutoStagingDelay = (Single)settings.AutoStagingDelayInTenths / 10;
                     GUILayout.BeginHorizontal();
-                    if (DrawHorizontalSlider(ref AutoStagingDelay, 0.1f, 3f, GUILayout.Width(148 + mbARP.windowMain.IconAlarmOffset)))
+                    if (DrawHorizontalSlider(ref AutoStagingDelay, 0.1f, 3f, GUILayout.Width(148 * GameSettings.UI_SCALE + mbARP.windowMain.IconAlarmOffset)))
                     {
                         settings.AutoStagingDelayInTenths = (Int32)(AutoStagingDelay * 10);
                         settings.Save();
                     }
-                    GUILayout.Label(String.Format("{0:0.0} sec", AutoStagingDelay), GUILayout.Width(50));
+                    GUILayout.Label(String.Format("{0:0.0} sec", AutoStagingDelay), GUILayout.Width(50 * GameSettings.UI_SCALE));
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndVertical();
@@ -654,7 +654,7 @@ namespace KSPAlternateResourcePanel
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.BeginVertical(GUILayout.Width(160));
+            GUILayout.BeginVertical(GUILayout.Width(160 * GameSettings.UI_SCALE));
             GUILayout.Space(4);
             GUILayout.Label("Last Check Attempt:");
             GUILayout.Label("Current Version:");

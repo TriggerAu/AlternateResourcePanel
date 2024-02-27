@@ -25,11 +25,11 @@ namespace KSPAlternateResourcePanel
         internal ARPWindowSettings windowSettings;
         internal ARPWindowResourceConfig windowResourceConfig;
 
-        internal Rect windowMainResetPos = new Rect(Screen.width - 339 - (GameSettings.UI_SCALE_APPS * 42), 0, 299, 20);
+        internal Rect windowMainResetPos = new Rect(Screen.width - 339 - (GameSettings.UI_SCALE_APPS * 42), 0, 320 * GameSettings.UI_SCALE, 20 * GameSettings.UI_SCALE); // KB1
         //variables
         internal PartResourceVisibleList SelectedResources;
 
-        internal Int32 LastStage;
+        internal float LastStage;
         public ARPResourceList lstResourcesVessel;
         public ARPResourceList lstResourcesLastStage;
 
@@ -71,7 +71,7 @@ namespace KSPAlternateResourcePanel
         internal Boolean AutoStagingArmed = false;
         internal Boolean AutoStagingRunning = false;
         internal Int32 AutoStagingMaxStage = 0;
-        internal Int32 AutoStagingTerminateAt = 1;
+        internal float AutoStagingTerminateAt = 1;
         internal String AutoStagingStatus;
         internal Color32 AutoStagingStatusColor;
 
@@ -109,13 +109,13 @@ namespace KSPAlternateResourcePanel
 			}
 
             //If the window is in the pre0.24 default then move it down so its not over the app launcher
-            if (new Rect(Screen.width - 310, 0, 310, 40).Contains(settings.vectButtonPos))
+            if (new Rect(Screen.width - 310, 0, 310 * GameSettings.UI_SCALE, 40 * GameSettings.UI_SCALE).Contains(settings.vectButtonPos))
             {
                 settings.vectButtonPos = new Vector3(Screen.width - 405, 0,0 );
                 settings.ButtonPosUpdatedv24 = true;
                 settings.Save();
             }
-            if (!settings.WindowPosUpdatedv24 && settings.WindowPosition == new Rect(new Rect(Screen.width - 298, 19, 299, 20)))
+            if (!settings.WindowPosUpdatedv24 && settings.WindowPosition == new Rect(new Rect(Screen.width - 298, 19, 360 * GameSettings.UI_SCALE, 20 * GameSettings.UI_SCALE)))
             {
                 MonoBehaviourExtended.LogFormatted("Moving window for 0.24");
                 settings.WindowPosUpdatedv24 = true;
@@ -807,23 +807,23 @@ namespace KSPAlternateResourcePanel
             }
 
             //Calc window widths/heights
-            windowMain.IconAlarmOffset = 12;
+            windowMain.IconAlarmOffset = (int)(12 * GameSettings.UI_SCALE);
             if (!settings.AlarmsEnabled)
                 windowMain.IconAlarmOffset = 0;
 
-            windowMain.WindowRect.width = 329 + windowMain.IconAlarmOffset; //was 299 - adding 30
-            windowMain.Icon2BarOffset_Left = 40 + windowMain.IconAlarmOffset ;
-            windowMain.Icon2BarOffset_Right = 40 + 140 + windowMain.IconAlarmOffset ;
+            windowMain.WindowRect.width = 420 * GameSettings.UI_SCALE + windowMain.IconAlarmOffset; // KB1
+            windowMain.Icon2BarOffset_Left = (int)((40 * GameSettings.UI_SCALE) + windowMain.IconAlarmOffset);
+            windowMain.Icon2BarOffset_Right = (int)(40 * GameSettings.UI_SCALE + (180 * GameSettings.UI_SCALE) + windowMain.IconAlarmOffset); // KB1
 
             if (lstResourcesToDisplay.Count == 0)
-                windowMain.WindowRect.height = (2 * windowMain.intLineHeight) + 16;
+                windowMain.WindowRect.height = (2 * GameSettings.UI_SCALE * windowMain.intLineHeight) + 16;
             else
             {
                 //this is resources lines - separators diff + fixed value
-                windowMain.WindowRect.height = ((lstResourcesToDisplay.Count + 1) * windowMain.intLineHeight) - (lstResourcesToDisplay.Count(x => x == 0) * (15 - (settings.SpacerPadding * 2))) + 12;
+                windowMain.WindowRect.height = (((lstResourcesToDisplay.Count + 1) * windowMain.intLineHeight) - (lstResourcesToDisplay.Count(x => x == 0) * ((15 * GameSettings.UI_SCALE) - (settings.SpacerPadding * 2))) + 12);
             }
             if (settings.AutoStagingEnabled)
-                windowMain.WindowRect.height += 24;
+                windowMain.WindowRect.height += 24 * GameSettings.UI_SCALE;
 
             //now do the autostaging stuff
             lstLastStageEngineModules = lstPartsLastStageEngines.SelectMany(x => x.Modules.OfType<ModuleEngines>()).ToList();
