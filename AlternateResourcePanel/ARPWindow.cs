@@ -38,7 +38,7 @@ namespace KSPAlternateResourcePanel
 
         internal override void OnAwake()
         {
-            TooltipMouseOffset = new Vector2d(-10, 10);
+            TooltipMouseOffset = new Vector2d(20, -20);
 
             onWindowMoveComplete += ARPWindow_onWindowMoveComplete;
         }

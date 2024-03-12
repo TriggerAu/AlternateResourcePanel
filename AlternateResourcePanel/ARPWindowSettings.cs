@@ -49,7 +49,7 @@ namespace KSPAlternateResourcePanel
         {
             settings = KSPAlternateResourcePanel.settings;
 
-            TooltipMouseOffset = new Vector2d(-10, 10);
+            TooltipMouseOffset = new Vector2d(20, 10);
 
             ddlSettingsTab = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<SettingsTabs>(),this);
 

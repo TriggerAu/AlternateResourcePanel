@@ -139,7 +139,7 @@ namespace KSPAlternateResourcePanel
 
             styleTooltipStyle = new GUIStyle();
             styleTooltipStyle.name = "Tooltip";
-            styleTooltipStyle.fontSize = 12;
+            styleTooltipStyle.fontSize = (int)(12 * GameSettings.UI_SCALE);
             styleTooltipStyle.normal.textColor = new Color32(207, 207, 207, 255);
             styleTooltipStyle.stretchHeight = true;
             styleTooltipStyle.wordWrap = true;
