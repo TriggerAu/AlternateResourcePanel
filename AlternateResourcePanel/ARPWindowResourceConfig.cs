@@ -33,7 +33,7 @@ namespace KSPAlternateResourcePanel
         {
             settings = KSPAlternateResourcePanel.settings;
             WindowRect = new Rect(300, 0, 455, WindowHeight);
-
+            TooltipMouseOffset = new Vector2d(20, -20);
             ddlMonType = new DropDownList(KSPPluginFramework.EnumExtensions.ToEnumDescriptions<ResourceSettings.MonitorDirections>(),this);
             ddlMonType.SetListBoxOffset(vectMonTypeOffset-ScrollPosition);
             ddlMonType.OnSelectionChanged += ddlMonType_OnSelectionChanged;
@@ -415,7 +415,7 @@ namespace KSPAlternateResourcePanel
             else { resourceOver = null; iconOver = null; }
 
             //did we click on an Icon with mouse button 0
-            if (Event.current.type == EventType.mouseDown && 
+            if (Event.current.type == EventType.MouseDown && 
                 Event.current.button==0 && iconOver!=null)
             {
                 LogFormatted_DebugOnly("Drag Start");
@@ -425,7 +425,7 @@ namespace KSPAlternateResourcePanel
                 DropWillReorderList = false;
             }
             //did we release the mouse
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0)
             {
                 if (resourceOver != null)
@@ -455,7 +455,7 @@ namespace KSPAlternateResourcePanel
             base.OnGUIEvery();
 
             //disable resource dragging if we mouseup outside the window
-            if (Event.current.type == EventType.mouseUp &&
+            if (Event.current.type == EventType.MouseUp &&
                 Event.current.button == 0 &&
                 !this.WindowRect.Contains(new Vector2(Input.mousePosition.x,Screen.height-Input.mousePosition.y)))
             {
